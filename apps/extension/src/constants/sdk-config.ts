@@ -4,6 +4,7 @@ import {
   encodePacked,
   Hex,
   zeroHash,
+  parseAbiParameters,
 } from 'viem';
 
 export const DEFAULT_GUARDIAN_SAFE_PERIOD = 5;
@@ -23,19 +24,20 @@ const DOMAIN_SEPARATOR_TYPE_HASH =
 
 export const getEncoded1271MessageHash = (message: Hex) => {
   return keccak256(
-    encodeAbiParameters(
-      [{ type: 'bytes32' }, { type: 'bytes32' }],
-      [SOUL_WALLET_MSG_TYPE_HASH, message]
-    )
+    encodeAbiParameters(parseAbiParameters(['bytes32', 'bytes32']), [
+      SOUL_WALLET_MSG_TYPE_HASH,
+      message,
+    ])
   );
 };
 
 export const getDomainSeparator = (chainIdHex: Hex, walletAddress: Hex) => {
   return keccak256(
-    encodeAbiParameters(
-      [{ type: 'bytes32' }, { type: 'uint256' }, { type: 'address' }],
-      [DOMAIN_SEPARATOR_TYPE_HASH, BigInt(chainIdHex), walletAddress]
-    )
+    encodeAbiParameters(parseAbiParameters(['bytes32', 'uint256', 'address']), [
+      DOMAIN_SEPARATOR_TYPE_HASH,
+      BigInt(chainIdHex),
+      walletAddress,
+    ])
   );
 };
 

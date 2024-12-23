@@ -6,7 +6,7 @@ import {
   DEFAULT_GUARDIAN_HASH,
   DEFAULT_GUARDIAN_SAFE_PERIOD,
 } from '@/constants/sdk-config';
-import { formatHex, getHexString, paddingZero } from '@/utils/format';
+import { formatHex, paddingZero } from '@/utils/format';
 import { Bundler, SignkeyType, SoulWallet, Transaction } from '@soulwallet/sdk';
 import { DecodeUserOp } from '@soulwallet/decoder';
 import { canUserOpGetSponsor } from '@/utils/ethRpc/sponsor';
@@ -20,9 +20,12 @@ import {
   parseEther,
   PublicClient,
   toHex,
+  hashMessage,
+  serializeSignature,
 } from 'viem';
 import { createAccount } from '@/utils/ethRpc/create-account';
 import { ethErrors } from 'eth-rpc-errors';
+import { ABI_SoulWallet } from '@soulwallet/abi';
 import eventBus from '@/utils/eventBus';
 import { EVENT_TYPES } from '@/constants/events';
 
@@ -36,6 +39,10 @@ class ElytroSDK {
     eventBus.on(EVENT_TYPES.CHAIN.CHAIN_INITIALIZED, (chain: TChainItem) => {
       this.resetSDK(chain);
     });
+  }
+
+  get bundler() {
+    return this._bundler;
   }
 
   public resetSDK(chainConfig: TChainItem) {
@@ -215,6 +222,28 @@ class ElytroSDK {
   //   }
   // }
 
+  private async _isSignatureValid(
+    address: Hex,
+    messageHash: Hex,
+    signature: Hex
+  ) {
+    const _client = createPublicClient({
+      chain: this._config,
+      transport: http(this._config.endpoint),
+    });
+
+    const magicValue = await _client.readContract({
+      address,
+      abi: ABI_SoulWallet,
+      functionName: 'isValidSignature',
+      args: [messageHash, signature],
+    });
+
+    if (magicValue !== '0x1626ba7e') {
+      throw new Error('Elytro: Invalid signature.');
+    }
+  }
+
   private async _getSignature(
     messageHash: string,
     validStartTime?: number,
@@ -233,18 +262,28 @@ class ElytroSDK {
     // TODO： move sign userOp to wallet controller, so the keyring will be same instance
     await keyring.tryUnlock();
 
-    // raw sign -> personal sign
-    const _eoaSignature = await keyring.owner?.signMessage({
-      message: { raw: rawHashRes.OK.packedHash as Hex },
-    });
+    // // raw sign -> personal sign
+    // const _eoaSignature = await keyring.owner?.signMessage({
+    //   message: { raw: rawHashRes.OK.packedHash as Hex },
+    // });
+
+    const _eoaSignature = keyring.signingKey?.signDigest(
+      rawHashRes.OK.packedHash
+    );
 
     if (!_eoaSignature) {
       throw new Error('Elytro: Failed to sign message.');
     }
 
+    const _eoaSignatureHex = serializeSignature({
+      r: _eoaSignature.r as Hex,
+      s: _eoaSignature.s as Hex,
+      v: BigInt(_eoaSignature.v),
+    });
+
     const signRes = await this._sdk.packUserOpEOASignature(
       this._config.validator,
-      _eoaSignature,
+      _eoaSignatureHex,
       rawHashRes.OK.validationData
     );
 
@@ -417,13 +456,9 @@ class ElytroSDK {
     }
   }
 
-  public async signMessage(
-    message: Uint8Array | string | bigint | number | boolean | Hex,
-    saAddress: Address
-  ) {
-    const rawMessage = getHexString(message, 32);
-
-    const encode1271MessageHash = getEncoded1271MessageHash(rawMessage);
+  public async signMessage(message: Hex, saAddress: Address) {
+    const hashedMessage = hashMessage({ raw: message });
+    const encode1271MessageHash = getEncoded1271MessageHash(hashedMessage);
     const domainSeparator = getDomainSeparator(
       toHex(this._config.id),
       saAddress
@@ -431,6 +466,9 @@ class ElytroSDK {
     const encodedSHA = getEncodedSHA(domainSeparator, encode1271MessageHash);
 
     const signature = await this._getSignature(encodedSHA);
+
+    await this._isSignatureValid(saAddress, hashedMessage, signature as Hex);
+
     return signature;
   }
 
