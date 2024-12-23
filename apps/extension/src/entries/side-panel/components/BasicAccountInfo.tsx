@@ -8,8 +8,6 @@ import { SIDE_PANEL_ROUTE_PATHS } from '../routes';
 import { navigateTo } from '@/utils/navigation';
 import ActionButton from './ActionButton';
 import ActivateButton from './ActivateButton';
-import { useState } from 'react';
-import SettingModal from './SettingModal';
 import Account from './Account';
 import { useAccount } from '../contexts/account-context';
 import { useChain } from '../contexts/chain-context';
@@ -22,10 +20,9 @@ export default function BasicAccountInfo() {
     useAccount();
   const wallet = useWallet();
   const { currentChain, chains, getCurrentChain } = useChain();
-  const [openSetting, setOpenSetting] = useState(false);
 
   const onClickMore = () => {
-    setOpenSetting(true);
+    navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Settings);
   };
 
   const onClickSend = () => {
@@ -126,11 +123,6 @@ export default function BasicAccountInfo() {
           )}
         </div>
       </div>
-
-      <SettingModal
-        open={openSetting}
-        onOpenChange={() => setOpenSetting(false)}
-      />
     </div>
   );
 }
