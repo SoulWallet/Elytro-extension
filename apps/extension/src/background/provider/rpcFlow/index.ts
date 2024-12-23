@@ -1,7 +1,7 @@
 // export const rpcFlow = async (method: string, params: any[]) => {};
 
 import AsyncTaskFlow from '@/utils/asyncTaskFlow';
-import { checkMethodExist } from './checkMethodExist';
+import { checkMethodExist } from './checkCallable';
 import { checkLock } from './checkLock';
 import { callProvider } from './callProvider';
 import { requestConnect } from './requestConnect';

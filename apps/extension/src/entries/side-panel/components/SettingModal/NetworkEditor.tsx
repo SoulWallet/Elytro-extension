@@ -10,18 +10,19 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useState } from 'react';
-import { Chain } from 'viem';
 import { useToast } from '@/hooks/use-toast';
 import TickCircle from '@/assets/icons/tickCircle.svg';
+import { TChainItem } from '@/constants/chains';
 
 export default function NetworkEditor({
   network,
   onCancel,
 }: {
-  network: Chain;
+  network: TChainItem;
   onCancel: () => void;
 }) {
   const { toast } = useToast();
+
   const mockBundlers = [
     {
       name: 'Bundler 01',
@@ -30,6 +31,7 @@ export default function NetworkEditor({
       name: 'Bundler 02',
     },
   ];
+
   const onSave = () => {
     onCancel();
     toast({

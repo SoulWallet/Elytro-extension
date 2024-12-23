@@ -8,7 +8,6 @@ import {
 import DAppDetail from './DAppDetail';
 import TxDetail, { SendTxTypeEn } from './TxDetail';
 import GasEstimation, { TGasEstimate } from './GasEstimation';
-import { SupportedChainTypeEn } from '@/constants/chains';
 import { useEffect, useRef, useState } from 'react';
 import { useWallet } from '@/contexts/wallet';
 import { elytroSDK } from '@/background/services/sdk';
@@ -18,14 +17,14 @@ import Spin from '@/components/Spin';
 import { DecodeResult } from '@soulwallet/decoder';
 import { toast } from '@/hooks/use-toast';
 import { Loader } from 'lucide-react';
-import { formatUserOperation } from '@/utils/format';
+import { formatObjectWithBigInt } from '@/utils/format';
 
 interface ISendTxProps {
   txParams: TTransactionInfo;
   dapp: TDAppInfo;
   onConfirm: () => void;
   onCancel: () => void;
-  chainType: SupportedChainTypeEn;
+  chainName: string;
 }
 
 export default function SendTx({
@@ -33,7 +32,7 @@ export default function SendTx({
   onConfirm,
   onCancel,
   dapp,
-  chainType,
+  chainName,
 }: ISendTxProps) {
   const gasEstimationRef = useRef<TGasEstimate>();
   const wallet = useWallet();
@@ -60,14 +59,14 @@ export default function SendTx({
         throw new Error('Failed to decode user operation');
       }
 
-      const { needDeposit = true } = await elytroSDK.getRechargeAmountForUserOp(
+      const { calcResult } = await elytroSDK.getRechargeAmountForUserOp(
         res,
         decodeRes[0].value
       );
 
       setDecodedDetail(decodeRes);
       userOpRef.current = res;
-      setNeedDeposit(needDeposit);
+      setNeedDeposit(calcResult.needDeposit);
     } finally {
       setIsLoading(false);
     }
@@ -93,7 +92,7 @@ export default function SendTx({
       }
 
       const { signature, opHash } = await wallet.signUserOperation(
-        formatUserOperation(userOpRef.current!)
+        formatObjectWithBigInt(userOpRef.current!)
       );
 
       userOpRef.current!.signature = signature;
@@ -130,7 +129,7 @@ export default function SendTx({
     <Card className="w-full max-w-md mx-auto flex-grow flex flex-col min-w-[430px]">
       <Spin isLoading={isLoading} />
       <CardHeader>
-        <DAppDetail dapp={dapp} chainType={chainType} />
+        <DAppDetail dapp={dapp} chainName={chainName} />
       </CardHeader>
 
       <CardContent className="space-y-4 flex-grow">

@@ -5,7 +5,12 @@ import {
 import { elytroSDK } from '../sdk';
 import eventBus from '@/utils/eventBus';
 
-const FETCH_INTERVAL = 1000;
+const FETCH_INTERVAL = 1_000;
+
+const STATUS_MAP = {
+  '0x1': UserOperationStatusEn.confirmedSuccess,
+  '0x0': UserOperationStatusEn.confirmedFailed,
+};
 
 class HistoryItem {
   private _data: UserOperationHistory;
@@ -47,11 +52,10 @@ class HistoryItem {
     }
 
     this._status = status;
-    this._broadcastToUI();
+    this._broadcastStatusChange();
   }
 
-  private _broadcastToUI() {
-    // todo: test broadcast to ui
+  private _broadcastStatusChange() {
     eventBus.emit('historyItemStatusUpdated', this._data.opHash, this.status);
   }
 
@@ -68,10 +72,12 @@ class HistoryItem {
 
     try {
       this._fetching = true;
-      const opStatus = await elytroSDK.getUserOperationReceipt(
-        this._data.opHash
-      );
-      this._updateStatus(opStatus);
+      const res = await elytroSDK.getUserOperationReceipt(this._data.opHash);
+      const newStatus =
+        // the definition is not correct. res has 'status' field
+        STATUS_MAP[(res as SafeAny)?.status as keyof typeof STATUS_MAP] ||
+        UserOperationStatusEn.pending;
+      this._updateStatus(newStatus);
     } catch (error) {
       console.error(error);
     } finally {

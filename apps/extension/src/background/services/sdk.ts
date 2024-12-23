@@ -1,27 +1,17 @@
-import {
-  DEFAULT_CHAIN_TYPE,
-  SUPPORTED_CHAIN_MAP,
-  SupportedChainTypeEn,
-} from '@/constants/chains';
+import { SUPPORTED_CHAIN_IDS, TChainItem } from '@/constants/chains';
 import {
   getDomainSeparator,
   getEncoded1271MessageHash,
   getEncodedSHA,
-  SDK_INIT_CONFIG_BY_CHAIN_MAP,
-  SDKInitConfig,
-} from '@/constants/sdk-config';
-import {
   DEFAULT_GUARDIAN_HASH,
   DEFAULT_GUARDIAN_SAFE_PERIOD,
-  TEMP_ENTRY_POINT,
-} from '@/constants/temp';
+} from '@/constants/sdk-config';
 import { formatHex, getHexString, paddingZero } from '@/utils/format';
 import { Bundler, SignkeyType, SoulWallet, Transaction } from '@soulwallet/sdk';
 import { DecodeUserOp } from '@soulwallet/decoder';
 import { canUserOpGetSponsor } from '@/utils/ethRpc/sponsor';
 import keyring from './keyring';
 import { simulateSendUserOp } from '@/utils/ethRpc/simulate';
-import { UserOperationStatusEn } from '@/constants/operations';
 import {
   Address,
   createPublicClient,
@@ -37,22 +27,38 @@ import { ethErrors } from 'eth-rpc-errors';
 class ElytroSDK {
   private _sdk!: SoulWallet;
   private _bundler!: Bundler;
-  private _chainType!: SupportedChainTypeEn;
-  private _config!: SDKInitConfig;
+  private _config!: TChainItem;
   private _pimlicoRpc: Nullable<PublicClient> = null;
-
-  constructor() {
-    this._initByChainType(DEFAULT_CHAIN_TYPE);
-  }
 
   get bundler() {
     return this._bundler;
   }
 
-  public resetSDK(chainType: SupportedChainTypeEn) {
-    if (chainType !== this._chainType) {
-      this._initByChainType(chainType);
+  public resetSDK(chainConfig: TChainItem) {
+    if (chainConfig.id === this._config?.id) {
+      console.log('Elytro::SDK: chainId is the same, no need to reset.');
+      return;
     }
+
+    if (!SUPPORTED_CHAIN_IDS.includes(chainConfig.id)) {
+      throw new Error(
+        `Elytro: chain ${chainConfig.id} is not supported for now.`
+      );
+    }
+
+    const { factory, fallback, recovery, onchainConfig, bundler, endpoint } =
+      chainConfig;
+    this._sdk = new SoulWallet(
+      endpoint,
+      bundler,
+      factory,
+      fallback,
+      recovery,
+      onchainConfig
+    );
+
+    this._bundler = new Bundler(bundler);
+    this._config = chainConfig;
   }
 
   // TODO: temp, make sure it's unique later.
@@ -60,18 +66,6 @@ class ElytroSDK {
   // also, make sure it keeps the same when it's a same SA address.
   private get _index() {
     return 0; // Math.floor(Math.random() * 100);
-  }
-
-  get chain() {
-    return SUPPORTED_CHAIN_MAP[this._chainType];
-  }
-
-  private _initByChainType(chainType: SupportedChainTypeEn) {
-    this._config = SDK_INIT_CONFIG_BY_CHAIN_MAP[chainType];
-    const { endpoint, bundler, factory, fallback, recovery } = this._config;
-    this._sdk = new SoulWallet(endpoint, bundler, factory, fallback, recovery);
-    this._bundler = new Bundler(bundler);
-    this._chainType = chainType;
   }
 
   /**
@@ -84,9 +78,9 @@ class ElytroSDK {
    */
   public async createWalletAddress(
     eoaAddress: string,
+    chainId: number,
     initialGuardianHash: string = DEFAULT_GUARDIAN_HASH,
-    initialGuardianSafePeriod: number = DEFAULT_GUARDIAN_SAFE_PERIOD,
-    chainId: number | string = this.chain.id
+    initialGuardianSafePeriod: number = DEFAULT_GUARDIAN_SAFE_PERIOD
   ) {
     const initialKeysStrArr = [paddingZero(eoaAddress, 32)];
 
@@ -101,9 +95,10 @@ class ElytroSDK {
     if (res.isErr()) {
       throw res.ERR;
     } else {
+      // no need await for createAccount request. it's not a blocking request.
       createAccount(
         res.OK,
-        this.chain.id,
+        chainId,
         this._index,
         initialKeysStrArr,
         initialGuardianHash,
@@ -142,7 +137,8 @@ class ElytroSDK {
   }
 
   public async canGetSponsored(userOp: ElytroUserOperation) {
-    return canUserOpGetSponsor(userOp, this.chain.id, TEMP_ENTRY_POINT);
+    const { chainId, entryPoint } = this._config.onchainConfig;
+    return await canUserOpGetSponsor(userOp, chainId, entryPoint);
   }
 
   public async isSmartAccountDeployed(address: string) {
@@ -150,16 +146,6 @@ class ElytroSDK {
     // when account is not deployed, it's code is undefined or 0x.
     return code !== undefined && code !== '0x';
   }
-
-  // public async activateSmartAccount(address: string) {
-  //   try {
-  //     const userOp = await this.createUnsignedDeployWalletUserOp(address);
-  //     await this.estimateGas(userOp);
-  //     await this.sendUserOperation(userOp);
-  //   } catch (error) {
-  //     console.error('Elytro: Failed to activate smart account.', error);
-  //   }
-  // }
 
   public async sendUserOperation(userOp: ElytroUserOperation) {
     // estimate gas before sending userOp, but can not do it here (for the case of sign tx)
@@ -197,18 +183,11 @@ class ElytroSDK {
       if (res?.isErr()) {
         throw res.ERR;
       } else if (res?.OK) {
-        if (res.OK.success) {
-          // TODO: maybe return all fields, not just status?
-          return UserOperationStatusEn.confirmedSuccess; //  res.OK.receipt;
-        }
-
-        return UserOperationStatusEn.confirmedFailed;
+        return { ...res.OK.receipt };
       }
-
-      return UserOperationStatusEn.pending;
     } catch (error) {
       console.error('Elytro: Failed to get user operation receipt.', error);
-      return UserOperationStatusEn.pending; // maybe error?
+      return null;
     }
   }
 
@@ -277,8 +256,11 @@ class ElytroSDK {
       return null;
     }
 
-    // todo: entrypoint should be dynamically changed with chainId?
-    const res = await DecodeUserOp(this.chain.id, TEMP_ENTRY_POINT, userOp);
+    const res = await DecodeUserOp(
+      this._config.id,
+      this._config.onchainConfig.entryPoint,
+      userOp
+    );
 
     if (res.isErr()) {
       throw res.ERR;
@@ -288,7 +270,11 @@ class ElytroSDK {
   }
 
   public async simulateUserOperation(userOp: ElytroUserOperation) {
-    return await simulateSendUserOp(userOp, TEMP_ENTRY_POINT, this.chain.id);
+    return await simulateSendUserOp(
+      userOp,
+      this._config.onchainConfig.entryPoint,
+      this._config.id
+    );
   }
 
   private async _getFeeDataFromSDKProvider() {
@@ -304,14 +290,13 @@ class ElytroSDK {
   }
 
   private async _getPimlicoFeeData() {
-    this._pimlicoRpc = this._pimlicoRpc
-      ? this._pimlicoRpc
-      : createPublicClient({
-          chain: this.chain,
-          transport: http(this._config.bundler),
-        });
+    const newRpcUrl = this._config.bundler;
+    if (!this._pimlicoRpc || this._pimlicoRpc.transport.url !== newRpcUrl) {
+      this._pimlicoRpc = createPublicClient({
+        transport: http(newRpcUrl),
+      });
+    }
 
-    // TODO: fix type
     const ret = await this._pimlicoRpc.request({
       method: 'pimlico_getUserOperationGasPrice' as SafeAny,
       params: [] as SafeAny,
@@ -335,7 +320,6 @@ class ElytroSDK {
     useDefaultGasPrice = true
   ) {
     // looks like only deploy wallet will need this
-
     if (useDefaultGasPrice) {
       const gasPrice = await this._getFeeData();
 
@@ -374,6 +358,7 @@ class ElytroSDK {
       userOp.callGasLimit = BigInt(callGasLimit);
       userOp.preVerificationGas = BigInt(preVerificationGas);
       userOp.verificationGasLimit = BigInt(verificationGasLimit);
+
       if (
         userOp.paymaster !== null &&
         typeof paymasterPostOpGasLimit !== 'undefined' &&
@@ -384,6 +369,8 @@ class ElytroSDK {
           paymasterVerificationGasLimit
         );
       }
+
+      return userOp;
     }
   }
 
@@ -391,29 +378,38 @@ class ElytroSDK {
     userOp: ElytroUserOperation,
     transferValue: bigint
   ) {
-    const res = await this._sdk.preFund(userOp);
     const hasSponsored = await this.canGetSponsored(userOp);
+
+    if (!hasSponsored) {
+      await this.estimateGas(userOp);
+    }
+
+    const res = await this._sdk.preFund(userOp);
 
     if (res.isErr()) {
       throw res.ERR;
     } else {
       const {
         missfund,
+        prefund,
         //deposit, prefund
       } = res.OK;
-
       const balance = await this._sdk.provider.getBalance(userOp.sender);
       const missAmount = hasSponsored
         ? transferValue - balance // why transferValue is not accurate? missfund is wrong during preFund?
         : BigInt(missfund) + transferValue - balance;
 
       return {
-        balance, // user balance
-        hasSponsored, // for this userOp, can get sponsored or not
-        missAmount, // for this userOp, how much it needs to deposit
-        needDeposit: missAmount > 0n, // need to deposit or not
-        suspiciousOp: missAmount > parseEther('0.001'), // if missAmount is too large, it may considered suspicious
-      } as TUserOperationPreFundResult;
+        userOp,
+        calcResult: {
+          balance, // user balance
+          gasUsed: prefund,
+          hasSponsored, // for this userOp, can get sponsored or not
+          missAmount: missAmount > 0n ? missAmount : 0n, // for this userOp, how much it needs to deposit
+          needDeposit: missAmount > 0n, // need to deposit or not
+          suspiciousOp: missAmount > parseEther('0.001'), // if missAmount is too large, it may considered suspicious
+        } as TUserOperationPreFundResult,
+      };
     }
   }
 
@@ -424,7 +420,10 @@ class ElytroSDK {
     const rawMessage = getHexString(message, 32);
 
     const encode1271MessageHash = getEncoded1271MessageHash(rawMessage);
-    const domainSeparator = getDomainSeparator(toHex(this.chain.id), saAddress);
+    const domainSeparator = getDomainSeparator(
+      toHex(this._config.id),
+      saAddress
+    );
     const encodedSHA = getEncodedSHA(domainSeparator, encode1271MessageHash);
 
     const signature = await this._getSignature(encodedSHA);
@@ -444,18 +443,6 @@ class ElytroSDK {
       throw _userOp.ERR;
     } else {
       return _userOp.OK;
-    }
-  }
-
-  public async sendTransaction(userOp: ElytroUserOperation) {
-    try {
-      // const userOp = await this.createUserOpFromTxs(tx);
-      // todo: use outer gas estimation, not auto
-      // await this.estimateGas(userOp, false);
-      return await this.sendUserOperation(userOp);
-    } catch (error) {
-      console.error('Elytro:: send_transaction failed:', error);
-      throw ethErrors.rpc.transactionRejected();
     }
   }
 

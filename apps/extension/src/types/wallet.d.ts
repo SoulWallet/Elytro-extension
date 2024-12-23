@@ -1,17 +1,17 @@
 type TUserOperationPreFundResult = {
   balance: bigint;
   hasSponsored: boolean;
-  missAmount: bigint;
+  // missAmount: bigint;
   needDeposit: boolean;
   suspiciousOp: boolean;
+  gasUsed: string;
 };
 
 type TAccountInfo = {
-  address: Nullable<string>;
-  ownerAddress: Nullable<string>;
-  balance: Nullable<string>;
-  isActivated: boolean;
-  chainType: SupportedChainTypeEn;
+  address: Address;
+  chainId: number;
+  isDeployed: boolean;
+  balance?: Nullable<string>;
 };
 
 type TTransactionInfo = {

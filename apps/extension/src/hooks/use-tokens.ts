@@ -1,5 +1,6 @@
 import { gql, useQuery } from '@apollo/client';
-import { Address, Hex } from 'viem';
+import { useEffect, useMemo, useState } from 'react';
+import { Address, Hex, toHex } from 'viem';
 
 export interface TokenDTO {
   decimals: number;
@@ -14,27 +15,52 @@ interface TokenQueryDTO {
   tokens: TokenDTO[];
 }
 
-export default function useTokens(address?: Address, chainId?: Hex) {
-  const tokens_query = gql`
-    query TokensQuery($address: String!, $chainId: String!) {
-      tokens(address: $address, chainID: $chainId) {
-        decimals
-        logoURI
-        name
-        symbol
-        tokenBalance
-        price
+export default function useTokens({
+  chainId,
+  address,
+}: {
+  chainId: number;
+  address?: Address;
+}) {
+  const tokens_query = useMemo(
+    () => gql`
+      query TokensQuery($address: String!, $chainId: String!) {
+        tokens(address: $address, chainID: $chainId) {
+          decimals
+          logoURI
+          name
+          symbol
+          tokenBalance
+          price
+        }
       }
+    `,
+    []
+  );
+
+  useEffect(() => {
+    if (address && chainId) {
+      refetch();
     }
-  `;
+  }, [address, chainId]);
+
+  const [isRefetching, setIsRefetching] = useState(false);
 
   const { loading, data, refetch } = useQuery<TokenQueryDTO>(tokens_query, {
-    variables: { address, chainId },
+    variables: { address, chainId: toHex(chainId as number) },
+    skip: !address || !chainId,
   });
 
+  const refetchTokens = async () => {
+    setIsRefetching(true);
+    await refetch();
+    setIsRefetching(false);
+  };
+
+  // TODO: separate loading and refetching
   return {
     tokens: data?.tokens || [],
-    loadingTokens: loading,
-    refetchTokens: refetch,
+    loadingTokens: loading || isRefetching,
+    refetchTokens,
   };
 }

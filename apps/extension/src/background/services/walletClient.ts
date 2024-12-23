@@ -1,14 +1,8 @@
-import {
-  DEFAULT_CHAIN_TYPE,
-  SUPPORTED_CHAIN_MAP,
-  SUPPORTED_CHAIN_RPC_URL_MAP,
-  SupportedChainTypeEn,
-} from '@/constants/chains';
+import { TChainItem } from '@/constants/chains';
 import {
   Address,
   BlockTag,
   createPublicClient,
-  formatEther,
   GetBlockParameters,
   Hex,
   http,
@@ -16,108 +10,52 @@ import {
   ReadContractParameters,
   toHex,
 } from 'viem';
-import keyring from './keyring';
-import { elytroSDK } from './sdk';
 import { ethErrors } from 'eth-rpc-errors';
 import { formatBlockInfo, formatBlockParam } from '@/utils/format';
+import { normalize } from 'viem/ens';
+import { elytroSDK } from './sdk';
+import chainService from './chain';
 
 class ElytroWalletClient {
-  private _address: Nullable<Address> = null;
-  private _isDeployed: boolean = false;
-  private _chainType: SupportedChainTypeEn = DEFAULT_CHAIN_TYPE;
-  private _balance: Nullable<string> = null;
+  private _client: Nullable<PublicClient>;
 
-  private _client!: PublicClient;
+  get client() {
+    if (!this._client) {
+      // TODO: chainService should not be imported here. move this init to walletController or implemented by event
+      if (!chainService.currentChain) {
+        throw new Error('Elytro: Wallet client not initialized');
+      }
+      this.init(chainService.currentChain);
+    }
 
-  constructor() {
-    // default to ETH Sepolia
-    this.init(DEFAULT_CHAIN_TYPE);
+    return this._client!;
   }
 
-  get chainType() {
-    return this._chainType;
+  set client(client: PublicClient) {
+    this._client = client;
   }
 
-  get chain() {
-    return SUPPORTED_CHAIN_MAP[this._chainType];
-  }
-
-  get address() {
-    return this._address;
-  }
-
-  get balance() {
-    return this._balance;
-  }
-
-  get isActivated() {
-    return this._isDeployed;
-  }
-
-  public async init(chainType: SupportedChainTypeEn) {
-    if (!this._client || chainType !== this._chainType) {
-      this._chainType = chainType;
-
+  public init(chain: TChainItem) {
+    if (chain.id && chain.id !== this._client?.chain?.id) {
       this._client = createPublicClient({
-        chain: SUPPORTED_CHAIN_MAP[this._chainType],
-        transport: http(SUPPORTED_CHAIN_RPC_URL_MAP[this._chainType]),
+        chain,
+        transport: http(chain.rpcUrls.default.http[0]), // if default is down, use endpoint as fallback
       });
     }
   }
 
-  public async initSmartAccount(): Promise<TAccountInfo | undefined> {
-    await keyring.tryUnlock();
-
-    if (keyring.smartAccountAddress) {
-      this._address = keyring.smartAccountAddress;
-      this._isDeployed = await elytroSDK.isSmartAccountDeployed(this._address);
-
-      this._balance = formatEther(
-        await this._client.getBalance({
-          address: this._address,
-        })
-      );
-
-      return {
-        address: this._address,
-        ownerAddress: keyring.owner?.address,
-        isActivated: this._isDeployed,
-        chainType: this._chainType,
-        balance: this._balance,
-      };
-    }
-  }
-
-  async setSocialRecoveryGuardian(walletAddress: string) {
-    // TODO: implement recovery
-    console.log('Elytro: Implement recovery.', walletAddress);
-  }
-
   public async getBlockByNumber(params: GetBlockParameters) {
-    const res = await this._client.getBlock(params);
+    const res = await this.client.getBlock(params);
     return formatBlockInfo(res);
   }
 
   public async getBlockNumber() {
-    return toHex(await this._client.getBlockNumber());
-  }
-
-  public async signMessage(message: string) {
-    if (!this._address) {
-      throw ethErrors.rpc.internal();
-    }
-
-    if (typeof message !== 'string') {
-      throw ethErrors.rpc.invalidParams();
-    }
-
-    // todo: maybe more params check?
-    return await elytroSDK.signMessage(message, this._address);
+    return toHex(await this.client.getBlockNumber());
   }
 
   public async getCode(address: Address, block: BlockTag | bigint = 'latest') {
     try {
-      return await this._client.getCode({
+      return await this.client.getCode({
         address,
         ...formatBlockParam(block),
       });
@@ -129,12 +67,12 @@ class ElytroWalletClient {
   public async rpcRequest(method: ProviderMethodType, params: SafeAny) {
     // TODO: methods will be as same as viem's request method eventually
     // TODO: maybe change all 'from' to local account?
-    return await this._client.request({ method: method as SafeAny, params });
+    return await this.client.request({ method: method as SafeAny, params });
   }
 
   public async estimateGas(tx: SafeAny, block: BlockTag | bigint = 'latest') {
     return toHex(
-      await this._client.estimateGas({
+      await this.client.estimateGas({
         ...tx,
         ...formatBlockParam(block),
       })
@@ -142,72 +80,53 @@ class ElytroWalletClient {
   }
 
   public async readContract(param: ReadContractParameters) {
-    return await this._client.readContract(param);
+    return await this.client.readContract(param);
   }
 
   public async getTransaction(hash: Hex) {
-    return await this._client.getTransaction({ hash });
+    return await this.client.getTransaction({ hash });
   }
 
-  // public async signTypedDataV4(params: unknown) {
-  //   // todo: maybe need format the params
-  //   return await keyring.owner?.signTypedData(
-  //     params as unknown as SignTypedDataParameters
-  //   );
-  // }
+  public async getBalance(address: Address) {
+    return await this.client.getBalance({
+      address,
+    });
+  }
 
-  // public async personalSign(message: string) {
-  //   if (!this._address) {
-  //     throw ethErrors.rpc.internal();
-  //   }
+  public async getENSAddressByName(name: string) {
+    try {
+      const ensAddress = await this.client.getEnsAddress({
+        name: normalize(name),
+      });
+      return ensAddress;
+    } catch (error) {
+      throw ethErrors.rpc.internal((error as Error)?.message);
+    }
+  }
 
-  //   if (typeof message !== 'string') {
-  //     throw ethErrors.rpc.invalidParams();
-  //   }
+  public async getENSAvatarByName(name: string) {
+    const ensResolverAddress =
+      this?.client?.chain?.contracts?.ensUniversalResolver?.address;
 
-  //   // todo: maybe more params check?
-  //   return await elytroSDK.signMessage(message, this._address);
-  // }
+    if (!ensResolverAddress) {
+      throw new Error('Elytro: Chain does not support ENS');
+    }
 
-  // public async signTypedData(data: string) {
-  //   if (!this._address) {
-  //     throw ethErrors.rpc.internal();
-  //   }
+    try {
+      const avatar = await this.client.getEnsAvatar({
+        name: normalize(name),
+        universalResolverAddress: ensResolverAddress,
+      });
+      return avatar;
+    } catch (error) {
+      throw ethErrors.rpc.internal((error as Error)?.message);
+    }
+  }
 
-  //   return await elytroSDK.signMessage(data, this._address);
-  // }
-
-  // public async getTransactionByHash(params: unknown) {
-  //   try {
-  //     if (Array.isArray(params) && params.length)
-  //       return await this._client.getTransaction({ hash: params[0] });
-  //     else {
-  //       return new Error('Elytro: invalid params');
-  //     }
-  //   } catch {
-  //     // do nth.
-  //   }
-  // }
-
-  // public async prepareTransactionRequest(
-  //   args: PrepareTransactionRequestParameters
-  // ) {
-  //   return await this._client.prepareTransactionRequest(args);
-  // }
-
-  // public async signTransaction(request: SafeAny) {
-  //   return await this._client.signTransaction(request);
-  // }
-
-  // public async sendRawTransaction(serializedTransaction: `0x${string}`) {
-  //   return await this._client.sendRawTransaction({ serializedTransaction });
-  // }
-
-  // public async getBalance() {
-  //   return await this._client.getBalance({
-  //     address: keyring.owner?.address as Address,
-  //   });
-  // }
+  public async getTransactionReceipt(hash: Hex) {
+    // TODO: check if it's a user operation hash
+    return await elytroSDK.getUserOperationReceipt(hash);
+  }
 }
 
 const walletClient = new ElytroWalletClient();

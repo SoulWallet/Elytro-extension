@@ -15,27 +15,55 @@ type HistoryState = {
 class HistoryManager {
   private _historyQueue: UniqueQueue<HistoryItem>;
   private _store: SubscribableStore<HistoryState>;
+  private _currentAccount: TAccountInfo | null = null;
 
   constructor() {
     this._historyQueue = new UniqueQueue<HistoryItem>();
     this._store = new SubscribableStore({} as HistoryState);
     this._initialize();
+
+    eventBus.on('historyItemStatusUpdated', (opHash, status) => {
+      const historyItem = this.find(opHash);
+      if (historyItem) {
+        this._store.setState({
+          ...this._store.state,
+          [opHash]: {
+            ...this._store.state[opHash],
+            status,
+          },
+        });
+      }
+    });
+  }
+
+  private get _storageKey() {
+    return `${HISTORY_STORAGE_KEY}-${this._currentAccount?.chainId}-${this._currentAccount?.address}`;
+  }
+
+  get isInitialized() {
+    return !!this._currentAccount;
   }
 
   get histories() {
     return this._historyQueue.items;
   }
 
+  private _storeSubscriber = (state: HistoryState) => {
+    localStorage.save({ [this._storageKey]: state });
+
+    eventBus.emit(EVENT_TYPES.HISTORY.ITEMS_UPDATED);
+  };
+
   private _initialize = async () => {
+    if (!this._currentAccount) {
+      return;
+    }
+
     // update local storage when _store changes
-    this._store.subscribe((state) => {
-      localStorage.save({ [HISTORY_STORAGE_KEY]: state });
+    this._store.subscribe(this._storeSubscriber);
 
-      eventBus.emit(EVENT_TYPES.HISTORY.ITEMS_UPDATED);
-    });
-
-    const { [HISTORY_STORAGE_KEY]: prevState } = await localStorage.get([
-      HISTORY_STORAGE_KEY,
+    const { [this._storageKey]: prevState } = await localStorage.get([
+      this._storageKey,
     ]);
 
     // sync local storage with _store
@@ -48,12 +76,31 @@ class HistoryManager {
     }
   };
 
+  public switchAccount(account: TAccountInfo | null) {
+    if (
+      account?.address &&
+      account?.address === this._currentAccount?.address
+    ) {
+      return;
+    }
+
+    this._currentAccount = account;
+    this._store.resetState();
+    this._historyQueue.clear();
+
+    this._initialize();
+  }
+
   add(data: UserOperationHistory) {
+    if (this.find(data.opHash)) {
+      console.log('duplicate history', data.opHash);
+      return;
+    }
+
     const newHistory = new HistoryItem(data);
     this._historyQueue.enqueue(newHistory);
 
     this._store.setState({
-      ...this._store.state,
       [data.opHash]: newHistory.data,
     });
   }

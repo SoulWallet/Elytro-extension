@@ -12,6 +12,7 @@ import RuntimeMessage from '@/utils/message/runtimeMessage';
 import { EVENT_TYPES } from '@/constants/events';
 import uiReqCacheManager from '@/utils/cache/uiReqCacheManager';
 import { rpcCacheManager } from '@/utils/cache/rpcCacheManager';
+import accountManager from './services/account';
 
 chrome.runtime.onInstalled.addListener((details) => {
   switch (details.reason) {
@@ -72,15 +73,15 @@ const initContentScriptAndPageProviderMessage = (port: chrome.runtime.Port) => {
 
   providerPortManager.connect(port);
 
-  const heartbeat = setInterval(() => {
-    if (port) {
-      port.postMessage({ type: 'HEARTBEAT', data: '{}' });
-      console.log('elytro heartbeat');
-    }
-  }, 6_000);
+  // const heartbeat = setInterval(() => {
+  //   if (port) {
+  //     port.postMessage({ type: 'HEARTBEAT', data: '{}' });
+  //     console.log('elytro heartbeat');
+  //   }
+  // }, 6_000);
 
   port.onDisconnect.addListener(() => {
-    clearInterval(heartbeat);
+    // clearInterval(heartbeat);
     sessionManager.removeSession(tabId, origin);
   });
 
@@ -89,12 +90,15 @@ const initContentScriptAndPageProviderMessage = (port: chrome.runtime.Port) => {
 
     if (connectionManager.isConnected(origin)) {
       await keyring.tryUnlock();
-      // wait for 300ms to ensure the session is created
+
+      // wait 300ms to ensure the session is ready
       setTimeout(() => {
         sessionManager.broadcastMessageToDApp(
           origin,
           'accountsChanged',
-          keyring.smartAccountAddress ? [keyring.smartAccountAddress] : []
+          accountManager?.currentAccount?.address
+            ? [accountManager.currentAccount.address]
+            : []
         );
       }, 300);
     }
@@ -213,6 +217,7 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 const initBackgroundMessage = () => {
+  /** History */
   eventBus.on(EVENT_TYPES.HISTORY.ITEMS_UPDATED, () => {
     RuntimeMessage.sendMessage(EVENT_TYPES.HISTORY.ITEMS_UPDATED);
   });
@@ -225,6 +230,11 @@ const initBackgroundMessage = () => {
       }
     );
   });
+
+  // /** Approval */
+  // eventBus.on(EVENT_TYPES.APPROVAL.REQUESTED, (approvalId) => {
+  //   RuntimeMessage.sendMessage(EVENT_TYPES.APPROVAL.REQUESTED, { approvalId });
+  // });
 };
 
 initBackgroundMessage();
