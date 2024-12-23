@@ -6,4 +6,12 @@ export const EVENT_TYPES = {
   APPROVAL: {
     REQUESTED: 'approvalRequested',
   },
+  CHAIN: {
+    CHAIN_INITIALIZED: 'chainInitialized',
+    CHAIN_CHANGED: 'chainChanged',
+  },
+  ACCOUNT: {
+    ACCOUNT_INITIALIZED: 'accountInitialized',
+    ACCOUNT_CHANGED: 'accountChanged',
+  },
 };

@@ -23,6 +23,8 @@ import {
 } from 'viem';
 import { createAccount } from '@/utils/ethRpc/create-account';
 import { ethErrors } from 'eth-rpc-errors';
+import eventBus from '@/utils/eventBus';
+import { EVENT_TYPES } from '@/constants/events';
 
 class ElytroSDK {
   private _sdk!: SoulWallet;
@@ -30,8 +32,10 @@ class ElytroSDK {
   private _config!: TChainItem;
   private _pimlicoRpc: Nullable<PublicClient> = null;
 
-  get bundler() {
-    return this._bundler;
+  constructor() {
+    eventBus.on(EVENT_TYPES.CHAIN.CHAIN_INITIALIZED, (chain: TChainItem) => {
+      this.resetSDK(chain);
+    });
   }
 
   public resetSDK(chainConfig: TChainItem) {

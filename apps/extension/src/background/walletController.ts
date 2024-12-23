@@ -12,7 +12,7 @@ import {
 } from '@/utils/format';
 import historyManager from './services/history';
 import { UserOperationHistory } from '@/constants/operations';
-import { formatEther, Hex, toHex } from 'viem';
+import { formatEther, Hex, isHex, toHex } from 'viem';
 import chainService from './services/chain';
 import accountManager from './services/account';
 import type { Transaction } from '@soulwallet/sdk';
@@ -78,7 +78,7 @@ class WalletController {
       throw ethErrors.rpc.internal();
     }
 
-    if (typeof message !== 'string') {
+    if (!isHex(message)) {
       throw ethErrors.rpc.invalidParams();
     }
 
@@ -113,10 +113,6 @@ class WalletController {
   }
 
   public getLatestHistories() {
-    if (!historyManager.isInitialized) {
-      historyManager.switchAccount(accountManager.currentAccount);
-    }
-
     return historyManager.histories.map((item) => ({
       ...item.data,
       status: item.status,

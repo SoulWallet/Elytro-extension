@@ -22,6 +22,10 @@ class HistoryManager {
     this._store = new SubscribableStore({} as HistoryState);
     this._initialize();
 
+    eventBus.on(EVENT_TYPES.ACCOUNT.ACCOUNT_INITIALIZED, (account) => {
+      this.switchAccount(account);
+    });
+
     eventBus.on('historyItemStatusUpdated', (opHash, status) => {
       const historyItem = this.find(opHash);
       if (historyItem) {

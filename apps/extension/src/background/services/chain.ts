@@ -1,4 +1,6 @@
 import { SUPPORTED_CHAINS, TChainItem } from '@/constants/chains';
+import { EVENT_TYPES } from '@/constants/events';
+import eventBus from '@/utils/eventBus';
 import { localStorage } from '@/utils/storage/local';
 import { SubscribableStore } from '@/utils/store/subscribableStore';
 
@@ -11,6 +13,19 @@ const CHAINS_STORAGE_KEY = 'elytroChains';
 
 class ChainService {
   private _store: SubscribableStore<TChainsState>;
+
+  constructor() {
+    this._store = new SubscribableStore({
+      chains: [],
+      currentChain: null,
+    } as TChainsState);
+
+    this._store.subscribe((state) => {
+      localStorage.save({ [CHAINS_STORAGE_KEY]: JSON.stringify(state) });
+    });
+
+    this._loadStore();
+  }
 
   private get _chains() {
     return this._store.state.chains;
@@ -40,19 +55,6 @@ class ChainService {
     return this._chains;
   }
 
-  constructor() {
-    this._store = new SubscribableStore({
-      chains: [],
-      currentChain: null,
-    } as TChainsState);
-
-    this._store.subscribe((state) => {
-      localStorage.save({ [CHAINS_STORAGE_KEY]: JSON.stringify(state) });
-    });
-
-    this._loadStore();
-  }
-
   private async _loadStore() {
     const { [CHAINS_STORAGE_KEY]: strState } = (await localStorage.get([
       CHAINS_STORAGE_KEY,
@@ -66,6 +68,8 @@ class ChainService {
     }
 
     this._store.setState(parsedState);
+
+    eventBus.emit(EVENT_TYPES.CHAIN.CHAIN_INITIALIZED, this._currentChain);
   }
 
   public addChain(chain: TChainItem) {

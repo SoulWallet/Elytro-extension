@@ -1,6 +1,8 @@
 import { localStorage } from '@/utils/storage/local';
 import { SubscribableStore } from '@/utils/store/subscribableStore';
 import { elytroSDK } from './sdk';
+import { EVENT_TYPES } from '@/constants/events';
+import eventBus from '@/utils/eventBus';
 
 type TAccountsState = {
   accounts: TAccountInfo[];
@@ -63,6 +65,11 @@ class AccountManager {
 
       this._store.setState(parsedState);
     }
+
+    eventBus.emit(
+      EVENT_TYPES.ACCOUNT.ACCOUNT_INITIALIZED,
+      this._currentAccount
+    );
   }
 
   public getAccountByChainId(chainId: number | string) {
