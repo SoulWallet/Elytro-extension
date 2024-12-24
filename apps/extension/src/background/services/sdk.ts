@@ -177,11 +177,11 @@ class ElytroSDK {
     if (opHash.isErr()) {
       throw opHash.ERR;
     } else {
-      const signature = await this._getSignature(
-        opHash.OK,
-        0, // 0
-        Math.floor(new Date().getTime() / 1000) + 60 * 5 // 5 mins
-      );
+      const signature = await this._getSignature({
+        messageHash: opHash.OK,
+        validStartTime: 0, // 0
+        validEndTime: Math.floor(new Date().getTime() / 1000) + 60 * 5, // 5 mins
+      });
       userOp.signature = signature;
       return { signature, opHash: opHash.OK };
     }
@@ -244,32 +244,13 @@ class ElytroSDK {
     }
   }
 
-  private async _getSignature(
-    messageHash: string,
-    validStartTime?: number,
-    validEndTime?: number
-  ) {
-    const rawHashRes = await this._sdk.packRawHash(
-      messageHash,
-      validStartTime,
-      validEndTime
-    );
-
-    if (rawHashRes.isErr()) {
-      throw rawHashRes.ERR;
-    }
-
-    // TODO： move sign userOp to wallet controller, so the keyring will be same instance
-    await keyring.tryUnlock();
-
-    // // raw sign -> personal sign
-    // const _eoaSignature = await keyring.owner?.signMessage({
-    //   message: { raw: rawHashRes.OK.packedHash as Hex },
-    // });
-
-    const _eoaSignature = keyring.signingKey?.signDigest(
-      rawHashRes.OK.packedHash
-    );
+  /**
+   * Raw sign message. For EIP-1271 signature.
+   * @param message - The message to sign.
+   * @returns The signature.
+   */
+  private async _rawSign(message: Hex) {
+    const _eoaSignature = keyring.signingKey?.signDigest(message);
 
     if (!_eoaSignature) {
       throw new Error('Elytro: Failed to sign message.');
@@ -281,9 +262,54 @@ class ElytroSDK {
       v: BigInt(_eoaSignature.v),
     });
 
+    return _eoaSignatureHex;
+  }
+
+  /**
+   * Personal sign message. For internal user operation signature.
+   * @param message - The message to sign.
+   * @returns The signature.
+   */
+  private async _personalSign(message: Hex) {
+    const _eoaSignature = keyring.owner?.signMessage({
+      message: { raw: message },
+    });
+
+    if (!_eoaSignature) {
+      throw new Error('Elytro: Failed to sign message.');
+    }
+
+    return _eoaSignature;
+  }
+
+  private async _getSignature(
+    packParams: {
+      messageHash: string;
+      validStartTime?: number;
+      validEndTime?: number;
+    },
+    useRawSign = false
+  ) {
+    const rawHashRes = await this._sdk.packRawHash(
+      packParams.messageHash,
+      packParams.validStartTime,
+      packParams.validEndTime
+    );
+
+    if (rawHashRes.isErr()) {
+      throw rawHashRes.ERR;
+    }
+
+    // TODO： move sign userOp to wallet controller, so the keyring will be same instance
+    await keyring.tryUnlock();
+
+    const signature = useRawSign
+      ? await this._rawSign(rawHashRes.OK.packedHash as Hex)
+      : await this._personalSign(rawHashRes.OK.packedHash as Hex);
+
     const signRes = await this._sdk.packUserOpEOASignature(
       this._config.validator,
-      _eoaSignatureHex,
+      signature,
       rawHashRes.OK.validationData
     );
 
@@ -463,9 +489,9 @@ class ElytroSDK {
       toHex(this._config.id),
       saAddress
     );
-    const encodedSHA = getEncodedSHA(domainSeparator, encode1271MessageHash);
+    const messageHash = getEncodedSHA(domainSeparator, encode1271MessageHash);
 
-    const signature = await this._getSignature(encodedSHA);
+    const signature = await this._getSignature({ messageHash }, true);
 
     await this._isSignatureValid(saAddress, hashedMessage, signature as Hex);
 
