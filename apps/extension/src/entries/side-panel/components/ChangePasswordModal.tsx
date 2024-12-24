@@ -85,14 +85,12 @@ export default function ChangePasswordModal({
   const handleConfirm = async () => {
     try {
       const data = form.getValues();
-      const res = await wallet.changePassword(data.oldPassword, data.password);
-      if (res) {
-        toast({
-          title: 'Password changed',
-          description: 'Your password has been changed successfully',
-        });
-        lock();
-      }
+      await wallet.changePassword(data.oldPassword, data.password);
+      toast({
+        title: 'Password changed',
+        description: 'Your password has been changed successfully',
+      });
+      lock();
     } catch (error) {
       toast({
         title: 'Error',

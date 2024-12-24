@@ -62,10 +62,10 @@ const getCryptoKeyWithBackup = async (
 
     return derivedKey;
   } else {
-    const { storedCryptoKey, storedSaltBase64 } = await sessionStorage.get([
+    const { storedCryptoKey, storedSaltBase64 } = (await sessionStorage.get([
       'storedCryptoKey',
       'storedSaltBase64',
-    ]);
+    ])) as { storedCryptoKey: string; storedSaltBase64: string };
     if (!storedCryptoKey || !storedSaltBase64) {
       throw new Error('locked');
     }
