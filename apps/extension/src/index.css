@@ -131,4 +131,8 @@
     background: linear-gradient(to top, #f9fbfb 0%, #f7f3f0 24%, #dfecf3 50%);
     background-blend-mode: overlay;
   }
+
+  .elytro-setting-item {
+    @apply border p-lg rounded-md text-lg font-medium bg-white cursor-pointer;
+  }
 }

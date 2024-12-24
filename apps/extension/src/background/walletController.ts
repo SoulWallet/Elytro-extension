@@ -269,6 +269,10 @@ class WalletController {
   public async removeAccount(address: string) {
     await accountManager.removeAccountByAddress(address);
   }
+
+  public async changePassword(oldPassword: string, newPassword: string) {
+    return await keyring.changePassword(oldPassword, newPassword);
+  }
 }
 
 export const walletController = new WalletController();

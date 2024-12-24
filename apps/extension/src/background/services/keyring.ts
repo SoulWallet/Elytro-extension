@@ -185,6 +185,31 @@ class KeyringService {
 
     callback?.();
   }
+
+  public async changePassword(oldPassword: string, newPassword: string) {
+    if (!this._owner) {
+      throw new Error('Cannot reset password if owner is not set');
+    }
+
+    const { data } = this._store.state;
+
+    if (!data) {
+      this._locked = true;
+      throw new Error('Cannot verify password if there is no previous owner');
+    }
+    const { key } = (await decrypt(data, oldPassword)) as EncryptedData;
+    const encryptedData = await encrypt(
+      {
+        key,
+      },
+      newPassword
+    );
+
+    this._store.setState({
+      data: encryptedData,
+    });
+    return true;
+  }
 }
 
 const keyring = new KeyringService();

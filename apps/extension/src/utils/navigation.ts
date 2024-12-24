@@ -5,7 +5,7 @@ import { navigate } from 'wouter/use-hash-location';
 // for now, we only support tab and side-panel
 const getCurrentType = () => location.pathname.split('/')[3];
 
-type SidePanelRoutePath =
+export type SidePanelRoutePath =
   (typeof SIDE_PANEL_ROUTE_PATHS)[keyof typeof SIDE_PANEL_ROUTE_PATHS];
 type TabRoutePath = (typeof TAB_ROUTE_PATHS)[keyof typeof TAB_ROUTE_PATHS];
 
