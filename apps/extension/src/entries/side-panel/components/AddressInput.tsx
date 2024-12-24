@@ -41,6 +41,12 @@ export default function AddressInput({
     }
   };
 
+  const handleClickRecentAddress = (item: EnsAddress) => {
+    setDisplayLabel(item.address);
+    setValue(item.address);
+    field.onChange(item.address);
+  };
+
   const getENSAddress = async (value: string) => {
     try {
       const existedEns = Object.values(recentAddress || {}).find(
@@ -184,8 +190,7 @@ export default function AddressInput({
                     if (item.name) {
                       handleClickENS(item);
                     } else {
-                      setDisplayLabel(item.address);
-                      setValue(item.address);
+                      handleClickRecentAddress(item);
                     }
                   };
                   let Comp = null;
