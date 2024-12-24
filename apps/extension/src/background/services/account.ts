@@ -153,6 +153,21 @@ class AccountManager {
       (account) => account.address !== address
     );
   }
+
+  public async updateCurrentAccountInfo(account: Partial<TAccountInfo>) {
+    if (!this._currentAccount) return;
+
+    const updatedAccount = {
+      ...this._currentAccount,
+      ...account,
+    };
+
+    this._accounts = this._accounts.map((acc) =>
+      acc.address === updatedAccount.address ? updatedAccount : acc
+    );
+
+    this._currentAccount = updatedAccount;
+  }
 }
 
 const accountManager = new AccountManager();

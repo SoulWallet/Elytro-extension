@@ -16,8 +16,14 @@ import { useWallet } from '@/contexts/wallet';
 import { toast } from '@/hooks/use-toast';
 
 export default function BasicAccountInfo() {
-  const { accountInfo, accounts, getAccounts, updateTokens, updateAccount } =
-    useAccount();
+  const {
+    accountInfo,
+    accounts,
+    getAccounts,
+    updateTokens,
+    updateAccount,
+    updateHistory,
+  } = useAccount();
   const wallet = useWallet();
   const { currentChain, chains, getCurrentChain } = useChain();
 
@@ -45,6 +51,7 @@ export default function BasicAccountInfo() {
   const reloadAccount = async () => {
     await updateAccount();
     await updateTokens();
+    await updateHistory();
   };
 
   const handleSwitchAccount = async (account: TAccountInfo) => {

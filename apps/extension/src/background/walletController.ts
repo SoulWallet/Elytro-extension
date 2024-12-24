@@ -178,7 +178,11 @@ class WalletController {
     }
 
     const balanceBn = await walletClient.getBalance(basicInfo.address);
-    return { ...basicInfo, balance: formatEther(balanceBn) };
+    accountManager.updateCurrentAccountInfo({
+      balance: formatEther(balanceBn),
+    });
+
+    return basicInfo;
   }
 
   public async createAccount(chainId: number) {
