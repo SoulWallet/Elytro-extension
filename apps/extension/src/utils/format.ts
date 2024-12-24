@@ -132,7 +132,7 @@ export function formatBlockInfo(block: Block) {
   };
 }
 
-function checkType(value: SafeAny) {
+export function checkType(value: SafeAny) {
   const typeString = Object.prototype.toString.call(value);
 
   switch (typeString) {
@@ -342,4 +342,26 @@ export function formatBalance(
     decimalPart: displayDecimalPart,
     fullDisplay: `${integerPart}.${displayDecimalPart}`,
   };
+}
+
+export function formatStringifiedObject(str: SafeAny) {
+  const type = checkType(str);
+
+  if (type === 'string') {
+    try {
+      const parsed = JSON.parse(str);
+      return parsed;
+    } catch {
+      return str;
+    }
+  } else if (type === 'object') {
+    return Object.fromEntries(
+      Object.entries(str).map(([key, value]): [string, SafeAny] => [
+        key,
+        formatStringifiedObject(value),
+      ])
+    );
+  }
+
+  return str;
 }

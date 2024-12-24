@@ -1,8 +1,7 @@
-import { localStorage } from '@/utils/storage/local';
-import { SubscribableStore } from '@/utils/store/subscribableStore';
 import { elytroSDK } from './sdk';
 import { EVENT_TYPES } from '@/constants/events';
 import eventBus from '@/utils/eventBus';
+import LocalStore from '@/utils/store/LocalSubscribableStore';
 
 type TAccountsState = {
   accounts: TAccountInfo[];
@@ -12,27 +11,23 @@ type TAccountsState = {
 const ACCOUNTS_STORAGE_KEY = 'elytroAccounts';
 
 class AccountManager {
-  private _store: SubscribableStore<TAccountsState>;
+  private _store: LocalStore<TAccountsState>;
 
   constructor() {
-    this._store = new SubscribableStore({
-      accounts: [],
-      currentAccount: null,
-    } as TAccountsState);
+    this._store = new LocalStore<TAccountsState>(ACCOUNTS_STORAGE_KEY);
 
-    this._store.subscribe((state) => {
-      localStorage.save({ [ACCOUNTS_STORAGE_KEY]: JSON.stringify(state) });
-    });
-
-    this.restoreAccounts();
+    eventBus.emit(
+      EVENT_TYPES.ACCOUNT.ACCOUNT_INITIALIZED,
+      this._currentAccount
+    );
   }
 
   private get _accounts() {
-    return this._store.state.accounts;
+    return this._store.state.accounts || [];
   }
 
   private set _accounts(accounts: TAccountInfo[]) {
-    this._store.setState({ accounts });
+    this._store.state.accounts = accounts;
   }
 
   private get _currentAccount() {
@@ -40,7 +35,7 @@ class AccountManager {
   }
 
   private set _currentAccount(currentAccount: TAccountInfo | null) {
-    this._store.setState({ currentAccount });
+    this._store.state.currentAccount = currentAccount;
   }
 
   // TODO: maybe make _accounts public?
@@ -50,26 +45,6 @@ class AccountManager {
 
   get currentAccount() {
     return this._currentAccount;
-  }
-
-  public async restoreAccounts() {
-    const { [ACCOUNTS_STORAGE_KEY]: prevState } = await localStorage.get([
-      ACCOUNTS_STORAGE_KEY,
-    ]);
-
-    if (prevState) {
-      const parsedState = JSON.parse(prevState as string);
-      if (!parsedState.currentAccount) {
-        parsedState.currentAccount = parsedState.accounts?.[0] ?? null;
-      }
-
-      this._store.setState(parsedState);
-    }
-
-    eventBus.emit(
-      EVENT_TYPES.ACCOUNT.ACCOUNT_INITIALIZED,
-      this._currentAccount
-    );
   }
 
   public getAccountByChainId(chainId: number | string) {
@@ -142,10 +117,8 @@ class AccountManager {
   }
 
   public async resetAccounts() {
-    this._store.setState({
-      accounts: [],
-      currentAccount: null,
-    });
+    this._accounts = [];
+    this._currentAccount = null;
   }
 
   public async removeAccountByAddress(address: string) {

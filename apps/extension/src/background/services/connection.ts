@@ -1,5 +1,5 @@
 import { localStorage } from '@/utils/storage/local';
-import { SubscribableStore } from '@/utils/store/subscribableStore';
+import { SubscribableStore } from '@/utils/store/SubscribableStore';
 import sessionManager from './session';
 
 type TConnectedDAppInfo = TDAppInfo & {
@@ -40,9 +40,9 @@ class ConnectionManager {
   }
 
   private async _initFromStorage() {
-    const { [CONNECTION_STORAGE_KEY]: prevState } = (await localStorage.get([
-      CONNECTION_STORAGE_KEY,
-    ])) as { [CONNECTION_STORAGE_KEY]: TConnectionManagerState };
+    const prevState = (await localStorage.get(
+      CONNECTION_STORAGE_KEY
+    )) as TConnectionManagerState;
 
     if (prevState?.sites) {
       this._store.setState(prevState);

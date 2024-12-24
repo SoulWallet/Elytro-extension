@@ -7,9 +7,9 @@ function useLocalStorage<T>(key: string, initialValue: T) {
   useEffect(() => {
     const loadInitialValue = async () => {
       try {
-        const result = await localStorage.get<T>([key]);
-        if (result[key] !== undefined) {
-          setStoredValue(result[key]);
+        const result = await localStorage.get<T>(key);
+        if (result !== undefined) {
+          setStoredValue(result as T);
         } else {
           await localStorage.save({ [key]: initialValue });
         }

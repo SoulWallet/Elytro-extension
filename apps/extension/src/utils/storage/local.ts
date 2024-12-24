@@ -1,3 +1,5 @@
+import { formatStringifiedObject } from '../format';
+
 /**
  * Elytro Local Storage
  */
@@ -13,11 +15,12 @@ const localStorage: StorageOperations = {
     }
   },
 
-  // TODO: add parse/stringify
-  get: async <T>(keys: string[]): Promise<Record<string, T>> => {
+  get: async <T>(keys: string[] | string): Promise<T | Record<string, T>> => {
+    const isString = typeof keys === 'string';
+
     try {
-      const result = await chrome.storage.local.get(keys);
-      return result;
+      const res = await chrome.storage.local.get(keys);
+      return formatStringifiedObject(isString ? res[keys] : res);
     } catch (error) {
       throw new Error(`Elytro::LocalStorage::get: ${(error as Error).message}`);
     }

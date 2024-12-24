@@ -1,11 +1,22 @@
 import { Buffer } from 'buffer';
 import { sessionStorage } from './storage/session';
+import { Hex } from 'viem';
 
 const DEFAULT_ALGORITHM = 'PBKDF2';
 const DERIVED_KEY_FORMAT = 'AES-GCM';
 const STRING_ENCODING = 'utf-8';
 const BUFFER_ENCODING = 'base64';
 const ITERATIONS = 10_000;
+
+export type TPasswordEncryptedData = {
+  data: string;
+  iv: string;
+  salt: string;
+};
+
+export type TPasswordDecryptedData = {
+  key: Hex;
+};
 
 function generateSalt(size = 32) {
   const randomBytes = new Uint8Array(size);
@@ -92,7 +103,7 @@ export async function encrypt<T>(data: T, password?: string) {
   const salt = getBase64Salt(generateSalt());
   const key = await getCryptoKeyWithBackup(salt, password);
   const encryptedData = await encryptWithKey(key, data);
-  return JSON.stringify({ ...encryptedData, salt });
+  return { ...encryptedData, salt };
 }
 
 async function decryptWithKey(
@@ -124,12 +135,11 @@ async function decryptWithKey(
 }
 
 export async function decrypt(
-  encryptedText: string,
+  payload: TPasswordEncryptedData,
   password?: string
-): Promise<unknown> {
-  const payload = JSON.parse(encryptedText);
+): Promise<TPasswordDecryptedData> {
   const { salt } = payload;
   const key = await getCryptoKeyWithBackup(salt, password);
   const result = await decryptWithKey(key, payload);
-  return result;
+  return result as TPasswordDecryptedData;
 }
