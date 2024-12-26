@@ -162,7 +162,11 @@ export default function ChangePasswordModal({
         </DialogHeader>
         <DialogFooter>
           <div className="w-full flex justify-between gap-lg">
-            <Button className="flex-1" variant="outline">
+            <Button
+              className="flex-1"
+              variant="outline"
+              onClick={handleOnOpenChange}
+            >
               Cancel
             </Button>
             <Button
