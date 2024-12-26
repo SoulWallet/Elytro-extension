@@ -1,7 +1,7 @@
 import { elytroSDK } from './sdk';
 import { EVENT_TYPES } from '@/constants/events';
 import eventBus from '@/utils/eventBus';
-import LocalStore from '@/utils/store/LocalSubscribableStore';
+import LocalSubscribableStore from '@/utils/store/LocalSubscribableStore';
 
 type TAccountsState = {
   accounts: TAccountInfo[];
@@ -11,14 +11,17 @@ type TAccountsState = {
 const ACCOUNTS_STORAGE_KEY = 'elytroAccounts';
 
 class AccountManager {
-  private _store: LocalStore<TAccountsState>;
+  private _store: LocalSubscribableStore<TAccountsState>;
 
   constructor() {
-    this._store = new LocalStore<TAccountsState>(ACCOUNTS_STORAGE_KEY);
-
-    eventBus.emit(
-      EVENT_TYPES.ACCOUNT.ACCOUNT_INITIALIZED,
-      this._currentAccount
+    this._store = new LocalSubscribableStore<TAccountsState>(
+      ACCOUNTS_STORAGE_KEY,
+      (initState) => {
+        eventBus.emit(
+          EVENT_TYPES.ACCOUNT.ACCOUNT_INITIALIZED,
+          initState.currentAccount
+        );
+      }
     );
   }
 
