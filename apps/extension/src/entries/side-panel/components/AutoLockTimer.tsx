@@ -8,7 +8,10 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAutoLock } from '../contexts/auto-lock-context';
+import { ELYTRO_AUTO_LOCK_TIME, NEVER_LOCK } from './AutoLockProvider';
+import { toast } from '@/hooks/use-toast';
 interface IProps {
   open: boolean;
   handleOnOpenChange: () => void;
@@ -18,13 +21,14 @@ export default function AutoLockTimerModal({
   open,
   handleOnOpenChange,
 }: IProps) {
+  const { resetTimer } = useAutoLock();
   const timerOptions = [
     {
       label: '1 Minute',
       value: '1',
     },
     {
-      label: '10 Minute',
+      label: '10 Minutes',
       value: '10',
     },
     {
@@ -45,7 +49,22 @@ export default function AutoLockTimerModal({
     },
   ];
   const [selected, setSelected] = useState('0');
-  const handleConfirm = () => {};
+  useEffect(() => {
+    const storedTime = localStorage.getItem(ELYTRO_AUTO_LOCK_TIME);
+    if (storedTime) {
+      setSelected((parseInt(storedTime, 10) || NEVER_LOCK).toString());
+    }
+  }, []);
+  const handleConfirm = () => {
+    localStorage.setItem(ELYTRO_AUTO_LOCK_TIME, selected.toString());
+    setTimeout(() => {
+      resetTimer();
+      handleOnOpenChange();
+    }, 500);
+    toast({
+      title: 'Auto lock timer set successfully',
+    });
+  };
   return (
     <Dialog open={open} onOpenChange={handleOnOpenChange}>
       <DialogContent className="h-screen">
@@ -54,7 +73,7 @@ export default function AutoLockTimerModal({
           <DialogDescription>
             <ToggleGroup
               type="single"
-              className="flex-col gap-sm"
+              className="flex-col gap-sm mt-lg"
               value={selected}
               onValueChange={(value) => {
                 setSelected(value || '0');
@@ -67,7 +86,7 @@ export default function AutoLockTimerModal({
                   aria-label={option.label}
                   key={option.value}
                 >
-                  <div className="elytro-setting-item w-full bg-transparent">
+                  <div className="elytro-setting-item flex-1 bg-transparent">
                     {option.label}
                   </div>
                 </ToggleGroupItem>
