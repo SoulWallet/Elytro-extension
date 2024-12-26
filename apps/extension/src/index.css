@@ -133,6 +133,6 @@
   }
 
   .elytro-setting-item {
-    @apply border p-lg rounded-md text-lg font-medium bg-white cursor-pointer;
+    @apply border p-lg rounded-md text-lg font-medium bg-white cursor-pointer flex items-center;
   }
 }
