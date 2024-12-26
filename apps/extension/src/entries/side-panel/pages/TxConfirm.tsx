@@ -22,6 +22,7 @@ export default function TxConfirm() {
   const wallet = useWallet();
   const {
     opType,
+    txType,
     isPacking,
     hasSufficientBalance,
     userOp,
@@ -103,9 +104,7 @@ export default function TxConfirm() {
         to: decodedDetail?.to || userOp?.factory,
         method: decodedDetail?.method,
         value: decodedDetail?.value.toString() || '0',
-        // TODO: maybe a better way to determine the activity name
-        name:
-          opType === UserOpType.DeployWallet ? 'Activate account' : undefined,
+        type: txType,
       });
 
       await toast({

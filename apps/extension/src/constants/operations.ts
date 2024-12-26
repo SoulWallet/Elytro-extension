@@ -43,6 +43,13 @@ export enum ApprovalTypeEn {
 //   failed = 'failed',
 // }
 
+export enum HistoricalActivityTypeEn {
+  Send = 'Send',
+  Receive = 'Receive',
+  ActivateAccount = 'Activate Account',
+  ContractInteraction = 'Contract Interaction',
+}
+
 export type UserOperationHistory = {
   timestamp: number;
   from: string;
@@ -51,5 +58,5 @@ export type UserOperationHistory = {
   value: string;
   opHash: string;
   status?: UserOperationStatusEn;
-  name?: string;
+  type: Nullable<HistoricalActivityTypeEn>;
 };
