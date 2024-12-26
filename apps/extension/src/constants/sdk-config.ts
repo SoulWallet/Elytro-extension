@@ -15,9 +15,9 @@ export const DEFAULT_GUARDIAN_HASH = zeroHash;
 const SOUL_WALLET_MSG_TYPE_HASH =
   // '0x04e6b5b1de6ba008d582849d4956d004d09a345fc11e7ba894975b5b56a4be66';
   keccak256(
-    // below for old Contract
+    // below for old Contract (op sepolia)
     // toBytes('SoulWalletMessage(bytes32 message)')
-    // below for new Contract
+    // below for new Contract (sepolia)
     toBytes('ElytroMessage(bytes32 message)')
   );
 const DOMAIN_SEPARATOR_TYPE_HASH =

@@ -91,7 +91,7 @@ const initContentScriptAndPageProviderMessage = (port: chrome.runtime.Port) => {
     if (connectionManager.isConnected(origin)) {
       await keyring.tryUnlock();
 
-      // wait 300ms to ensure the session is ready
+      // wait 500ms to ensure the session is ready
       setTimeout(() => {
         sessionManager.broadcastMessageToDApp(
           origin,
@@ -100,7 +100,7 @@ const initContentScriptAndPageProviderMessage = (port: chrome.runtime.Port) => {
             ? [accountManager.currentAccount.address]
             : []
         );
-      }, 300);
+      }, 500);
     }
   });
 
