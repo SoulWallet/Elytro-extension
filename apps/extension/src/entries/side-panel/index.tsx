@@ -13,7 +13,6 @@ import { client } from '@/requests';
 import SendTxModal from './components/SendTxModal';
 import { TxProvider } from './contexts/tx-context';
 import { AlerterProvider } from '@/components/ui/alerter';
-import AutoLockProvider from './components/AutoLockProvider';
 
 const main = () => {
   const SidePanelApp: React.FC = () => (
@@ -25,11 +24,9 @@ const main = () => {
               {/*  according to chrome dev team. the minimum width of the side panel is 360px */}
               <TooltipProvider>
                 <AlerterProvider>
-                  <AutoLockProvider>
-                    <HashRouter routes={routes} />
-                    <SignTxModal />
-                    <SendTxModal />
-                  </AutoLockProvider>
+                  <HashRouter routes={routes} />
+                  <SignTxModal />
+                  <SendTxModal />
                 </AlerterProvider>
                 {/* <UserOpConfirmDialog /> */}
               </TooltipProvider>
