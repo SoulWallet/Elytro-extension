@@ -1,8 +1,7 @@
 import { SUPPORTED_CHAINS, TChainItem } from '@/constants/chains';
 import { EVENT_TYPES } from '@/constants/events';
 import eventBus from '@/utils/eventBus';
-import { localStorage } from '@/utils/storage/local';
-import { SubscribableStore } from '@/utils/store/subscribableStore';
+import LocalSubscribableStore from '@/utils/store/LocalSubscribableStore';
 
 type TChainsState = {
   chains: TChainItem[];
@@ -12,19 +11,24 @@ type TChainsState = {
 const CHAINS_STORAGE_KEY = 'elytroChains';
 
 class ChainService {
-  private _store: SubscribableStore<TChainsState>;
+  private _store: LocalSubscribableStore<TChainsState>;
 
   constructor() {
-    this._store = new SubscribableStore({
-      chains: [],
-      currentChain: null,
-    } as TChainsState);
+    this._store = new LocalSubscribableStore<TChainsState>(
+      CHAINS_STORAGE_KEY,
+      (initState) => {
+        if (!initState?.chains?.length) {
+          this._chains = [...SUPPORTED_CHAINS];
+        }
 
-    this._store.subscribe((state) => {
-      localStorage.save({ [CHAINS_STORAGE_KEY]: JSON.stringify(state) });
-    });
-
-    this._loadStore();
+        if (initState?.currentChain) {
+          eventBus.emit(
+            EVENT_TYPES.CHAIN.CHAIN_INITIALIZED,
+            initState.currentChain
+          );
+        }
+      }
+    );
   }
 
   private get _chains() {
@@ -32,9 +36,7 @@ class ChainService {
   }
 
   private set _chains(chains: TChainItem[]) {
-    this._store.setState({
-      chains,
-    });
+    this._store.state.chains = chains;
   }
 
   private get _currentChain() {
@@ -42,9 +44,7 @@ class ChainService {
   }
 
   private set _currentChain(currentChain: TChainItem | null) {
-    this._store.setState({
-      currentChain,
-    });
+    this._store.state.currentChain = currentChain;
   }
 
   public get currentChain() {
@@ -53,23 +53,6 @@ class ChainService {
 
   public get chains() {
     return this._chains;
-  }
-
-  private async _loadStore() {
-    const { [CHAINS_STORAGE_KEY]: strState } = (await localStorage.get([
-      CHAINS_STORAGE_KEY,
-    ])) as { [CHAINS_STORAGE_KEY: string]: string };
-
-    const parsedState = strState ? JSON.parse(strState) : {};
-
-    if (!parsedState.chains?.length) {
-      // default to local chains config if no previously set chains are found
-      parsedState.chains = SUPPORTED_CHAINS;
-    }
-
-    this._store.setState(parsedState);
-
-    eventBus.emit(EVENT_TYPES.CHAIN.CHAIN_INITIALIZED, this._currentChain);
   }
 
   public addChain(chain: TChainItem) {
@@ -106,7 +89,6 @@ class ChainService {
 
   public switchChain(chainId: number) {
     if (this._currentChain?.id === chainId) {
-      console.log('Elytro::ChainService::switchChains: no need to switch');
       return;
     }
 

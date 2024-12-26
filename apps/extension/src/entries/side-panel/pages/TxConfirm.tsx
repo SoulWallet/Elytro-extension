@@ -96,16 +96,17 @@ export default function TxConfirm() {
       await wallet.sendUserOperation(currentUserOp!);
 
       // TODO: what to do if op is a batch of txs?
-      if (decodedDetail) {
-        wallet.addNewHistory({
-          opHash,
-          timestamp: Date.now(),
-          from: userOp!.sender,
-          to: decodedDetail.to,
-          method: decodedDetail.method,
-          value: decodedDetail.value.toString(),
-        });
-      }
+      wallet.addNewHistory({
+        opHash,
+        timestamp: Date.now(),
+        from: userOp!.sender,
+        to: decodedDetail?.to || userOp?.factory,
+        method: decodedDetail?.method,
+        value: decodedDetail?.value.toString() || '0',
+        // TODO: maybe a better way to determine the activity name
+        name:
+          opType === UserOpType.DeployWallet ? 'Activate account' : undefined,
+      });
 
       await toast({
         title: 'Transaction sent successfully',

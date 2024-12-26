@@ -144,12 +144,9 @@ export default function AddressInput({
   };
 
   const getRecentAddressStore = async () => {
-    const { [ELYTRO_RECENT_ADDRESS_STORE]: addressStr } =
-      (await localStorage.get([ELYTRO_RECENT_ADDRESS_STORE])) as {
-        [ELYTRO_RECENT_ADDRESS_STORE]: string;
-      };
-    if (addressStr) {
-      setRecentAddress(JSON.parse(addressStr));
+    const address = await localStorage.get(ELYTRO_RECENT_ADDRESS_STORE);
+    if (address) {
+      setRecentAddress(address as { [key: string]: EnsAddress });
     }
   };
 

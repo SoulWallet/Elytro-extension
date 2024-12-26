@@ -14,20 +14,19 @@ import { ethErrors } from 'eth-rpc-errors';
 import { formatBlockInfo, formatBlockParam } from '@/utils/format';
 import { normalize } from 'viem/ens';
 import { elytroSDK } from './sdk';
-import chainService from './chain';
+import eventBus from '@/utils/eventBus';
+import { EVENT_TYPES } from '@/constants/events';
 
 class ElytroWalletClient {
   private _client: Nullable<PublicClient>;
 
-  get client() {
-    if (!this._client) {
-      // TODO: chainService should not be imported here. move this init to walletController or implemented by event
-      if (!chainService.currentChain) {
-        throw new Error('Elytro: Wallet client not initialized');
-      }
-      this.init(chainService.currentChain);
-    }
+  constructor() {
+    eventBus.on(EVENT_TYPES.CHAIN.CHAIN_INITIALIZED, (chain: TChainItem) => {
+      this.init(chain);
+    });
+  }
 
+  get client() {
     return this._client!;
   }
 

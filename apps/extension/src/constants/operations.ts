@@ -51,4 +51,5 @@ export type UserOperationHistory = {
   value: string;
   opHash: string;
   status?: UserOperationStatusEn;
+  name?: string;
 };

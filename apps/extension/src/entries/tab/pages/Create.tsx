@@ -57,6 +57,8 @@ const CreateAccountStep = ({ onNext }: { onNext: () => void }) => {
   const [selectedChain, setSelectedChain] = useState<TChainItem | null>(null);
 
   useEffect(() => {
+    console.log('Elytro::CreateAccountStep::getChains');
+
     getChains();
   }, []);
 

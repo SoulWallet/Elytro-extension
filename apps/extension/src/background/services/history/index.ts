@@ -1,4 +1,4 @@
-import { SubscribableStore } from '@/utils/store/subscribableStore';
+import { SubscribableStore } from '@/utils/store/SubscribableStore';
 import HistoryItem from './historyItem';
 import UniqueQueue from '@/utils/UniqueQueue';
 import { UserOperationHistory } from '@/constants/operations';
@@ -66,9 +66,9 @@ class HistoryManager {
     // update local storage when _store changes
     this._store.subscribe(this._storeSubscriber);
 
-    const { [this._storageKey]: prevState } = await localStorage.get([
-      this._storageKey,
-    ]);
+    const prevState = (await localStorage.get(
+      this._storageKey
+    )) as HistoryState;
 
     // sync local storage with _store
     if (prevState) {
