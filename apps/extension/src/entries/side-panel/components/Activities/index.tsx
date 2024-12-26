@@ -19,6 +19,7 @@ const History = ({
   to,
   value,
   method,
+  name,
   timestamp,
 }: UserOperationHistory) => {
   const [latestStatus, setLatestStatus] = useState(status);
@@ -50,12 +51,17 @@ const History = ({
     ),
   };
 
+  const getActivityName = () => {
+    if (name) return name;
+    if (method?.name) return method.name;
+    if (to) return 'Send';
+    return 'Unknown Activity';
+  };
+
   return (
     <div className="py-2">
       <div className="flex justify-between">
-        <div className="text-lg font-bold">
-          {method?.name || to ? 'Send' : 'Unknown Activity'}
-        </div>
+        <div className="text-lg font-bold">{getActivityName()}</div>
 
         {value && (
           <div className="text-lg font-medium">
