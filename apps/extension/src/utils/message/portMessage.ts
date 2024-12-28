@@ -3,17 +3,16 @@ class PortMessage {
 
   constructor(private _name: string) {
     this._port = chrome.runtime.connect({ name: this._name });
-
-    // this._port.onDisconnect.addListener(() => {
-    //   console.warn(`Elytro: Port ${this._name} disconnected`);
-
-    //   // try reconnect
-    //   this._port = chrome.runtime.connect({ name: this._name });
-    // });
   }
 
   public sendMessage(type: string, data: SafeObject) {
-    this._port.postMessage({ type, data });
+    try {
+      this._port.postMessage({ type, data });
+    } catch {
+      console.error(`Elytro: Port ${this._name} disconnected`);
+      // TODO: check if we need to reconnect
+      this._port = chrome.runtime.connect({ name: this._name });
+    }
   }
 
   public onMessage(targetType: string, listener: (data: SafeObject) => void) {
