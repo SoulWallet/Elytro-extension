@@ -11,6 +11,8 @@ export enum ElytroMessageTypeEn {
   DISCONNECT = 'disconnect',
   REQUEST_FROM_PAGE_PROVIDER = 'requestFromPageProvider',
   RESPONSE_TO_PAGE_PROVIDER = 'responseToPageProvider',
+  REQUEST_FROM_CONTENT_SCRIPT = 'requestFromContentScript',
+  RESPONSE_TO_CONTENT_SCRIPT = 'responseToContentScript',
   MESSAGE = 'event_message',
 }
 

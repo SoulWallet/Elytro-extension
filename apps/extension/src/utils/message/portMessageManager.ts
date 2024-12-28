@@ -3,43 +3,65 @@ export type MessageHandler = (
   port: chrome.runtime.Port
 ) => void;
 
+// interface ExtendedPort extends chrome.runtime.Port {
+//   lastHeartbeat?: number;
+// }
+
 export class PortMessageManager {
   private ports: Map<string, chrome.runtime.Port> = new Map();
   private messageHandlers: Map<string, MessageHandler> = new Map();
 
-  constructor(private name: string) {}
+  constructor(private _name: string) {}
 
-  public connect(
-    port: chrome.runtime.Port = chrome.runtime.connect({ name: this.name })
-  ) {
+  public connect(port: chrome.runtime.Port) {
     this._setupPort(port);
     return port;
   }
 
   private _setupPort(port: chrome.runtime.Port) {
-    this.ports.set(port.sender?.id || 'default', port);
+    const portName = port.sender?.origin || this._name;
+
+    this.ports.set(portName, port);
 
     port.onMessage.addListener(({ type, data }) => {
+      if (!type) {
+        return; // ignore dev server heartbeats
+      }
+
+      // if (type === 'HEARTBEAT') {
+      //   port['lastHeartbeat'] = Date.now();
+      //   return;
+      // }
+
       const handler = this.messageHandlers.get(type);
+
       if (handler) {
+        // TODO: check this
         handler(data, port);
+      } else {
+        console.warn(
+          `Elytro: port ${portName} has no handler for message type: ${type}`
+        );
       }
     });
 
-    port.postMessage({
-      type: 'NEW_PAGE_LOADED',
-      data: '{}', // !DO NOT REMOVE THIS LINE, a workaround for crx message channel
+    port.onDisconnect.addListener(() => {
+      console.log(`Elytro: Port ${portName} disconnected`);
+      this.ports.delete(portName);
     });
   }
 
-  // @ts-ignore
-  public sendMessage(type: string, data: SafeAny, portId: string = 'default') {
-    const port = this.ports.get(portId) ?? this.ports.values().next().value;
+  public sendMessage(
+    type: string,
+    data: SafeAny,
+    portName: string = this._name
+  ) {
+    const port = this.ports.get(portName); // ?? this.ports.values().next().value;
 
     if (port) {
       port.postMessage({ type, data });
     } else {
-      console.error(`No port found for ID: ${portId}`);
+      console.error(`Elytro: No port found for name: ${portName}`);
     }
   }
 

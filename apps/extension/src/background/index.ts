@@ -13,6 +13,7 @@ import { EVENT_TYPES } from '@/constants/events';
 import uiReqCacheManager from '@/utils/cache/uiReqCacheManager';
 import { rpcCacheManager } from '@/utils/cache/rpcCacheManager';
 import accountManager from './services/account';
+import { ElytroMessageTypeEn } from '@/utils/message/duplexStream';
 
 chrome.runtime.onInstalled.addListener((details) => {
   switch (details.reason) {
@@ -58,7 +59,7 @@ const initApp = async () => {
 
 initApp();
 
-const providerPortManager = new PortMessageManager('elytro-bg');
+const providerPortManager = new PortMessageManager('elytro-cs');
 
 /**
  * Init the message between background and (content script / page provider)
@@ -124,24 +125,16 @@ const initContentScriptAndPageProviderMessage = (port: chrome.runtime.Port) => {
         const result = await rpcFlow(providerReq);
 
         providerPortManager.sendMessage(
-          'BUILTIN_PROVIDER_RESPONSE',
+          ElytroMessageTypeEn.RESPONSE_TO_CONTENT_SCRIPT,
           {
             method: payload.method,
             data: result,
             uuid,
           },
-          port.sender?.id
+          port.sender?.origin
         );
       } catch (error) {
-        providerPortManager.sendMessage(
-          'BUILTIN_PROVIDER_RESPONSE',
-          {
-            method: payload.method,
-            error: (error as Error).message,
-            uuid,
-          },
-          port.sender?.id
-        );
+        console.error('Elytro: dApp request encountered error', error);
       }
     }
   );
@@ -188,12 +181,12 @@ const initUIMessage = (port: chrome.runtime.Port) => {
     try {
       const result = await handleUIRequestWithCache(data as TUIRequest);
 
-      UIPortManager.sendMessage(msgKey, { result }, port.sender?.id);
+      UIPortManager.sendMessage(msgKey, { result }, port.sender?.origin);
     } catch (error) {
       UIPortManager.sendMessage(
         msgKey,
         { error: (error as Error).message },
-        port.sender?.id
+        port.sender?.origin
       );
     }
   });
@@ -205,7 +198,10 @@ chrome.runtime.onConnect.addListener((port) => {
     return;
   }
 
-  initContentScriptAndPageProviderMessage(port);
+  if (port.name === 'elytro-cs') {
+    initContentScriptAndPageProviderMessage(port);
+    return;
+  }
 });
 
 const initBackgroundMessage = () => {
