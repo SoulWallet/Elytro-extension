@@ -17,10 +17,12 @@ class AccountManager {
     this._store = new LocalSubscribableStore<TAccountsState>(
       ACCOUNTS_STORAGE_KEY,
       (initState) => {
-        eventBus.emit(
-          EVENT_TYPES.ACCOUNT.ACCOUNT_INITIALIZED,
-          initState.currentAccount
-        );
+        if (initState?.currentAccount) {
+          eventBus.emit(
+            EVENT_TYPES.ACCOUNT.ACCOUNT_INITIALIZED,
+            initState.currentAccount
+          );
+        }
       }
     );
   }
