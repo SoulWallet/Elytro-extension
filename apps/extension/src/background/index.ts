@@ -99,21 +99,8 @@ const initContentScriptAndPageProviderMessage = (port: chrome.runtime.Port) => {
 
   providerPortManager.onMessage(
     'CONTENT_SCRIPT_REQUEST',
-    async (
-      { uuid, payload }: { uuid: string; payload: RequestArguments },
-      port
-    ) => {
-      const tabId = port.sender?.tab?.id;
-
-      if (!tabId || !port.sender?.origin) {
-        return;
-      }
-
-      sessionManager.createSession(
-        tabId,
-        port.sender.origin,
-        providerPortManager
-      );
+    async ({ uuid, payload }: { uuid: string; payload: RequestArguments }) => {
+      sessionManager.createSession(tabId, origin, providerPortManager);
 
       const dAppInfo = await getDAppInfoFromSender(port.sender!);
       const providerReq: TProviderRequest = {
@@ -131,10 +118,20 @@ const initContentScriptAndPageProviderMessage = (port: chrome.runtime.Port) => {
             data: result,
             uuid,
           },
-          port.sender?.origin
+          origin
         );
       } catch (error) {
         console.error('Elytro: dApp request encountered error', error);
+
+        providerPortManager.sendMessage(
+          ElytroMessageTypeEn.RESPONSE_TO_CONTENT_SCRIPT,
+          {
+            method: payload.method,
+            error,
+            uuid,
+          },
+          origin
+        );
       }
     }
   );
