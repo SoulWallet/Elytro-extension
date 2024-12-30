@@ -1,10 +1,4 @@
-import {
-  Chain,
-  mainnet,
-  optimism,
-  optimismSepolia,
-  sepolia,
-} from 'viem/chains';
+import { Chain, optimism, optimismSepolia, sepolia } from 'viem/chains';
 
 export type TChainConfigItem = {
   chainId: number;
@@ -92,11 +86,8 @@ export const SUPPORTED_CHAINS: TChainItem[] = [
 
 export const SUPPORTED_CHAIN_IDS = SUPPORTED_CHAINS.map((chain) => chain.id);
 
-export const SUPPORTED_CHAIN_ICON_MAP: Record<number, string> = {
-  [mainnet.id]: 'https://etherscan.io/images/svg/brands/ethereum-original.svg',
-  [sepolia.id]: 'https://etherscan.io/images/svg/brands/ethereum-original.svg',
-  [optimism.id]:
-    'https://assets.coingecko.com/coins/images/25244/standard/Optimism.png',
-  [optimismSepolia.id]:
-    'https://assets.coingecko.com/coins/images/25244/standard/Optimism.png',
-};
+export const getIconByChainId = (chainId: number) =>
+  SUPPORTED_CHAINS.find((chain) => chain.id === chainId)?.icon;
+
+export const getChainNameByChainId = (chainId: number) =>
+  SUPPORTED_CHAINS.find((chain) => chain.id === chainId)?.name;

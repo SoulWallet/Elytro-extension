@@ -8,6 +8,7 @@ import {
   formatUnits,
   Block,
   BlockTag,
+  isAddress,
 } from 'viem';
 
 export function paddingZero(
@@ -73,7 +74,7 @@ export function paddingBytesToEven(value?: string): string | null {
 export function formatAddressToShort(address: Nullable<string>) {
   // 0x12345...123456
   // todo: check if address is valid
-  return address && address?.length > 12
+  return address && isAddress(address)
     ? `${address?.slice(0, 6)}...${address?.slice(-4)}`
     : '--';
 }

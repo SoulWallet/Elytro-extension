@@ -1,7 +1,6 @@
 import { useAccount } from '../contexts/account-context';
 import SecondaryPageWrapper from '../components/SecondaryPageWrapper';
 import { ChevronDown, Copy } from 'lucide-react';
-import { SUPPORTED_CHAIN_ICON_MAP } from '@/constants/chains';
 import ReceiveAddressBadge from '../components/ReceiveAddressBadge';
 import { CircleAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -46,7 +45,7 @@ export default function Receive() {
         <div className="flex flex-row items-center justify-between w-full">
           <div className="flex flex-row items-center gap-2  ">
             <img
-              src={SUPPORTED_CHAIN_ICON_MAP[currentChain?.id]}
+              src={currentChain.icon}
               alt={currentChain?.name}
               className="size-8 rounded-full border border-gray-50"
             />
