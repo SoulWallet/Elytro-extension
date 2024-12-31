@@ -37,13 +37,12 @@ export default function Unlock() {
         <Button className="w-full" onClick={handleUnlock} disabled={!pwd}>
           Unlock
         </Button>
-        <div className="text-sm text-[#32417]}">
-          Can’t access account?{' '}
+        <div className="text-sm text-[#32417]}"> 
           <a
             className="font-semibold cursor-pointer"
             onClick={() => navigateTo('tab', TAB_ROUTE_PATHS.Recover)}
           >
-            Recover here
+             Forget password?
           </a>
         </div>
       </>

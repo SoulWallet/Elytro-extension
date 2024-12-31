@@ -1,6 +1,6 @@
 import { cn } from '@/utils/shadcn/utils';
 
-const SLOGAN = 'Next-gen\nDecentralized\nEthereum wallet';
+const SLOGAN = 'Next-gen\n\nDecentralized\n\nEthereum wallet';
 
 interface SloganProps {
   size?: 'md' | 'lg';
@@ -14,7 +14,7 @@ const textSizeMap = {
 const Slogan = ({ size = 'lg' }: SloganProps) => (
   <h1
     className={cn(
-      'w-full whitespace-pre-wrap font-medium text-left',
+      'w-full whitespace-pre-wrap font-medium text-left ',
       textSizeMap[size]
     )}
   >
