@@ -6,10 +6,8 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormMessage,
 } from '@/components/ui/form';
 import { useState } from 'react';
 import PasswordInput from '@/components/PasswordInputer';
@@ -19,11 +17,13 @@ const passwordForm = z
     password: z
       .string()
       .min(6, {
-        message:
-          'The password should be more than 6 characters and include more than 1 capitalized letter.',
+        message: 'The password should be more than 6 characters.',
       })
       .refine((value) => /[A-Z]/.test(value), {
         message: 'The password should include more than 1 capitalized letter.',
+      })
+      .refine((value) => /[!@#$%^&*(),.?":{}|<>]/.test(value), {
+        message: 'The password should include at least 1 special character.',
       }),
     confirm: z.string(),
   })
@@ -54,6 +54,7 @@ export function PasswordSetter({ onSubmit, loading }: PasswordSetterProps) {
   const pwdValidationStates = {
     length: currentPassword.length >= 6,
     uppercase: /[A-Z]/.test(currentPassword),
+    special: /[!@#$%^&*(),.?":{}|<>]/.test(currentPassword),
   };
 
   // 确认密码校验
@@ -108,6 +109,12 @@ export function PasswordSetter({ onSubmit, loading }: PasswordSetterProps) {
                   )}>
                     • Include at least 1 uppercase letter
                   </div>
+                  <div className={cn(
+                    "text-sm transition-colors",
+                    pwdValidationStates.special ? "text-green" : "text-gray "
+                  )}>
+                    • Include a special character
+                  </div>
                 </div>
               </FormItem>
             )}
@@ -138,7 +145,7 @@ export function PasswordSetter({ onSubmit, loading }: PasswordSetterProps) {
                         "text-sm transition-colors ",
                         confirmValidationStates.match ? "text-green" : "text-gray "
                       )}>
-                        • Passwords don't match
+                        • Passwords don&apos;t match
                       </div>
 
                     </div>
