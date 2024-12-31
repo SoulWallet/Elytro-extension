@@ -23,14 +23,16 @@ export default function RecoverSteps({ step }: { step: StepEnum }) {
           {steps.map((stp, index) => (
             <div
               key={stp}
-              className={`flex items-center space-x-2 ${stepIndex >= index ? '' : 'opacity-60'}`}
+              className={`flex item-start space-x-2 ${stepIndex >= index ? '' : 'opacity-60'}`}
             >
               {stepIndex > index ? (
                 <img className="w-5 h-5" src={greenTickCircleIcon} alt="" />
               ) : (
-                <div className="w-5 h-5 border-2 border-black rounded-full" />
+                <div className="w-5 h-5 border-2 border-black rounded-full flex-shrink-0" />
               )}
-              <span className="font-medium">Step</span> {index + 1} {stp}
+              <div className="flex-1">
+                <span className="font-medium">Step {index + 1} </span>  {stp}
+              </div>
             </div>
           ))}
         </div>
