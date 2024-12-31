@@ -45,6 +45,11 @@ type TDAppInfo = {
   icon: string;
 };
 
+type TConnectedDAppInfo = TDAppInfo & {
+  isConnected: boolean;
+  permissions: WalletPermission[];
+};
+
 type TSignData = {
   method:
     | 'personal_sign'

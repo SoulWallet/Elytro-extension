@@ -56,11 +56,19 @@ class WalletController {
     return approvalService.rejectApproval(id);
   }
 
-  public async connectWallet(dApp: TDAppInfo, chainId: number) {
-    connectionManager.connect(dApp, chainId);
+  public async connectSite(dApp: TDAppInfo) {
+    connectionManager.connect(dApp);
     sessionManager.broadcastMessageToDApp(dApp.origin!, 'accountsChanged', [
       accountManager?.currentAccount?.address as string,
     ]);
+  }
+
+  public async getConnectedSites() {
+    return connectionManager.connectedSites;
+  }
+
+  public async disconnectSite(origin: string) {
+    connectionManager.disconnect(origin);
   }
 
   public async signUserOperation(userOp: ElytroUserOperation) {
@@ -211,6 +219,7 @@ class WalletController {
 
     accountManager.switchAccountByChainId(chainId);
     historyManager.switchAccount(accountManager.currentAccount);
+    connectionManager.switchAccount(accountManager.currentAccount);
 
     sessionManager.broadcastMessage('accountsChanged', [
       accountManager.currentAccount?.address as string,

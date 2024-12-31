@@ -10,6 +10,7 @@ import Sign from './pages/Sign';
 import TxConfirm from './pages/TxConfirm';
 import CreateNewAddress from './pages/CreateNewAddress';
 import LocalProfile from './pages/LocalProfile';
+import Connection from './pages/Connection';
 
 export const SIDE_PANEL_ROUTE_PATHS = {
   Home: '/',
@@ -25,6 +26,7 @@ export const SIDE_PANEL_ROUTE_PATHS = {
   TxConfirm: '/tx-confirm',
   CreateNewAddress: '/create-new-address',
   LocalProfile: '/local-profile',
+  Connection: '/connection',
 } as const;
 
 export const routes: TRoute[] = [
@@ -76,5 +78,9 @@ export const routes: TRoute[] = [
   {
     path: SIDE_PANEL_ROUTE_PATHS.LocalProfile,
     component: LocalProfile,
+  },
+  {
+    path: SIDE_PANEL_ROUTE_PATHS.Connection,
+    component: Connection,
   },
 ];

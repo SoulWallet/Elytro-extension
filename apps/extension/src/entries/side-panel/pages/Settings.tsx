@@ -50,7 +50,10 @@ export default function Settings() {
             <ShieldIcon />
             <span className="ml-sm">Social recovery</span>
           </div>
-          <div className="elytro-setting-item">
+          <div
+            onClick={() => handleJumpPage(SIDE_PANEL_ROUTE_PATHS.Connection)}
+            className="elytro-setting-item"
+          >
             <LayoutGridIcon />
             <span className="ml-sm">Connected apps</span>
           </div>

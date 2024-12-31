@@ -1,15 +1,11 @@
-import { localStorage } from '@/utils/storage/local';
-import { SubscribableStore } from '@/utils/store/SubscribableStore';
 import sessionManager from './session';
-
-type TConnectedDAppInfo = TDAppInfo & {
-  chainId: number;
-  isConnected: boolean;
-  permissions: WalletPermission[];
-};
+import eventBus from '@/utils/eventBus';
+import { EVENT_TYPES } from '@/constants/events';
+import { SubscribableStore } from '@/utils/store/SubscribableStore';
+import { localStorage } from '@/utils/storage/local';
 
 type TConnectionManagerState = {
-  sites: TConnectedDAppInfo[];
+  [key: string]: TConnectedDAppInfo[];
 };
 
 const CONNECTION_STORAGE_KEY = 'elytroConnectionState';
@@ -19,45 +15,48 @@ const CONNECTION_STORAGE_KEY = 'elytroConnectionState';
  * Support EIP-2255
  */
 class ConnectionManager {
-  private connectedSites: Map<string, TConnectedDAppInfo> = new Map(); // Store connected sites
+  private _connectedSites: Map<string, TConnectedDAppInfo> = new Map(); // Store connected sites
   private _store: SubscribableStore<TConnectionManagerState>;
-  private _initialized = false;
+  private _accountKey: string | null = null;
 
   constructor() {
-    this._store = new SubscribableStore({
-      sites: [] as TConnectedDAppInfo[],
-    });
+    this._store = new SubscribableStore<TConnectionManagerState>({});
 
     this._store.subscribe((state) => {
       localStorage.save({ [CONNECTION_STORAGE_KEY]: state });
     });
+
+    eventBus.on(EVENT_TYPES.ACCOUNT.ACCOUNT_INITIALIZED, (account) => {
+      this.switchAccount(account);
+    });
   }
 
-  public async restore() {
-    if (!this._initialized) {
-      await this._initFromStorage();
-    }
-  }
-
-  private async _initFromStorage() {
-    const prevState = (await localStorage.get(
-      CONNECTION_STORAGE_KEY
-    )) as TConnectionManagerState;
-
-    if (prevState?.sites) {
-      this._store.setState(prevState);
-
-      prevState.sites.forEach((site) => {
-        if (site.origin) {
-          this.connectedSites.set(site.origin, site);
-        }
-      });
+  public async switchAccount(account: TAccountInfo | null) {
+    if (!account || !account.address || !account.chainId) {
+      console.log(
+        'Elytro::ConnectionManager:: switchAccount failed, no account.'
+      );
+      return;
     }
 
-    this._initialized = true;
+    this._accountKey = `${account.address}-${account.chainId}`;
+    this._connectedSites.clear();
+
+    const prevAccountState =
+      (
+        (await localStorage.get(
+          CONNECTION_STORAGE_KEY
+        )) as TConnectionManagerState
+      )?.[this._accountKey] || [];
+
+    prevAccountState?.forEach((site: TConnectedDAppInfo) => {
+      if (site.origin) {
+        this._connectedSites.set(site.origin, site);
+      }
+    });
   }
 
-  public connect(dApp: TDAppInfo, chainId: number) {
+  public connect(dApp: TDAppInfo) {
     if (!dApp.origin) {
       return;
     }
@@ -65,7 +64,6 @@ class ConnectionManager {
     this.addConnectedSite({
       ...dApp,
       isConnected: true,
-      chainId,
       permissions: [
         {
           parentCapability: 'eth_accounts',
@@ -77,23 +75,23 @@ class ConnectionManager {
   }
 
   public disconnect(origin: string) {
-    this.connectedSites.delete(String(origin));
-    this.syncToStorage();
+    this._connectedSites.delete(String(origin));
+    this._syncToStorage();
     sessionManager.broadcastMessageToDApp(origin, 'accountsChanged', []);
   }
 
   public getSite(origin: string) {
-    return this.connectedSites.get(String(origin));
+    return this._connectedSites.get(String(origin));
   }
 
   public setSite(origin: string, info: TConnectedDAppInfo) {
-    this.connectedSites.set(String(origin), info);
-    this.syncToStorage();
+    this._connectedSites.set(String(origin), info);
+    this._syncToStorage();
   }
 
   public addConnectedSite({ origin, ...rest }: TConnectedDAppInfo) {
-    this.connectedSites.set(origin!, { ...rest, origin });
-    this.syncToStorage();
+    this._connectedSites.set(origin!, { ...rest, origin });
+    this._syncToStorage();
   }
 
   // maybe turn isConnected to false a while later
@@ -101,31 +99,31 @@ class ConnectionManager {
     origin: string,
     updates: Omit<TConnectedDAppInfo, 'origin'>
   ) {
-    const siteInfo = this.connectedSites.get(origin);
+    const siteInfo = this._connectedSites.get(origin);
 
     if (siteInfo) {
-      this.connectedSites.set(origin, { ...siteInfo, ...updates });
-      this.syncToStorage();
+      this._connectedSites.set(origin, { ...siteInfo, ...updates });
+      this._syncToStorage();
     }
   }
 
   public isConnected(origin: string): boolean {
-    return this.connectedSites.get(origin)?.isConnected || false;
+    return this._connectedSites.get(origin)?.isConnected || false;
   }
 
   public getPermissions(origin: string): WalletPermission[] {
-    return this.connectedSites.get(origin)?.permissions || [];
+    return this._connectedSites.get(origin)?.permissions || [];
   }
 
   public requestPermissions(
     origin: string,
     permissions: WalletPermission[]
   ): boolean {
-    const site = this.connectedSites.get(origin);
+    const site = this._connectedSites.get(origin);
     if (!site) return false;
 
-    site.permissions = [...new Set([...site.permissions, ...permissions])];
-    this.syncToStorage();
+    site.permissions = [...site.permissions, ...permissions];
+    this._syncToStorage();
     return true;
   }
 
@@ -133,20 +131,26 @@ class ConnectionManager {
     origin: string,
     permissions: WalletPermission[]
   ): void {
-    const site = this.connectedSites.get(origin);
+    const site = this._connectedSites.get(origin);
     if (!site) return;
 
     site.permissions = site.permissions.filter(
       ({ parentCapability }) =>
         !permissions.some((p) => p.parentCapability === parentCapability)
     );
-    this.syncToStorage();
+    this._syncToStorage();
   }
 
-  private syncToStorage() {
-    this._store.setState({
-      sites: [...this.connectedSites.values()],
-    });
+  private _syncToStorage() {
+    if (this._accountKey) {
+      this._store.setState({
+        [this._accountKey]: this.connectedSites,
+      });
+    }
+  }
+
+  public get connectedSites() {
+    return Array.from(this._connectedSites.values());
   }
 }
 

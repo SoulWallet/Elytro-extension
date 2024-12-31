@@ -1,5 +1,4 @@
 import { useApproval } from '../contexts/approval-context';
-import { useChain } from '../contexts/chain-context';
 import { useWallet } from '@/contexts/wallet';
 import { ethErrors } from 'eth-rpc-errors';
 import ConnectionConfirmation from '../components/ConnectConfirmation';
@@ -8,7 +7,6 @@ import Spin from '@/components/Spin';
 export default function Connect() {
   const wallet = useWallet();
   const { approval, resolve, reject } = useApproval();
-  const { currentChain } = useChain();
 
   if (!approval || !approval.data) {
     return <Spin isLoading />;
@@ -20,7 +18,7 @@ export default function Connect() {
 
   const handleConnect = async () => {
     try {
-      await wallet.connectWallet(dApp, currentChain?.id || 1);
+      await wallet.connectSite(dApp);
       resolve();
     } catch (error) {
       reject(error as Error);

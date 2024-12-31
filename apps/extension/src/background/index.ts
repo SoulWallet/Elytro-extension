@@ -44,7 +44,6 @@ chrome.sidePanel
 
 const initApp = async () => {
   // await keyring.restore();
-  await connectionManager.restore();
   await sendReadyMessageToTabs();
 
   rpcCacheManager.init();
@@ -78,8 +77,13 @@ const initContentScriptAndPageProviderMessage = (port: chrome.runtime.Port) => {
     sessionManager.removeSession(tabId, origin);
   });
 
-  providerPortManager.onMessage('NEW_PAGE_LOADED', async () => {
-    sessionManager.createSession(tabId, origin, providerPortManager);
+  providerPortManager.onMessage('NEW_PAGE_LOADED', async (_, port) => {
+    const { origin, tab } = port.sender || {};
+    if (!origin || !tab?.id) {
+      return;
+    }
+
+    sessionManager.createSession(tab.id, origin, providerPortManager);
 
     if (connectionManager.isConnected(origin)) {
       await keyring.tryUnlock();
@@ -99,8 +103,17 @@ const initContentScriptAndPageProviderMessage = (port: chrome.runtime.Port) => {
 
   providerPortManager.onMessage(
     'CONTENT_SCRIPT_REQUEST',
-    async ({ uuid, payload }: { uuid: string; payload: RequestArguments }) => {
-      sessionManager.createSession(tabId, origin, providerPortManager);
+    async (
+      { uuid, payload }: { uuid: string; payload: RequestArguments },
+      port
+    ) => {
+      const { origin, tab } = port.sender || {};
+
+      if (!origin || !tab?.id) {
+        return;
+      }
+
+      sessionManager.createSession(tab.id, origin, providerPortManager);
 
       const dAppInfo = await getDAppInfoFromSender(port.sender!);
       const providerReq: TProviderRequest = {
@@ -190,6 +203,8 @@ const initUIMessage = (port: chrome.runtime.Port) => {
 };
 
 chrome.runtime.onConnect.addListener((port) => {
+  console.log('port.name', port.name, port.sender);
+
   if (port.name === 'elytro-ui') {
     initUIMessage(port);
     return;
