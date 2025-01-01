@@ -8,6 +8,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormMessage,
 } from '@/components/ui/form';
 import { useState } from 'react';
 import PasswordInput from '@/components/PasswordInputer';
@@ -50,19 +51,12 @@ export function PasswordSetter({ onSubmit, loading }: PasswordSetterProps) {
 
   const currentPassword = form.watch('password') || '';
 
-  // 密码校验状态
+  // password validation
   const pwdValidationStates = {
     length: currentPassword.length >= 6,
     uppercase: /[A-Z]/.test(currentPassword),
     special: /[!@#$%^&*(),.?":{}|<>]/.test(currentPassword),
   };
-
-  // 确认密码校验
-  const confirmValidationStates = {
-    match: currentPassword === form.getValues('confirm'),
-  };
-
-
 
   return (
     <Form {...form}>
@@ -97,22 +91,30 @@ export function PasswordSetter({ onSubmit, loading }: PasswordSetterProps) {
                 }
 
                 <div className="space-y-2 mt-2">
-                  <div className={cn(
-                    "text-sm transition-colors ",
-                    pwdValidationStates.length ? "text-green" : "text-gray "
-                  )}>
+                  <div
+                    className={cn(
+                      'text-sm transition-colors ',
+                      pwdValidationStates.length ? 'text-green' : 'text-gray '
+                    )}
+                  >
                     • More than 6 characters
                   </div>
-                  <div className={cn(
-                    "text-sm transition-colors",
-                    pwdValidationStates.uppercase ? "text-green" : "text-gray "
-                  )}>
+                  <div
+                    className={cn(
+                      'text-sm transition-colors',
+                      pwdValidationStates.uppercase
+                        ? 'text-green'
+                        : 'text-gray '
+                    )}
+                  >
                     • Include at least 1 uppercase letter
                   </div>
-                  <div className={cn(
-                    "text-sm transition-colors",
-                    pwdValidationStates.special ? "text-green" : "text-gray "
-                  )}>
+                  <div
+                    className={cn(
+                      'text-sm transition-colors',
+                      pwdValidationStates.special ? 'text-green' : 'text-gray '
+                    )}
+                  >
                     • Include a special character
                   </div>
                 </div>
@@ -123,36 +125,26 @@ export function PasswordSetter({ onSubmit, loading }: PasswordSetterProps) {
           {(loading ||
             (form.getValues('password')?.length > 0 &&
               form.formState.errors.password === undefined)) && (
-              <FormField
-                control={form.control}
-                name="confirm"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <PasswordInput
-                        field={field}
-                        disabled={loading}
-                        placeholder="Repeat password"
-                        showEye={false}
-                        outerPwdVisible={isPwdVisible}
-                      />
-                    </FormControl>
+            <FormField
+              control={form.control}
+              name="confirm"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <PasswordInput
+                      field={field}
+                      disabled={loading}
+                      placeholder="Repeat password"
+                      showEye={false}
+                      outerPwdVisible={isPwdVisible}
+                    />
+                  </FormControl>
 
-                    {/* <FormMessage /> */}
-
-                    <div className="space-y-2 mt-2">
-                      <div className={cn(
-                        "text-sm transition-colors ",
-                        confirmValidationStates.match ? "text-green" : "text-gray "
-                      )}>
-                        • Passwords don&apos;t match
-                      </div>
-
-                    </div>
-                  </FormItem>
-                )}
-              />
-            )}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         </div>
 
         <Button
