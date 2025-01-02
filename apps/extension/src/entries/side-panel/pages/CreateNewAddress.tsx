@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { useChain } from '../contexts/chain-context';
 import SecondaryPageWrapper from '../components/SecondaryPageWrapper';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import ChainItem from '@/components/ChainItem';
 import { TChainItem } from '@/constants/chains';
 import { toast } from '@/hooks/use-toast';
@@ -12,8 +12,8 @@ import { SIDE_PANEL_ROUTE_PATHS } from '../routes';
 import { useAccount } from '../contexts/account-context';
 
 export default function CreateNewAddress() {
-  const { chains, currentChain, getCurrentChain } = useChain();
-  const { getAccounts, updateAccount, updateTokens } = useAccount();
+  const { chains, currentChain } = useChain();
+  const { accounts } = useAccount();
   const wallet = useWallet();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedChain, setSelectedChain] = useState<TChainItem | null>(null);
@@ -23,12 +23,15 @@ export default function CreateNewAddress() {
     );
   };
 
-  const handleAfterCreating = async () => {
-    await getCurrentChain();
-    await getAccounts();
-    await updateAccount();
-    await updateTokens();
-  };
+  const processedChains = useMemo(() => {
+    return chains.map((chain) => {
+      const account = accounts.find(({ chainId }) => chainId === chain.id);
+      return {
+        ...chain,
+        disabled: !!account,
+      };
+    });
+  }, [chains, accounts]);
 
   const handleCreate = async () => {
     if (!selectedChain) return;
@@ -42,10 +45,7 @@ export default function CreateNewAddress() {
     try {
       setIsLoading(true);
       await wallet.createAccount(selectedChain.id);
-      await handleAfterCreating();
-      setTimeout(() => {
-        navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Dashboard);
-      }, 300);
+      navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Dashboard);
     } catch (error) {
       console.error(error);
     } finally {
@@ -82,12 +82,13 @@ export default function CreateNewAddress() {
             can use the same local password to access it.
           </div>
           <div className="space-y-2">
-            {chains.map((chain) => {
+            {processedChains.map((chain) => {
               return (
                 <ChainItem
                   isSelected={selectedChain?.id === chain.id}
                   key={chain.id}
                   chain={chain}
+                  disabled={chain.disabled}
                   onClick={() => handleChange(chain.id.toString())}
                 />
               );
