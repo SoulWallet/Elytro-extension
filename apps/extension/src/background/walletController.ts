@@ -140,6 +140,17 @@ class WalletController {
     sessionManager.broadcastMessage('chainChanged', toHex(chainConfig.id));
   }
 
+  private _broadcastToConnectedSites(
+    event: ElytroEventMessage['event'],
+    data: ElytroEventMessage['data']
+  ) {
+    connectionManager.connectedSites.forEach((site) => {
+      if (site.origin && !site.origin.startsWith('chrome-extension://')) {
+        sessionManager.broadcastMessageToDApp(site.origin, event, data);
+      }
+    });
+  }
+
   public async getCurrentChain() {
     return chainService.currentChain;
   }
@@ -216,9 +227,10 @@ class WalletController {
   }
 
   private async _onAccountChanged() {
-    historyManager.switchAccount(accountManager.currentAccount);
-    connectionManager.switchAccount(accountManager.currentAccount);
-    sessionManager.broadcastMessage('accountsChanged', [
+    await historyManager.switchAccount(accountManager.currentAccount);
+    await connectionManager.switchAccount(accountManager.currentAccount);
+
+    this._broadcastToConnectedSites('accountsChanged', [
       accountManager.currentAccount?.address as string,
     ]);
   }
@@ -226,6 +238,7 @@ class WalletController {
   public async switchAccountByChain(chainId: number) {
     this._switchChain(chainId);
     accountManager.switchAccountByChainId(chainId);
+    this._broadcastToConnectedSites('accountsChanged', []);
     this._onAccountChanged();
   }
 

@@ -16,10 +16,28 @@ const UNSUPPORTED_METHODS: Record<string, string> = {
     'Elytro is a smart wallet, not supported eth_getEncryptionPublicKey yet',
 };
 
+// These methods are banned when the account is not deployed
+const BANNED_METHODS_WITHOUT_DEPLOYMENT: ProviderMethodType[] = [
+  'eth_signTypedData_v4',
+  'eth_signTypedData_v3',
+  'eth_signTypedData',
+  'eth_sendTransaction',
+  'eth_getTransactionByHash',
+  'eth_decrypt',
+  'eth_requestAccounts',
+  'eth_accounts',
+  'wallet_getPermissions',
+  'wallet_requestPermissions',
+  'wallet_revokePermissions',
+];
+
 export const checkMethodExist: TFlowMiddleWareFn = async (ctx, next) => {
   const { rpcReq, dApp } = ctx.request;
 
-  if (!accountManager.currentAccount?.isDeployed) {
+  if (
+    BANNED_METHODS_WITHOUT_DEPLOYMENT.includes(rpcReq.method) &&
+    !accountManager.currentAccount?.isDeployed
+  ) {
     return await approvalService.request(ApprovalTypeEn.Alert, {
       dApp,
       options: {

@@ -79,7 +79,6 @@ class ConnectionManager {
     this._syncToStorage();
     sessionManager.broadcastMessageToDApp(origin, 'accountsChanged', []);
   }
-
   public getSite(origin: string) {
     return this._connectedSites.get(String(origin));
   }
