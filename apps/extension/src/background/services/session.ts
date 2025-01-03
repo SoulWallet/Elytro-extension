@@ -16,7 +16,7 @@ class DAppSession {
   }
 
   sendMessage(event: string, data: unknown) {
-    this._portMsgManager.sendMessage(event, data);
+    this._portMsgManager.sendMessage(event, data, this._dAppOrigin);
   }
 }
 

@@ -15,12 +15,19 @@ const PRIVATE_METHODS: ProviderMethodType[] = [
   'eth_signTypedData_v1',
   'eth_signTypedData_v3',
   'eth_signTypedData_v4',
+  'eth_getTransactionByHash',
+  'eth_getEncryptionPublicKey',
+  'eth_getCode',
+  'eth_call',
+  'eth_estimateGas',
 ];
 
 const SEMI_PUBLIC_METHODS: ProviderMethodType[] = ['eth_accounts'];
 
 export const checkLock: TFlowMiddleWareFn = async (ctx, next) => {
-  const { method } = ctx.request.rpcReq;
+  const {
+    rpcReq: { method },
+  } = ctx.request;
 
   if (SEMI_PUBLIC_METHODS.includes(method)) {
     ctx.request.needConnection = true;

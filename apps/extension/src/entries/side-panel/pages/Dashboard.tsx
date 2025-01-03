@@ -6,9 +6,15 @@ import { useAccount } from '../contexts/account-context';
 import Assets from '../components/Assets';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
+import { useEffect } from 'react';
 
 export default function Dashboard() {
-  const { loading } = useAccount();
+  const { loading, getAccounts, updateAccount } = useAccount();
+
+  useEffect(() => {
+    getAccounts();
+    updateAccount();
+  }, []);
 
   return (
     <div className="w-full h-full flex flex-col gap-2xl bg-gray-150 p-sm">

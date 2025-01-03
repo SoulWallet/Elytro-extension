@@ -1,26 +1,25 @@
 import { createContext, useContext } from 'react';
-import { PortMessageManager } from '@/utils/message/portMessageManager';
 import { WalletController } from '@/background/walletController';
+import PortMessage from '@/utils/message/portMessage';
 
-const portMessageManager = new PortMessageManager('elytro-ui');
-portMessageManager.connect();
+const portMessage = new PortMessage('elytro-ui');
 
 const walletControllerProxy = new Proxy(
   {},
   {
     get(_, prop: keyof WalletController) {
       return function (...args: unknown[]) {
-        portMessageManager.sendMessage('UI_REQUEST', {
+        portMessage.sendMessage('UI_REQUEST', {
           method: prop,
           params: args,
         });
 
         return new Promise((resolve, reject) => {
-          portMessageManager.onMessage(`UI_RESPONSE_${prop}`, (response) => {
-            if (response?.error) {
-              reject(response?.error);
+          portMessage.onMessage(`UI_RESPONSE_${prop}`, (data) => {
+            if (data?.error) {
+              reject(data?.error);
             } else {
-              resolve(response?.result);
+              resolve(data?.result);
             }
           });
         });

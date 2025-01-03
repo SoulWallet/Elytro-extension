@@ -6,7 +6,7 @@ import {
   DEFAULT_GUARDIAN_HASH,
   DEFAULT_GUARDIAN_SAFE_PERIOD,
 } from '@/constants/sdk-config';
-import { formatHex, getHexString, paddingZero } from '@/utils/format';
+import { formatHex, paddingZero } from '@/utils/format';
 import { Bundler, SignkeyType, SoulWallet, Transaction } from '@soulwallet/sdk';
 import { DecodeUserOp } from '@soulwallet/decoder';
 import { canUserOpGetSponsor } from '@/utils/ethRpc/sponsor';
@@ -20,15 +20,26 @@ import {
   parseEther,
   PublicClient,
   toHex,
+  hashMessage,
+  serializeSignature,
 } from 'viem';
 import { createAccount } from '@/utils/ethRpc/create-account';
 import { ethErrors } from 'eth-rpc-errors';
+import { ABI_SoulWallet } from '@soulwallet/abi';
+import eventBus from '@/utils/eventBus';
+import { EVENT_TYPES } from '@/constants/events';
 
 class ElytroSDK {
   private _sdk!: SoulWallet;
   private _bundler!: Bundler;
   private _config!: TChainItem;
   private _pimlicoRpc: Nullable<PublicClient> = null;
+
+  constructor() {
+    eventBus.on(EVENT_TYPES.CHAIN.CHAIN_INITIALIZED, (chain: TChainItem) => {
+      this.resetSDK(chain);
+    });
+  }
 
   get bundler() {
     return this._bundler;
@@ -166,11 +177,11 @@ class ElytroSDK {
     if (opHash.isErr()) {
       throw opHash.ERR;
     } else {
-      const signature = await this._getSignature(
-        opHash.OK,
-        0, // 0
-        Math.floor(new Date().getTime() / 1000) + 60 * 5 // 5 mins
-      );
+      const signature = await this._getSignature({
+        messageHash: opHash.OK,
+        validStartTime: 0, // 0
+        validEndTime: Math.floor(new Date().getTime() / 1000) + 60 * 5, // 5 mins
+      });
       userOp.signature = signature;
       return { signature, opHash: opHash.OK };
     }
@@ -211,15 +222,78 @@ class ElytroSDK {
   //   }
   // }
 
+  private async _isSignatureValid(
+    address: Hex,
+    messageHash: Hex,
+    signature: Hex
+  ) {
+    const _client = createPublicClient({
+      chain: this._config,
+      transport: http(this._config.endpoint),
+    });
+
+    const magicValue = await _client.readContract({
+      address,
+      abi: ABI_SoulWallet,
+      functionName: 'isValidSignature',
+      args: [messageHash, signature],
+    });
+
+    if (magicValue !== '0x1626ba7e') {
+      throw new Error('Elytro: Invalid signature.');
+    }
+  }
+
+  /**
+   * Raw sign message. For EIP-1271 signature.
+   * @param message - The message to sign.
+   * @returns The signature.
+   */
+  private async _rawSign(message: Hex) {
+    const _eoaSignature = keyring.signingKey?.signDigest(message);
+
+    if (!_eoaSignature) {
+      throw new Error('Elytro: Failed to sign message.');
+    }
+
+    const _eoaSignatureHex = serializeSignature({
+      r: _eoaSignature.r as Hex,
+      s: _eoaSignature.s as Hex,
+      v: BigInt(_eoaSignature.v),
+    });
+
+    return _eoaSignatureHex;
+  }
+
+  /**
+   * Personal sign message. For internal user operation signature.
+   * @param message - The message to sign.
+   * @returns The signature.
+   */
+  private async _personalSign(message: Hex) {
+    const _eoaSignature = keyring.owner?.signMessage({
+      message: { raw: message },
+    });
+
+    if (!_eoaSignature) {
+      throw new Error('Elytro: Failed to sign message.');
+    }
+
+    return _eoaSignature;
+  }
+
   private async _getSignature(
-    messageHash: string,
-    validStartTime?: number,
-    validEndTime?: number
+    packParams: {
+      messageHash: string;
+      validStartTime?: number;
+      validEndTime?: number;
+    },
+    useRawSign = false
   ) {
     const rawHashRes = await this._sdk.packRawHash(
-      messageHash,
-      validStartTime,
-      validEndTime
+      packParams.messageHash,
+      packParams.validStartTime,
+      packParams.validEndTime
     );
 
     if (rawHashRes.isErr()) {
@@ -229,18 +303,13 @@ class ElytroSDK {
     // TODO： move sign userOp to wallet controller, so the keyring will be same instance
     await keyring.tryUnlock();
 
-    // raw sign -> personal sign
-    const _eoaSignature = await keyring.owner?.signMessage({
-      message: { raw: rawHashRes.OK.packedHash as Hex },
-    });
-
-    if (!_eoaSignature) {
-      throw new Error('Elytro: Failed to sign message.');
-    }
+    const signature = useRawSign
+      ? await this._rawSign(rawHashRes.OK.packedHash as Hex)
+      : await this._personalSign(rawHashRes.OK.packedHash as Hex);
 
     const signRes = await this._sdk.packUserOpEOASignature(
       this._config.validator,
-      _eoaSignature,
+      signature,
       rawHashRes.OK.validationData
     );
 
@@ -413,20 +482,19 @@ class ElytroSDK {
     }
   }
 
-  public async signMessage(
-    message: Uint8Array | string | bigint | number | boolean | Hex,
-    saAddress: Address
-  ) {
-    const rawMessage = getHexString(message, 32);
-
-    const encode1271MessageHash = getEncoded1271MessageHash(rawMessage);
+  public async signMessage(message: Hex, saAddress: Address) {
+    const hashedMessage = hashMessage({ raw: message });
+    const encode1271MessageHash = getEncoded1271MessageHash(hashedMessage);
     const domainSeparator = getDomainSeparator(
       toHex(this._config.id),
       saAddress
     );
-    const encodedSHA = getEncodedSHA(domainSeparator, encode1271MessageHash);
+    const messageHash = getEncodedSHA(domainSeparator, encode1271MessageHash);
 
-    const signature = await this._getSignature(encodedSHA);
+    const signature = await this._getSignature({ messageHash }, true);
+
+    await this._isSignatureValid(saAddress, hashedMessage, signature as Hex);
+
     return signature;
   }
 

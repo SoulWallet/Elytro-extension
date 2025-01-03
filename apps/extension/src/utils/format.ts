@@ -8,6 +8,7 @@ import {
   formatUnits,
   Block,
   BlockTag,
+  isAddress,
 } from 'viem';
 
 export function paddingZero(
@@ -73,7 +74,7 @@ export function paddingBytesToEven(value?: string): string | null {
 export function formatAddressToShort(address: Nullable<string>) {
   // 0x12345...123456
   // todo: check if address is valid
-  return address && address?.length > 12
+  return address && isAddress(address)
     ? `${address?.slice(0, 6)}...${address?.slice(-4)}`
     : '--';
 }
@@ -132,7 +133,7 @@ export function formatBlockInfo(block: Block) {
   };
 }
 
-function checkType(value: SafeAny) {
+export function checkType(value: SafeAny) {
   const typeString = Object.prototype.toString.call(value);
 
   switch (typeString) {
@@ -342,4 +343,26 @@ export function formatBalance(
     decimalPart: displayDecimalPart,
     fullDisplay: `${integerPart}.${displayDecimalPart}`,
   };
+}
+
+export function formatStringifiedObject(str: SafeAny) {
+  const type = checkType(str);
+
+  if (type === 'string') {
+    try {
+      const parsed = JSON.parse(str);
+      return parsed;
+    } catch {
+      return str;
+    }
+  } else if (type === 'object') {
+    return Object.fromEntries(
+      Object.entries(str).map(([key, value]): [string, SafeAny] => [
+        key,
+        formatStringifiedObject(value),
+      ])
+    );
+  }
+
+  return str;
 }

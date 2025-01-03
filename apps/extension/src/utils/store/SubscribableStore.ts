@@ -1,18 +1,24 @@
 export class SubscribableStore<T> {
-  private _state: Readonly<T>;
-  private _subscribers: Set<(state: Readonly<T>) => void> = new Set();
+  protected _state: T;
+  protected _subscribers: Set<(state: Readonly<T>) => void> = new Set();
 
   constructor(initialState: T) {
     this._state = initialState;
   }
 
-  get state(): Readonly<T> {
+  public get state(): Readonly<T> {
     return { ...this._state };
   }
 
   public setState(newState: Partial<T>): void {
-    this._state = { ...this._state, ...newState };
-    this._notifySubscribers();
+    const hasChanges = Object.keys(newState).some(
+      (key) => this._state[key as keyof T] !== newState[key as keyof T]
+    );
+
+    if (hasChanges) {
+      this._state = { ...this._state, ...newState };
+      this._notifySubscribers();
+    }
   }
 
   public resetState() {
@@ -20,7 +26,7 @@ export class SubscribableStore<T> {
     this._state = {} as T;
   }
 
-  private _notifySubscribers(): void {
+  protected _notifySubscribers(): void {
     this._subscribers.forEach((subscriber) => subscriber(this._state));
   }
 

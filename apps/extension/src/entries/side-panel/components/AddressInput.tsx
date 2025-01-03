@@ -41,6 +41,12 @@ export default function AddressInput({
     }
   };
 
+  const handleClickRecentAddress = (item: EnsAddress) => {
+    setDisplayLabel(item.address);
+    setValue(item.address);
+    field.onChange(item.address);
+  };
+
   const getENSAddress = async (value: string) => {
     try {
       const existedEns = Object.values(recentAddress || {}).find(
@@ -138,12 +144,9 @@ export default function AddressInput({
   };
 
   const getRecentAddressStore = async () => {
-    const { [ELYTRO_RECENT_ADDRESS_STORE]: addressStr } =
-      (await localStorage.get([ELYTRO_RECENT_ADDRESS_STORE])) as {
-        [ELYTRO_RECENT_ADDRESS_STORE]: string;
-      };
-    if (addressStr) {
-      setRecentAddress(JSON.parse(addressStr));
+    const address = await localStorage.get(ELYTRO_RECENT_ADDRESS_STORE);
+    if (address) {
+      setRecentAddress(address as { [key: string]: EnsAddress });
     }
   };
 
@@ -184,8 +187,7 @@ export default function AddressInput({
                     if (item.name) {
                       handleClickENS(item);
                     } else {
-                      setDisplayLabel(item.address);
-                      setValue(item.address);
+                      handleClickRecentAddress(item);
                     }
                   };
                   let Comp = null;

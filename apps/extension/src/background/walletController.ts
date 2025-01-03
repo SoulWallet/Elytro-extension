@@ -12,7 +12,7 @@ import {
 } from '@/utils/format';
 import historyManager from './services/history';
 import { UserOperationHistory } from '@/constants/operations';
-import { formatEther, Hex, toHex } from 'viem';
+import { formatEther, Hex, isHex, toHex } from 'viem';
 import chainService from './services/chain';
 import accountManager from './services/account';
 import type { Transaction } from '@soulwallet/sdk';
@@ -56,11 +56,19 @@ class WalletController {
     return approvalService.rejectApproval(id);
   }
 
-  public async connectWallet(dApp: TDAppInfo, chainId: number) {
-    connectionManager.connect(dApp, chainId);
+  public async connectSite(dApp: TDAppInfo) {
+    connectionManager.connect(dApp);
     sessionManager.broadcastMessageToDApp(dApp.origin!, 'accountsChanged', [
       accountManager?.currentAccount?.address as string,
     ]);
+  }
+
+  public async getConnectedSites() {
+    return connectionManager.connectedSites;
+  }
+
+  public async disconnectSite(origin: string) {
+    connectionManager.disconnect(origin);
   }
 
   public async signUserOperation(userOp: ElytroUserOperation) {
@@ -78,7 +86,7 @@ class WalletController {
       throw ethErrors.rpc.internal();
     }
 
-    if (typeof message !== 'string') {
+    if (!isHex(message)) {
       throw ethErrors.rpc.invalidParams();
     }
 
@@ -113,10 +121,6 @@ class WalletController {
   }
 
   public getLatestHistories() {
-    if (!historyManager.isInitialized) {
-      historyManager.switchAccount(accountManager.currentAccount);
-    }
-
     return historyManager.histories.map((item) => ({
       ...item.data,
       status: item.status,
@@ -134,6 +138,17 @@ class WalletController {
     walletClient.init(chainConfig);
 
     sessionManager.broadcastMessage('chainChanged', toHex(chainConfig.id));
+  }
+
+  private _broadcastToConnectedSites(
+    event: ElytroEventMessage['event'],
+    data: ElytroEventMessage['data']
+  ) {
+    connectionManager.connectedSites.forEach((site) => {
+      if (site.origin && !site.origin.startsWith('chrome-extension://')) {
+        sessionManager.broadcastMessageToDApp(site.origin, event, data);
+      }
+    });
   }
 
   public async getCurrentChain() {
@@ -182,7 +197,11 @@ class WalletController {
     }
 
     const balanceBn = await walletClient.getBalance(basicInfo.address);
-    return { ...basicInfo, balance: formatEther(balanceBn) };
+    accountManager.updateCurrentAccountInfo({
+      balance: formatEther(balanceBn),
+    });
+
+    return basicInfo;
   }
 
   public async createAccount(chainId: number) {
@@ -190,8 +209,9 @@ class WalletController {
       throw new Error('Elytro: No owner address. Try create owner first.');
     }
 
-    this._switchChain(chainId);
-    accountManager.createAccountAsCurrent(keyring.owner.address, chainId);
+    await this._switchChain(chainId);
+    await accountManager.createAccountAsCurrent(keyring.owner.address, chainId);
+    this._onAccountChanged();
   }
 
   private async _switchChain(chainId: number) {
@@ -206,15 +226,20 @@ class WalletController {
     }
   }
 
-  public async switchAccountByChain(chainId: number) {
-    this._switchChain(chainId);
+  private async _onAccountChanged() {
+    await historyManager.switchAccount(accountManager.currentAccount);
+    await connectionManager.switchAccount(accountManager.currentAccount);
 
-    accountManager.switchAccountByChainId(chainId);
-    historyManager.switchAccount(accountManager.currentAccount);
-
-    sessionManager.broadcastMessage('accountsChanged', [
+    this._broadcastToConnectedSites('accountsChanged', [
       accountManager.currentAccount?.address as string,
     ]);
+  }
+
+  public async switchAccountByChain(chainId: number) {
+    this._switchChain(chainId);
+    accountManager.switchAccountByChainId(chainId);
+    this._broadcastToConnectedSites('accountsChanged', []);
+    this._onAccountChanged();
   }
 
   public async createDeployUserOp() {
@@ -272,6 +297,10 @@ class WalletController {
 
   public async removeAccount(address: string) {
     await accountManager.removeAccountByAddress(address);
+  }
+
+  public async changePassword(oldPassword: string, newPassword: string) {
+    return await keyring.changePassword(oldPassword, newPassword);
   }
 }
 

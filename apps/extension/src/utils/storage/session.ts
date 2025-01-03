@@ -1,3 +1,5 @@
+import { formatStringifiedObject } from '../format';
+
 /**
  * Elytro Session Storage
  */
@@ -11,10 +13,12 @@ const sessionStorage: StorageOperations = {
       );
     }
   },
-  get: async <T>(keys: string[]): Promise<Record<string, T>> => {
+  get: async <T>(keys: string[] | string): Promise<Record<string, T>> => {
+    const isString = typeof keys === 'string';
+
     try {
       const result = await chrome.storage.session.get(keys);
-      return result;
+      return formatStringifiedObject(isString ? result[keys] : result);
     } catch (error) {
       throw new Error(
         `Elytro::SessionStorage::get: ${(error as Error).message}`

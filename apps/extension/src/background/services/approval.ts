@@ -31,6 +31,11 @@ class ApprovalService {
   }
 
   public async request(type: ApprovalTypeEn, data?: TApprovalData) {
+    if (this._currentApproval) {
+      console.log('Elytro: Approval already exists', this._currentApproval);
+      return;
+    }
+
     return new Promise((resolve, reject) => {
       // compose approval info
       const approval = {

@@ -8,18 +8,24 @@ import { SIDE_PANEL_ROUTE_PATHS } from '../routes';
 import { navigateTo } from '@/utils/navigation';
 import ActionButton from './ActionButton';
 import ActivateButton from './ActivateButton';
-import Account from './Account';
 import { useAccount } from '../contexts/account-context';
 import { useChain } from '../contexts/chain-context';
 import Spin from '@/components/Spin';
 import { useWallet } from '@/contexts/wallet';
 import { toast } from '@/hooks/use-toast';
+import AccountsDropdown from './AccountsDropdown';
 
 export default function BasicAccountInfo() {
-  const { accountInfo, accounts, getAccounts, updateTokens, updateAccount } =
-    useAccount();
+  const {
+    accountInfo,
+    accounts,
+    updateTokens,
+    updateAccount,
+    getAccounts,
+    updateHistory,
+  } = useAccount();
   const wallet = useWallet();
-  const { currentChain, chains, getCurrentChain } = useChain();
+  const { currentChain, getCurrentChain } = useChain();
 
   const onClickMore = () => {
     navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Settings);
@@ -43,32 +49,46 @@ export default function BasicAccountInfo() {
   // });
 
   const reloadAccount = async () => {
+    await getCurrentChain();
+    await getAccounts();
     await updateAccount();
     await updateTokens();
+    await updateHistory();
   };
 
-  const handleSwitchAccount = async (account: TAccountInfo) => {
+  const handleAddAccount = async () => {
+    navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.CreateNewAddress);
+  };
+
+  const handleSelectAccount = async (account: TAccountInfo) => {
     try {
       await wallet.switchAccountByChain(account.chainId);
-      await getCurrentChain();
+
       await reloadAccount();
     } catch (error) {
       console.error(error);
+      toast({
+        title: 'Failed to switch account',
+        description: 'Please try again',
+        variant: 'destructive',
+      });
     }
   };
 
-  const handleRemoveAccount = async (address: string) => {
+  const handleRemoveAccount = async (account: TAccountInfo) => {
     try {
-      await wallet.removeAccount(address);
+      await wallet.removeAccount(account.address);
+      await reloadAccount();
       toast({
         title: 'Account removed successfully',
       });
-      getAccounts();
     } catch (error) {
-      toast({
-        title: 'Account removed failed',
-      });
       console.error(error);
+      toast({
+        title: 'Failed to delete account',
+        description: 'Please try again',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -76,14 +96,12 @@ export default function BasicAccountInfo() {
     <div className="flex flex-col p-sm pb-0 ">
       {/* Chain & Address */}
       <div className="flex flex-row gap-2 w-full items-center justify-between mb-lg">
-        <Account
-          key={accountInfo.chainId}
-          chains={chains}
-          chain={currentChain}
-          currentAccount={accountInfo}
+        <AccountsDropdown
           accounts={accounts}
-          onClickAccount={handleSwitchAccount}
-          onDeleteAccount={handleRemoveAccount}
+          currentAccount={accountInfo}
+          onAddAccount={handleAddAccount}
+          onSwitchAccount={handleSelectAccount}
+          onRemoveAccount={handleRemoveAccount}
         />
         <div className="flex flex-row gap-lg">
           <Ellipsis className="elytro-clickable-icon" onClick={onClickMore} />

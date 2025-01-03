@@ -22,6 +22,7 @@ export default function TxConfirm() {
   const wallet = useWallet();
   const {
     opType,
+    txType,
     isPacking,
     hasSufficientBalance,
     userOp,
@@ -96,16 +97,15 @@ export default function TxConfirm() {
       await wallet.sendUserOperation(currentUserOp!);
 
       // TODO: what to do if op is a batch of txs?
-      if (decodedDetail) {
-        wallet.addNewHistory({
-          opHash,
-          timestamp: Date.now(),
-          from: userOp!.sender,
-          to: decodedDetail.to,
-          method: decodedDetail.method,
-          value: decodedDetail.value.toString(),
-        });
-      }
+      wallet.addNewHistory({
+        opHash,
+        timestamp: Date.now(),
+        from: userOp!.sender,
+        to: decodedDetail?.to || userOp?.factory,
+        method: decodedDetail?.method,
+        value: decodedDetail?.value.toString() || '0',
+        type: txType,
+      });
 
       await toast({
         title: 'Transaction sent successfully',

@@ -4,6 +4,8 @@ import {
   encodePacked,
   Hex,
   zeroHash,
+  parseAbiParameters,
+  toBytes,
 } from 'viem';
 
 export const DEFAULT_GUARDIAN_SAFE_PERIOD = 5;
@@ -11,10 +13,13 @@ export const DEFAULT_GUARDIAN_SAFE_PERIOD = 5;
 export const DEFAULT_GUARDIAN_HASH = zeroHash;
 
 const SOUL_WALLET_MSG_TYPE_HASH =
-  '0x04e6b5b1de6ba008d582849d4956d004d09a345fc11e7ba894975b5b56a4be66';
-// keccak256(
-//   toBytes('SoulWalletMessage(bytes32 message)')
-// );
+  // '0x04e6b5b1de6ba008d582849d4956d004d09a345fc11e7ba894975b5b56a4be66';
+  keccak256(
+    // below for old Contract (op sepolia)
+    // toBytes('SoulWalletMessage(bytes32 message)')
+    // below for new Contract (sepolia)
+    toBytes('ElytroMessage(bytes32 message)')
+  );
 const DOMAIN_SEPARATOR_TYPE_HASH =
   '0x47e79534a245952e8b16893a336b85a3d9ea9fa8c573f3d803afb92a79469218';
 // keccak256(
@@ -23,19 +28,20 @@ const DOMAIN_SEPARATOR_TYPE_HASH =
 
 export const getEncoded1271MessageHash = (message: Hex) => {
   return keccak256(
-    encodeAbiParameters(
-      [{ type: 'bytes32' }, { type: 'bytes32' }],
-      [SOUL_WALLET_MSG_TYPE_HASH, message]
-    )
+    encodeAbiParameters(parseAbiParameters(['bytes32', 'bytes32']), [
+      SOUL_WALLET_MSG_TYPE_HASH,
+      message,
+    ])
   );
 };
 
 export const getDomainSeparator = (chainIdHex: Hex, walletAddress: Hex) => {
   return keccak256(
-    encodeAbiParameters(
-      [{ type: 'bytes32' }, { type: 'uint256' }, { type: 'address' }],
-      [DOMAIN_SEPARATOR_TYPE_HASH, BigInt(chainIdHex), walletAddress]
-    )
+    encodeAbiParameters(parseAbiParameters(['bytes32', 'uint256', 'address']), [
+      DOMAIN_SEPARATOR_TYPE_HASH,
+      BigInt(chainIdHex),
+      walletAddress,
+    ])
   );
 };
 

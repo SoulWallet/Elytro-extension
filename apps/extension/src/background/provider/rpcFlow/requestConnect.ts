@@ -6,10 +6,7 @@ import connectionManager from '@/background/services/connection';
 import type { TFlowMiddleWareFn } from '@/utils/asyncTaskFlow';
 import { ethErrors } from 'eth-rpc-errors';
 
-const CONNECT_METHODS: ProviderMethodType[] = [
-  'eth_accounts',
-  'eth_requestAccounts',
-];
+const CONNECT_METHODS: ProviderMethodType[] = ['eth_requestAccounts'];
 
 const CONNECT_METHODS_WITH_PERMISSIONS: ProviderMethodType[] = [
   'wallet_requestPermissions',

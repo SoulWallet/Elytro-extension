@@ -13,6 +13,7 @@ import { EVENT_TYPES } from '@/constants/events';
 import uiReqCacheManager from '@/utils/cache/uiReqCacheManager';
 import { rpcCacheManager } from '@/utils/cache/rpcCacheManager';
 import accountManager from './services/account';
+import { ElytroMessageTypeEn } from '@/utils/message/duplexStream';
 
 chrome.runtime.onInstalled.addListener((details) => {
   switch (details.reason) {
@@ -43,7 +44,6 @@ chrome.sidePanel
 
 const initApp = async () => {
   // await keyring.restore();
-  await connectionManager.restore();
   await sendReadyMessageToTabs();
 
   rpcCacheManager.init();
@@ -58,7 +58,7 @@ const initApp = async () => {
 
 initApp();
 
-const providerPortManager = new PortMessageManager('elytro-bg');
+const providerPortManager = new PortMessageManager('elytro-cs');
 
 /**
  * Init the message between background and (content script / page provider)
@@ -73,25 +73,22 @@ const initContentScriptAndPageProviderMessage = (port: chrome.runtime.Port) => {
 
   providerPortManager.connect(port);
 
-  // const heartbeat = setInterval(() => {
-  //   if (port) {
-  //     port.postMessage({ type: 'HEARTBEAT', data: '{}' });
-  //     console.log('elytro heartbeat');
-  //   }
-  // }, 6_000);
-
   port.onDisconnect.addListener(() => {
-    // clearInterval(heartbeat);
     sessionManager.removeSession(tabId, origin);
   });
 
-  providerPortManager.onMessage('NEW_PAGE_LOADED', async () => {
-    sessionManager.createSession(tabId, origin, providerPortManager);
+  providerPortManager.onMessage('NEW_PAGE_LOADED', async (_, port) => {
+    const { origin, tab } = port.sender || {};
+    if (!origin || !tab?.id) {
+      return;
+    }
+
+    sessionManager.createSession(tab.id, origin, providerPortManager);
 
     if (connectionManager.isConnected(origin)) {
       await keyring.tryUnlock();
 
-      // wait 300ms to ensure the session is ready
+      // wait 500ms to ensure the session is ready
       setTimeout(() => {
         sessionManager.broadcastMessageToDApp(
           origin,
@@ -100,7 +97,7 @@ const initContentScriptAndPageProviderMessage = (port: chrome.runtime.Port) => {
             ? [accountManager.currentAccount.address]
             : []
         );
-      }, 300);
+      }, 500);
     }
   });
 
@@ -110,17 +107,13 @@ const initContentScriptAndPageProviderMessage = (port: chrome.runtime.Port) => {
       { uuid, payload }: { uuid: string; payload: RequestArguments },
       port
     ) => {
-      const tabId = port.sender?.tab?.id;
+      const { origin, tab } = port.sender || {};
 
-      if (!tabId || !port.sender?.origin) {
+      if (!origin || !tab?.id) {
         return;
       }
 
-      sessionManager.createSession(
-        tabId,
-        port.sender.origin,
-        providerPortManager
-      );
+      sessionManager.createSession(tab.id, origin, providerPortManager);
 
       const dAppInfo = await getDAppInfoFromSender(port.sender!);
       const providerReq: TProviderRequest = {
@@ -132,23 +125,25 @@ const initContentScriptAndPageProviderMessage = (port: chrome.runtime.Port) => {
         const result = await rpcFlow(providerReq);
 
         providerPortManager.sendMessage(
-          'BUILTIN_PROVIDER_RESPONSE',
+          ElytroMessageTypeEn.RESPONSE_TO_CONTENT_SCRIPT,
           {
             method: payload.method,
             data: result,
             uuid,
           },
-          port.sender?.id
+          origin
         );
       } catch (error) {
+        console.error('Elytro: dApp request encountered error', error);
+
         providerPortManager.sendMessage(
-          'BUILTIN_PROVIDER_RESPONSE',
+          ElytroMessageTypeEn.RESPONSE_TO_CONTENT_SCRIPT,
           {
             method: payload.method,
-            error: (error as Error).message,
+            error,
             uuid,
           },
-          port.sender?.id
+          origin
         );
       }
     }
@@ -196,24 +191,29 @@ const initUIMessage = (port: chrome.runtime.Port) => {
     try {
       const result = await handleUIRequestWithCache(data as TUIRequest);
 
-      UIPortManager.sendMessage(msgKey, { result }, port.sender?.id);
+      UIPortManager.sendMessage(msgKey, { result }, port.sender?.origin);
     } catch (error) {
       UIPortManager.sendMessage(
         msgKey,
         { error: (error as Error).message },
-        port.sender?.id
+        port.sender?.origin
       );
     }
   });
 };
 
 chrome.runtime.onConnect.addListener((port) => {
+  console.log('port.name', port.name, port.sender);
+
   if (port.name === 'elytro-ui') {
     initUIMessage(port);
     return;
   }
 
-  initContentScriptAndPageProviderMessage(port);
+  if (port.name === 'elytro-cs') {
+    initContentScriptAndPageProviderMessage(port);
+    return;
+  }
 });
 
 const initBackgroundMessage = () => {

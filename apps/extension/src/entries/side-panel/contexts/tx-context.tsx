@@ -7,6 +7,7 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { toHex } from 'viem';
 import { SIDE_PANEL_ROUTE_PATHS } from '../routes';
 import { useApproval } from './approval-context';
+import { HistoricalActivityTypeEn } from '@/constants/operations';
 
 export enum UserOpType {
   DeployWallet = 1,
@@ -22,6 +23,7 @@ type ITxContext = {
   userOp: Nullable<ElytroUserOperation>;
   calcResult: Nullable<TUserOperationPreFundResult>;
   decodedDetail: Nullable<DecodeResult>;
+  txType: Nullable<HistoricalActivityTypeEn>;
   // TODO: params can be an array of transactions
   openUserOpConfirmTx: (opType: UserOpType, params?: Transaction) => void;
   closeUserOpConfirmTx: () => void;
@@ -36,12 +38,14 @@ const TxContext = createContext<ITxContext>({
   decodedDetail: null,
   openUserOpConfirmTx: () => {},
   closeUserOpConfirmTx: () => {},
+  txType: null,
 });
 
 // TODO: maybe move this to tx-confirm page?
 export const TxProvider = ({ children }: { children: React.ReactNode }) => {
   const wallet = useWallet();
   const userOpRef = useRef<Nullable<ElytroUserOperation>>();
+  const txTypeRef = useRef<Nullable<HistoricalActivityTypeEn>>(null);
   const { approval } = useApproval();
 
   const [opType, setOpType] = useState<Nullable<UserOpType>>(null);
@@ -65,6 +69,22 @@ export const TxProvider = ({ children }: { children: React.ReactNode }) => {
     setDecodedDetail(null);
     setHasSufficientBalance(false);
     setIsPacking(false);
+    setCalcResult(null);
+    txTypeRef.current = null;
+    userOpRef.current = null;
+  };
+
+  const getTxType = (type: UserOpType, params?: Transaction) => {
+    if (type === UserOpType.DeployWallet) {
+      return HistoricalActivityTypeEn.ActivateAccount;
+    }
+
+    if (params?.data?.length && params.data.length > 0) {
+      return HistoricalActivityTypeEn.ContractInteraction;
+    }
+
+    // TODO: no 'receive' tx type yet.
+    return HistoricalActivityTypeEn.Send;
   };
 
   const packUserOp = async (type: UserOpType, params?: Transaction) => {
@@ -100,6 +120,7 @@ export const TxProvider = ({ children }: { children: React.ReactNode }) => {
       userOpRef.current = res.userOp;
       setCalcResult(res.calcResult);
       setHasSufficientBalance(!res.calcResult.needDeposit);
+      txTypeRef.current = getTxType(type, params);
     } catch (err: unknown) {
       const errMsg = (err as Error)?.message || String(err) || 'Unknown Error';
       toast({
@@ -126,6 +147,7 @@ export const TxProvider = ({ children }: { children: React.ReactNode }) => {
     <TxContext.Provider
       value={{
         userOp: userOpRef.current,
+        txType: txTypeRef.current,
         opType,
         isPacking,
         calcResult,
