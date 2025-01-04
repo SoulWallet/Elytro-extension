@@ -38,6 +38,7 @@ export const checkMethodExist: TFlowMiddleWareFn = async (ctx, next) => {
     BANNED_METHODS_WITHOUT_DEPLOYMENT.includes(rpcReq.method) &&
     !accountManager.currentAccount?.isDeployed
   ) {
+    // TODO: Alert window may popup multiple times when there are multiple requests in a short time
     return await approvalService.request(ApprovalTypeEn.Alert, {
       dApp,
       options: {

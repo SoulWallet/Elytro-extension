@@ -203,8 +203,6 @@ const initUIMessage = (port: chrome.runtime.Port) => {
 };
 
 chrome.runtime.onConnect.addListener((port) => {
-  console.log('port.name', port.name, port.sender);
-
   if (port.name === 'elytro-ui') {
     initUIMessage(port);
     return;
