@@ -11,6 +11,7 @@ import TxConfirm from './pages/TxConfirm';
 import CreateNewAddress from './pages/CreateNewAddress';
 import LocalProfile from './pages/LocalProfile';
 import Connection from './pages/Connection';
+import ChainChange from './pages/ChainChange';
 
 export const SIDE_PANEL_ROUTE_PATHS = {
   Home: '/',
@@ -27,6 +28,7 @@ export const SIDE_PANEL_ROUTE_PATHS = {
   CreateNewAddress: '/create-new-address',
   LocalProfile: '/local-profile',
   Connection: '/connection',
+  ChainChange: '/chain-change',
 } as const;
 
 export const routes: TRoute[] = [
@@ -82,5 +84,9 @@ export const routes: TRoute[] = [
   {
     path: SIDE_PANEL_ROUTE_PATHS.Connection,
     component: Connection,
+  },
+  {
+    path: SIDE_PANEL_ROUTE_PATHS.ChainChange,
+    component: ChainChange,
   },
 ];

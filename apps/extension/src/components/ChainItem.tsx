@@ -28,7 +28,11 @@ export default function ChainItem({
         disabled && 'cursor-not-allowed opacity-50'
       )}
     >
-      <img src={chain?.icon} alt={chain?.name} className="size-8" />
+      <img
+        src={chain?.icon}
+        alt={chain?.name}
+        className="size-8 rounded-full"
+      />
       <div className="elytro-text-small-bold">{chain?.name}</div>
     </div>
   );

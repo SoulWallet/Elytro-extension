@@ -1,4 +1,10 @@
-import { Chain, optimism, optimismSepolia, sepolia } from 'viem/chains';
+import {
+  Chain,
+  optimism,
+  optimismSepolia,
+  scrollSepolia,
+  sepolia,
+} from 'viem/chains';
 
 export type TChainConfigItem = {
   chainId: number;
@@ -78,6 +84,23 @@ export const SUPPORTED_CHAINS: TChainItem[] = [
     validator: '0x162485941bA1FAF21013656DAB1E60e9D7226DC0',
     onchainConfig: {
       chainId: sepolia.id,
+      entryPoint: '0x0000000071727De22E5E9d8BAf0edAc6f37da032',
+      soulWalletLogic: '0x186b91aE45dd22dEF329BF6b4233cf910E157C84',
+    },
+  },
+  {
+    ...scrollSepolia,
+    icon: 'https://assets.coingecko.com/coins/images/50571/standard/scroll.jpg',
+    endpoint:
+      'https://scroll-sepolia.g.alchemy.com/v2/7EJnXZWkG9HIhjj0ZLx7vk_lexCq25Pr',
+    bundler:
+      'https://api.pimlico.io/v2/534351/rpc?apikey=pim_7KhEvjRKpLviLbtDBuHySr',
+    factory: '0x70B616f23bDDB18c5c412dB367568Dc360e224Bb',
+    fallback: '0xe4eA02c80C3CD86B2f23c8158acF2AAFcCa5A6b3',
+    recovery: '0x36693563E41BcBdC8d295bD3C2608eb7c32b1cCb',
+    validator: '0x162485941bA1FAF21013656DAB1E60e9D7226DC0',
+    onchainConfig: {
+      chainId: scrollSepolia.id,
       entryPoint: '0x0000000071727De22E5E9d8BAf0edAc6f37da032',
       soulWalletLogic: '0x186b91aE45dd22dEF329BF6b4233cf910E157C84',
     },

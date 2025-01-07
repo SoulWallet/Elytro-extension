@@ -65,6 +65,19 @@ type TApprovalData = {
   tx?: TTransactionInfo[];
   options?: unknown;
   sign?: TSignData;
+  chain?: {
+    method: 'switch' | 'add';
+    chainId: number;
+    chainName: string;
+    rpcUrls: string[];
+    nativeCurrency: {
+      name: string;
+      symbol: string;
+      decimals: number;
+    };
+    blockExplorerUrls: string[];
+    iconUrls: string[];
+  };
 };
 
 type TApprovalInfo = {
