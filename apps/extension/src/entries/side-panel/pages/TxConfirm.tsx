@@ -19,7 +19,7 @@ const UserOpTitleMap = {
 };
 
 export default function TxConfirm() {
-  const wallet = useWallet();
+  const { wallet } = useWallet();
   const {
     opType,
     txType,
