@@ -5,7 +5,7 @@ import ConnectionConfirmation from '../components/ConnectConfirmation';
 import Spin from '@/components/Spin';
 
 export default function Connect() {
-  const wallet = useWallet();
+  const { wallet } = useWallet();
   const { approval, resolve, reject } = useApproval();
 
   if (!approval || !approval.data) {

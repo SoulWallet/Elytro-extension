@@ -34,7 +34,7 @@ const ConnectedSiteItem = ({
 };
 
 export default function Connection() {
-  const wallet = useWallet();
+  const { wallet } = useWallet();
   const [connectedSites, setConnectedSites] = useState<TConnectedDAppInfo[]>(
     []
   );

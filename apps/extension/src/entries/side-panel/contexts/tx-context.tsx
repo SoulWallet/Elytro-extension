@@ -43,7 +43,7 @@ const TxContext = createContext<ITxContext>({
 
 // TODO: maybe move this to tx-confirm page?
 export const TxProvider = ({ children }: { children: React.ReactNode }) => {
-  const wallet = useWallet();
+  const { wallet } = useWallet();
   const userOpRef = useRef<Nullable<ElytroUserOperation>>();
   const txTypeRef = useRef<Nullable<HistoricalActivityTypeEn>>(null);
   const { approval } = useApproval();

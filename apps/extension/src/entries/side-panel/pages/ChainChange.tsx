@@ -35,7 +35,7 @@ function URLSection({ title, items }: { title: string; items: string[] }) {
 }
 
 export default function ChainChange() {
-  const wallet = useWallet();
+  const { wallet } = useWallet();
   const { currentChain } = useChain();
   const { approval, reject, resolve } = useApproval();
 

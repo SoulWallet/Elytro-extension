@@ -4,7 +4,6 @@ import { PasswordSetter } from '../components/PasswordSetter';
 import { navigateTo } from '@/utils/navigation';
 import { toast } from '@/hooks/use-toast';
 import { TAB_ROUTE_PATHS } from '../routes';
-import { useKeyring } from '@/contexts/keyring';
 import { SIDE_PANEL_ROUTE_PATHS } from '@/entries/side-panel/routes';
 import { useWallet } from '@/contexts/wallet';
 import { TChainItem } from '@/constants/chains';
@@ -30,12 +29,12 @@ const ProgressBarStep: React.FC<{ isActive: boolean }> = ({ isActive }) => (
 
 const PasswordStep = ({ onNext }: { onNext: () => void }) => {
   const [loading, setLoading] = useState(false);
-  const { createNewOwner } = useKeyring();
+  const { wallet } = useWallet();
 
   const handleCreatePassword = async (pwd: string) => {
     try {
       setLoading(true);
-      await createNewOwner(pwd);
+      await wallet.createNewOwner(pwd);
 
       onNext();
     } catch (error) {
@@ -53,7 +52,7 @@ const PasswordStep = ({ onNext }: { onNext: () => void }) => {
 
 const CreateAccountStep = ({ onNext }: { onNext: () => void }) => {
   const { chains, getChains } = useChain();
-  const wallet = useWallet();
+  const { wallet } = useWallet();
   const [selectedChain, setSelectedChain] = useState<TChainItem | null>(null);
 
   useEffect(() => {

@@ -1,4 +1,3 @@
-import { useKeyring } from '@/contexts/keyring';
 import SecondaryPageWrapper from '../components/SecondaryPageWrapper';
 import { Button } from '@/components/ui/button';
 import { SIDE_PANEL_ROUTE_PATHS } from '../routes';
@@ -11,11 +10,13 @@ import {
   ShieldIcon,
   UserRoundIcon,
 } from 'lucide-react';
+import { useWallet } from '@/contexts/wallet';
 
 export default function Settings() {
-  const { lock } = useKeyring();
+  const { wallet } = useWallet();
   const handleLock = async () => {
-    await lock();
+    await wallet.lock();
+    navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Launch);
   };
 
   const handleJumpPage = (path: SidePanelRoutePath) => {

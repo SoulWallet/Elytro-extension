@@ -12,6 +12,7 @@ import LocalSubscribableStore from '@/utils/store/LocalSubscribableStore';
 
 type KeyringServiceState = {
   data?: TPasswordEncryptedData;
+  hasOwner?: boolean;
 };
 
 const KEYRING_STORAGE_KEY = 'elytroKeyringState';
@@ -29,6 +30,14 @@ class KeyringService {
         this._verifyPassword();
       }
     );
+  }
+
+  get hasOwner() {
+    return this._store.state.hasOwner ?? false;
+  }
+
+  private set _hasOwner(value: boolean) {
+    this._store.state.hasOwner = value;
   }
 
   private get _encryptData() {
@@ -77,6 +86,7 @@ class KeyringService {
         password
       );
       this._encryptData = encryptedData;
+      this._hasOwner = true;
       this._locked = false;
     } catch {
       this._locked = true;

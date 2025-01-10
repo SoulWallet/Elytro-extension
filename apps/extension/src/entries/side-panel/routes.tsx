@@ -1,5 +1,4 @@
 import { TRoute } from '@/types/route';
-import Unlock from './pages/Unlock';
 import Dashboard from './pages/Dashboard';
 import Receive from './pages/Receive';
 import Settings from './pages/Settings';
@@ -12,6 +11,7 @@ import CreateNewAddress from './pages/CreateNewAddress';
 import LocalProfile from './pages/LocalProfile';
 import Connection from './pages/Connection';
 import ChainChange from './pages/ChainChange';
+import Launch from './pages/Launch';
 
 export const SIDE_PANEL_ROUTE_PATHS = {
   Home: '/',
@@ -29,12 +29,17 @@ export const SIDE_PANEL_ROUTE_PATHS = {
   LocalProfile: '/local-profile',
   Connection: '/connection',
   ChainChange: '/chain-change',
+  Launch: '/launch',
 } as const;
 
 export const routes: TRoute[] = [
   {
     path: SIDE_PANEL_ROUTE_PATHS.Home,
-    component: Dashboard,
+    component: Launch,
+  },
+  {
+    path: SIDE_PANEL_ROUTE_PATHS.Launch,
+    component: Launch,
   },
   {
     path: SIDE_PANEL_ROUTE_PATHS.Dashboard,
@@ -43,10 +48,6 @@ export const routes: TRoute[] = [
   {
     path: SIDE_PANEL_ROUTE_PATHS.Settings,
     component: Settings,
-  },
-  {
-    path: SIDE_PANEL_ROUTE_PATHS.Unlock,
-    component: Unlock,
   },
 
   {

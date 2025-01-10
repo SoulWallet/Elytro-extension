@@ -24,7 +24,7 @@ export default function BasicAccountInfo() {
     getAccounts,
     updateHistory,
   } = useAccount();
-  const wallet = useWallet();
+  const { wallet } = useWallet();
   const { currentChain, getCurrentChain } = useChain();
 
   const onClickMore = () => {

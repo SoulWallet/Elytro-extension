@@ -18,6 +18,13 @@ import accountManager from './services/account';
 import type { Transaction } from '@soulwallet/sdk';
 import { TChainItem } from '@/constants/chains';
 
+enum WalletStatusEn {
+  NoOwner = 'NoOwner',
+  NoAccount = 'NoAccount',
+  HasAccountButLocked = 'HasAccountButLocked',
+  HasAccountAndUnlocked = 'HasAccountAndUnlocked',
+}
+
 // ! DO NOT use getter. They can not be proxied.
 // ! Please declare all methods async.
 class WalletController {
@@ -34,6 +41,19 @@ class WalletController {
   public async getLockStatus() {
     await keyring.tryUnlock();
     return keyring.locked;
+  }
+  public async getWalletStatus() {
+    if (!keyring.hasOwner) {
+      return WalletStatusEn.NoOwner;
+    }
+
+    if (accountManager.accounts.length === 0) {
+      return WalletStatusEn.NoAccount;
+    }
+
+    return keyring.locked
+      ? WalletStatusEn.HasAccountButLocked
+      : WalletStatusEn.HasAccountAndUnlocked;
   }
 
   public async lock() {
@@ -304,5 +324,6 @@ class WalletController {
   }
 }
 
-export const walletController = new WalletController();
-export { WalletController };
+const walletController = new WalletController();
+
+export { walletController, WalletController, WalletStatusEn };

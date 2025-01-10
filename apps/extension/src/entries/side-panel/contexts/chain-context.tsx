@@ -18,7 +18,7 @@ const ChainContext = createContext<IChainContext>({
 });
 
 export const ChainProvider = ({ children }: { children: React.ReactNode }) => {
-  const wallet = useWallet();
+  const { wallet } = useWallet();
   const [chains, setChains] = useState<TChainItem[]>([]);
   const [currentChain, setCurrentChain] = useState<TChainItem | null>(null);
 

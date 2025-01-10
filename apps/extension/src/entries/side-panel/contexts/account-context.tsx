@@ -52,7 +52,7 @@ export const AccountProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const wallet = useWallet();
+  const { wallet } = useWallet();
   const [accountInfo, setAccountInfo] =
     useState<TAccountInfo>(DEFAULT_ACCOUNT_INFO);
   const [loading, setLoading] = useState(false);

@@ -14,7 +14,7 @@ import { useAccount } from '../contexts/account-context';
 export default function CreateNewAddress() {
   const { chains, currentChain } = useChain();
   const { accounts } = useAccount();
-  const wallet = useWallet();
+  const { wallet } = useWallet();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedChain, setSelectedChain] = useState<TChainItem | null>(null);
   const handleChange = (value: string) => {

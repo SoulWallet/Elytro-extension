@@ -27,7 +27,7 @@ export default function SignDetail({
   chainName,
   signData: { method, params },
 }: ISendTxProps) {
-  const wallet = useWallet();
+  const { wallet } = useWallet();
   const signType = method as SignTypeEn;
 
   const { title, format, messageIdx, showDetail, signMethod } =

@@ -15,7 +15,6 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import { useKeyring } from '@/contexts/keyring';
 import { useWallet } from '@/contexts/wallet';
 import { toast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,8 +30,7 @@ export default function ChangePasswordModal({
   open,
   handleOnOpenChange,
 }: IProps) {
-  const { lock } = useKeyring();
-  const wallet = useWallet();
+  const { wallet } = useWallet();
   const handleCheckPassword = async (password: string) => {
     const locked = await wallet.unlock(password);
     return !locked;
@@ -90,7 +88,7 @@ export default function ChangePasswordModal({
         title: 'Password changed',
         description: 'Your password has been changed successfully',
       });
-      lock();
+      await wallet.lock();
     } catch (error) {
       toast({
         title: 'Error',

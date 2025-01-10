@@ -19,7 +19,7 @@ export default function AddressInput({
   field: FieldValues;
   currentChain: TChainItem | null;
 }>) {
-  const wallet = useWallet();
+  const { wallet } = useWallet();
   const [displayLabel, setDisplayLabel] = useState<string>('');
   const [value, setValue] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);

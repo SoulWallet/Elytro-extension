@@ -1,6 +1,12 @@
-import { createContext, useContext } from 'react';
-import { WalletController } from '@/background/walletController';
+import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  WalletController,
+  WalletStatusEn,
+} from '@/background/walletController';
 import PortMessage from '@/utils/message/portMessage';
+import { toast } from '@/hooks/use-toast';
+import { SIDE_PANEL_ROUTE_PATHS } from '@/entries/side-panel/routes';
+import { navigateTo } from '@/utils/navigation';
 
 const portMessage = new PortMessage('elytro-ui');
 
@@ -30,22 +36,48 @@ const walletControllerProxy = new Proxy(
 
 type IWalletContext = {
   wallet: WalletController;
+  status: WalletStatusEn;
 };
 
 const WalletContext = createContext<IWalletContext>({
   wallet: walletControllerProxy as WalletController,
+  status: WalletStatusEn.NoOwner,
 });
 
 export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
+  const [status, setStatus] = useState<WalletStatusEn>(WalletStatusEn.NoOwner);
+
+  const getWalletStatus = async () => {
+    try {
+      const res = await walletControllerProxy.getWalletStatus();
+
+      if (res !== WalletStatusEn.HasAccountAndUnlocked) {
+        navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Home);
+      }
+      setStatus(res);
+    } catch {
+      toast({
+        title: 'Failed to get wallet status',
+        description: 'Please try again later',
+        variant: 'destructive',
+      });
+      setStatus(WalletStatusEn.NoOwner);
+    }
+  };
+
+  useEffect(() => {
+    getWalletStatus();
+  }, [walletControllerProxy]);
+
   return (
-    <WalletContext.Provider value={{ wallet: walletControllerProxy }}>
+    <WalletContext.Provider value={{ wallet: walletControllerProxy, status }}>
       {children}
     </WalletContext.Provider>
   );
 };
 
 export const useWallet = () => {
-  const { wallet } = useContext(WalletContext);
+  const { wallet, status } = useContext(WalletContext);
 
-  return wallet;
+  return { wallet, status };
 };

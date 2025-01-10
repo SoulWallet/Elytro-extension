@@ -24,7 +24,7 @@ chrome.runtime.onInstalled.addListener((details) => {
           url: chrome.runtime.getURL(`src/entries/tab/index.html#/launch`),
         });
       }, 200);
-      break;
+
     // case chrome.runtime.OnInstalledReason.UPDATE:
     //   // TODO: do something
     //   break;

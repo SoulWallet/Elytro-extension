@@ -19,6 +19,17 @@ const SocialMediaIcon: React.FC<{
   );
 };
 
+const handleInit = () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const tabId = tabs[0]?.id;
+    if (tabId) {
+      chrome.sidePanel.open({
+        tabId,
+      });
+    }
+  });
+};
+
 const Launch: React.FC = () => {
   return (
     <TabLayout
@@ -40,6 +51,10 @@ const Launch: React.FC = () => {
           <Button
             className="rounded-full w-full px-4 py-5 h-14 mb-4 font-medium text-lg leading-6"
             onClick={() => {
+              // TODO: Maintain two ways to launch temporarily. Delete the later one after side panel launch is implemented
+              // 1. tab launch must be reserved cause side panel cannot be opened when ext is installed
+              handleInit();
+              // 2. remove this after side panel launch is implemented
               navigateTo('tab', TAB_ROUTE_PATHS.Create);
             }}
           >

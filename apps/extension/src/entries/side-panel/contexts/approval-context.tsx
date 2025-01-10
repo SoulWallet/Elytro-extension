@@ -20,7 +20,7 @@ export const ApprovalProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const wallet = useWallet();
+  const { wallet } = useWallet();
   const [approval, setApproval] = useState<Nullable<TApprovalInfo>>(null);
 
   const getCurrentApproval = async () => {
