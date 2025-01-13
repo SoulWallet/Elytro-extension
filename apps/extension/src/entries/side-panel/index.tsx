@@ -8,7 +8,6 @@ import { ApprovalProvider } from './contexts/approval-context';
 import { AccountProvider } from './contexts/account-context';
 import { ApolloProvider } from '@apollo/client';
 import { routes } from './routes';
-import SignTxModal from '@/entries/side-panel/components/SignTxModal';
 import { client } from '@/requests';
 import { TxProvider } from './contexts/tx-context';
 import { AlerterProvider } from '@/components/ui/alerter';
@@ -24,7 +23,6 @@ const main = () => {
               <TooltipProvider>
                 <AlerterProvider>
                   <HashRouter routes={routes} />
-                  <SignTxModal />
                 </AlerterProvider>
                 {/* <UserOpConfirmDialog /> */}
               </TooltipProvider>
