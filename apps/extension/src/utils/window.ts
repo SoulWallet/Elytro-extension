@@ -107,8 +107,27 @@ const openPopupWindow = async (path: string) => {
   // }
 
   return await createWindow(
-    chrome.runtime.getURL(`src/entries/side-panel/index.html#/${path}`)
+    chrome.runtime.getURL(`src/side-panel.html#/${path}`)
   );
+};
+
+const openSidePanel = async (onOpen?: () => void) => {
+  try {
+    chrome.tabs.getCurrent().then((tab) => {
+      if (tab?.id || tab?.windowId) {
+        chrome.sidePanel
+          .open({
+            tabId: tab.id,
+            windowId: tab.windowId,
+          })
+          .then(() => {
+            onOpen?.();
+          });
+      }
+    });
+  } catch {
+    // do nth.
+  }
 };
 
 export {
@@ -117,4 +136,5 @@ export {
   tryRemoveWindow,
   approvalWindowEvent,
   ApprovalWindowEventNameEn,
+  openSidePanel,
 };

@@ -5,7 +5,7 @@ import {
 } from '@/background/walletController';
 import PortMessage from '@/utils/message/portMessage';
 import { toast } from '@/hooks/use-toast';
-import { SIDE_PANEL_ROUTE_PATHS } from '@/entries/side-panel/routes';
+import { SIDE_PANEL_ROUTE_PATHS } from '@/routes';
 import { navigateTo } from '@/utils/navigation';
 
 const portMessage = new PortMessage('elytro-ui');

@@ -21,7 +21,7 @@ chrome.runtime.onInstalled.addListener((details) => {
       // wait for 200ms to ensure the page is ready
       setTimeout(() => {
         chrome.tabs.create({
-          url: chrome.runtime.getURL(`src/entries/tab/index.html#/launch`),
+          url: chrome.runtime.getURL(`src/tab.html`),
         });
       }, 200);
 

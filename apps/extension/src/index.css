@@ -132,6 +132,15 @@
     background-blend-mode: overlay;
   }
 
+  .elytro-horizontal-gradient-bg {
+    background: radial-gradient(
+      93.78% 93.78% at 83.78% 16.41%,
+      #fffaf5 0%,
+      #e5f2f3 100%
+    );
+    background-blend-mode: overlay;
+  }
+
   .elytro-setting-item {
     @apply border p-lg rounded-md text-lg font-medium bg-white cursor-pointer flex items-center;
   }

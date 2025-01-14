@@ -27,9 +27,10 @@ export default defineConfig({
     outDir: process.env.NODE_ENV === 'production' ? 'build' : 'dist',
     rollupOptions: {
       input: {
-        sidePanel: resolve(__dirname, 'src/entries/side-panel/index.html'),
-        tab: resolve(__dirname, 'src/entries/tab/index.html'),
+        tab: resolve(__dirname, 'src/tab.html'),
+        sidePanel: resolve(__dirname, 'src/side-panel.html'),
       },
+      treeshake: true,
     },
   },
   server: {
