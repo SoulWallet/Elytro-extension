@@ -126,7 +126,7 @@ export const TxProvider = ({ children }: { children: React.ReactNode }) => {
       userOpRef.current = res.userOp;
       setCalcResult(res.calcResult);
       setHasSufficientBalance(!res.calcResult.needDeposit);
-      txTypeRef.current = getTxType(type, params);
+      txTypeRef.current = getTxType(type, params?.[0]);
     } catch (err: unknown) {
       const errMsg = (err as Error)?.message || String(err) || 'Unknown Error';
       toast({
@@ -144,7 +144,7 @@ export const TxProvider = ({ children }: { children: React.ReactNode }) => {
     if (approval?.data?.tx?.[0]) {
       packUserOp(
         UserOpType.ApproveTransaction,
-        approval?.data?.tx?.[0] as Transaction
+        approval?.data?.tx as Transaction[]
       );
     }
   }, [approval]);

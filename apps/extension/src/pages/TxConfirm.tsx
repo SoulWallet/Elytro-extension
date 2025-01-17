@@ -72,15 +72,19 @@ export default function TxConfirm() {
     //   });
     // }
 
+    const goSuccessPage = () => {
+      navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.TxSuccess, {
+        opHash,
+      });
+    };
+
     switch (opType) {
       case UserOpType.ApproveTransaction:
         resolve(opHash);
-      // fallthrough intentionally
-      // eslint-disable-next-line no-fallthrough
+        goSuccessPage();
+        break;
       case UserOpType.SendTransaction:
-        navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.TxSuccess, {
-          opHash,
-        });
+        goSuccessPage();
         break;
       case UserOpType.DeployWallet:
         navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Dashboard, {

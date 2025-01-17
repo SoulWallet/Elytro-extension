@@ -57,7 +57,7 @@ export default function TxSuccess() {
             openExplorer(opHash);
           }}
         >
-          <ExternalLink className="size-3 mb-2xs" />
+          <ExternalLink className="size-3 mr-2xs" />
           Transaction details
         </Button>
       </div>
