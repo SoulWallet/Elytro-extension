@@ -73,22 +73,35 @@
     @apply border-border;
     @apply text-black-blue hover:text-dark-blue;
   }
+  @font-face {
+    font-family: 'ElytroSohne';
+    src:  url('/src/assets/fonts/soehne-buch.woff2') format('woff2'),
+          url('/src/assets/fonts/soehne-buch.woff') format('woff');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'ElytroSohne';
+    src:  url('/src/assets/fonts/soehne-kraftig.woff2') format('woff2'),
+          url('/src/assets/fonts/soehne-kraftig.woff') format('woff');
+    font-weight: 700;
+  }
   body {
     @apply bg-background text-foreground;
     user-select: none;
+    font-family: ElytroSohne;
   }
 }
 
 @layer components {
   .elytro-text-hero {
-    @apply text-[52px] font-medium leading-[100%] text-black-blue;
+    @apply text-[52px] font-bold leading-[100%] text-black-blue;
   }
   .elytro-text-headline {
-    @apply text-[40px] font-medium leading-[100%] text-black-blue;
+    @apply text-[40px] font-bold leading-[100%] text-black-blue;
   }
 
   .elytro-text-subtitle {
-    @apply text-[28px] font-medium leading-[105%] text-black-blue;
+    @apply text-[28px] font-bold leading-[105%] text-black-blue;
   }
 
   .elytro-text-body {
@@ -96,7 +109,7 @@
   }
 
   .elytro-text-bold-body {
-    @apply elytro-text-body font-medium;
+    @apply elytro-text-body font-bold;
   }
 
   .elytro-text-small {
@@ -104,7 +117,7 @@
   }
 
   .elytro-text-small-bold {
-    @apply elytro-text-small font-medium;
+    @apply elytro-text-small font-bold;
   }
 
   .elytro-text-smaller-body {
@@ -112,7 +125,7 @@
   }
 
   .elytro-text-smaller-bold-body {
-    @apply elytro-text-smaller-body font-medium;
+    @apply elytro-text-smaller-body font-bold;
   }
 
   .elytro-text-tiny-body {
@@ -120,7 +133,7 @@
   }
 
   .elytro-text-tiny-bold-body {
-    @apply elytro-text-tiny-body font-medium;
+    @apply elytro-text-tiny-body font-bold;
   }
 
   .elytro-clickable-icon {

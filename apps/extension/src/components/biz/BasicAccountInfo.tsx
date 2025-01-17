@@ -59,12 +59,11 @@ export default function BasicAccountInfo() {
             className="elytro-clickable-icon"
             onClick={() => safeClipboard(accountInfo.address)}
           />
-
-          <Ellipsis className="elytro-clickable-icon" onClick={onClickMore} />
           <RefreshCcw
             className="elytro-clickable-icon"
             onClick={reloadAccount}
           />
+          <Ellipsis className="elytro-clickable-icon" onClick={onClickMore} />
         </div>
       </div>
 

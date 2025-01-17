@@ -32,12 +32,12 @@ module.exports = {
         2: '2px',
       },
       fontSize: {
-        xs: '0.75rem',
-        sm: '0.875rem',
-        base: '1rem',
-        lg: '1.125rem',
-        xl: '1.25rem',
-        '2xl': '1.3rem',
+        xs: '0.75rem' /* 'tiny', 12px */,
+        sm: '0.875rem' /* 'smaller', 14px */,
+        base: '1rem' /*'small', 16px */,
+        lg: '1.125rem' /* 'body', 18px */,
+        xl: '1.75rem' /* 'title', 28px */,
+        '2xl': '2.5rem' /* 'headline', 40px */,
       },
       backgroundImage: {
         'elytro-background': 'var(--elytro-background-image)',
