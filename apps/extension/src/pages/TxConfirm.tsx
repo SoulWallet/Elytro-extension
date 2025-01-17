@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { UserOpType, useTx } from '@/contexts/tx-context';
 import { useChain } from '@/contexts/chain-context';
-import PackingTip from '@/components/biz/PackingTip';
+import ProcessingTip from '@/components/biz/ProcessingTip';
 import { Button } from '@/components/ui/button';
 import { navigateTo } from '@/utils/navigation';
 import { SIDE_PANEL_ROUTE_PATHS } from '../routes';
@@ -34,7 +34,7 @@ export default function TxConfirm() {
   const { reject, resolve, approval } = useApproval();
 
   const renderContent = useMemo(() => {
-    if (isPacking) return <PackingTip />;
+    if (isPacking) return <ProcessingTip />;
 
     if (opType) {
       return (
@@ -64,12 +64,29 @@ export default function TxConfirm() {
   };
 
   const onSendSuccess = async (opHash: string) => {
-    if (opType === UserOpType.ApproveTransaction) {
-      resolve(opHash);
-    } else {
-      navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Dashboard, {
-        activating: opType as unknown as string,
-      });
+    // if (opType === UserOpType.ApproveTransaction) {
+    //   resolve(opHash);
+    // } else {
+    //   navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Dashboard, {
+    //     activating: opType as unknown as string,
+    //   });
+    // }
+
+    switch (opType) {
+      case UserOpType.ApproveTransaction:
+        resolve(opHash);
+      // fallthrough intentionally
+      // eslint-disable-next-line no-fallthrough
+      case UserOpType.SendTransaction:
+        navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.TxSuccess, {
+          opHash,
+        });
+        break;
+      case UserOpType.DeployWallet:
+        navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Dashboard, {
+          activating: '1',
+        });
+        break;
     }
   };
 

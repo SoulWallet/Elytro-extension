@@ -1,4 +1,3 @@
-import PageContainer from '@/components/ui/PageContainer';
 import LaunchImg from '@/assets/launch.png';
 import { Button } from '@/components/ui/button';
 import PasswordInput from '@/components/ui/PasswordInputer';
@@ -42,7 +41,6 @@ export default function Launch() {
     }
 
     if (status === WalletStatusEn.HasAccountAndUnlocked) {
-      console.log('navigate to dashboard');
       navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Dashboard);
       return null;
     }
@@ -66,7 +64,21 @@ export default function Launch() {
         content: (
           <>
             {/* TODO: navigate to new create account page */}
-            <Button>Get Started</Button>
+            <Button
+              onClick={async () => {
+                // TODO: this is a temporary dev mock: pretend to create owner and account successfully
+                try {
+                  await wallet.createNewOwner('123123A');
+                  await wallet.createAccount(11155420); // op sepolia
+
+                  navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Dashboard);
+                } catch (error) {
+                  console.error(error);
+                }
+              }}
+            >
+              Get Started
+            </Button>
             {/* TODO: navigate to import/recover account page */}
             <Button variant="secondary">I already have an account</Button>
           </>
@@ -82,10 +94,10 @@ export default function Launch() {
   const { title, content, iconImg } = renderContent;
 
   return (
-    <PageContainer className="elytro-gradient-bg flex flex-col items-center justify-center px-3xl h-full gap-y-3xl">
+    <div className="elytro-gradient-bg flex flex-1 flex-col items-center justify-center px-3xl h-full gap-y-3xl">
       <img src={iconImg} alt="Launch" className="size-[164px]" />
       <h1 className="elytro-text-headline text-center">{title}</h1>
       <div className="flex flex-col gap-y-md w-full">{content}</div>
-    </PageContainer>
+    </div>
   );
 }

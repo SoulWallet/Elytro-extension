@@ -25,7 +25,7 @@ type ITxContext = {
   decodedDetail: Nullable<DecodeResult>;
   txType: Nullable<HistoricalActivityTypeEn>;
   // TODO: params can be an array of transactions
-  openUserOpConfirmTx: (opType: UserOpType, params?: Transaction) => void;
+  openUserOpConfirmTx: (opType: UserOpType, params?: Transaction[]) => void;
   closeUserOpConfirmTx: () => void;
 };
 
@@ -58,7 +58,7 @@ export const TxProvider = ({ children }: { children: React.ReactNode }) => {
 
   const openUserOpConfirmTx = async (
     type: UserOpType,
-    params?: Transaction
+    params?: Transaction[]
   ) => {
     navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.TxConfirm);
     packUserOp(type, params);
@@ -72,6 +72,12 @@ export const TxProvider = ({ children }: { children: React.ReactNode }) => {
     setCalcResult(null);
     txTypeRef.current = null;
     userOpRef.current = null;
+
+    // if (history?.length > 1) {
+    //   history.back();
+    // } else {
+    //   window.close();
+    // }
   };
 
   const getTxType = (type: UserOpType, params?: Transaction) => {
@@ -87,7 +93,7 @@ export const TxProvider = ({ children }: { children: React.ReactNode }) => {
     return HistoricalActivityTypeEn.Send;
   };
 
-  const packUserOp = async (type: UserOpType, params?: Transaction) => {
+  const packUserOp = async (type: UserOpType, params?: Transaction[]) => {
     try {
       setIsPacking(true);
       setOpType(type);
@@ -103,7 +109,7 @@ export const TxProvider = ({ children }: { children: React.ReactNode }) => {
           throw new Error('Invalid user operation');
         }
 
-        currentUserOp = await wallet.createTxUserOp([params]);
+        currentUserOp = await wallet.createTxUserOp(params);
         // TODO: use the first decoded result only. what if there are multiple decoded results?
         const decodeRes = (await wallet.decodeUserOp(currentUserOp))?.[0];
 

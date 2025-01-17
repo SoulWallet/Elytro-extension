@@ -26,6 +26,10 @@ const DOMAIN_SEPARATOR_TYPE_HASH =
 //   toBytes('EIP712Domain(uint256 chainId,address verifyingContract)')
 // );
 
+export const GUARDIAN_INFO_KEY =
+  '0x1ace5ad304fe21562a90af48910fa441fc548c59f541c00cc8338faaa3de3990';
+// keccak256(toBytes('GUARDIAN_INFO'));
+
 export const getEncoded1271MessageHash = (message: Hex) => {
   return keccak256(
     encodeAbiParameters(parseAbiParameters(['bytes32', 'bytes32']), [

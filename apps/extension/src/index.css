@@ -124,7 +124,7 @@
   }
 
   .elytro-clickable-icon {
-    @apply size-6 text-dark-blue cursor-pointer hover:text-gray-500;
+    @apply size-xl text-dark-blue cursor-pointer hover:text-gray-500;
   }
 
   .elytro-gradient-bg {
@@ -141,7 +141,12 @@
     background-blend-mode: overlay;
   }
 
-  .elytro-setting-item {
-    @apply border p-lg rounded-md text-lg font-medium bg-white cursor-pointer flex items-center;
+  .elytro-rounded-border-item-wrapper {
+    @apply p-lg rounded-md border elytro-text-bold-body border-gray-300 bg-white cursor-pointer;
+  }
+
+  .elytro-select-content {
+    width: var(--radix-select-trigger-width);
+    max-height: var(--radix-select-content-available-height);
   }
 }

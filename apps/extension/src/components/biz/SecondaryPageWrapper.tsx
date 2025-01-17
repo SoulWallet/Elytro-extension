@@ -31,8 +31,11 @@ export default function SecondaryPageWrapper({
   };
 
   const handleBack = () => {
-    onBack?.();
-    history.back();
+    if (onBack) {
+      onBack();
+    } else {
+      history.back();
+    }
   };
 
   return (

@@ -8,6 +8,7 @@ type IChainContext = {
   currentChain: TChainItem | null;
   getCurrentChain: () => Promise<void>;
   getChains: () => Promise<void>;
+  openExplorer: (opHash: string) => void;
 };
 
 const ChainContext = createContext<IChainContext>({
@@ -15,6 +16,7 @@ const ChainContext = createContext<IChainContext>({
   currentChain: null,
   getCurrentChain: async () => {},
   getChains: async () => {},
+  openExplorer: () => {},
 });
 
 export const ChainProvider = ({ children }: { children: React.ReactNode }) => {
@@ -56,6 +58,13 @@ export const ChainProvider = ({ children }: { children: React.ReactNode }) => {
     getCurrentChain();
   }, []);
 
+  const openExplorer = (opHash: string) => {
+    const url = `${currentChain?.opExplorer || 'https://jiffyscan.xyz/userOpHash/'}${opHash}`;
+    chrome.tabs.create({
+      url,
+    });
+  };
+
   return (
     <ChainContext.Provider
       value={{
@@ -63,6 +72,7 @@ export const ChainProvider = ({ children }: { children: React.ReactNode }) => {
         currentChain,
         getCurrentChain,
         getChains,
+        openExplorer,
       }}
     >
       {children}

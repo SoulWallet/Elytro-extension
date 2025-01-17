@@ -101,7 +101,7 @@ export default function SendTx() {
       value: parseEther(form.getValues('amount')).toString(),
     };
 
-    openUserOpConfirmTx(UserOpType.SendTransaction, txParams);
+    openUserOpConfirmTx(UserOpType.SendTransaction, [txParams]);
   };
 
   return (

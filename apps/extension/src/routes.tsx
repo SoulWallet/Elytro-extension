@@ -12,6 +12,10 @@ import LocalProfile from './pages/LocalProfile';
 import Connection from './pages/Connection';
 import ChainChange from './pages/ChainChange';
 import Launch from './pages/Launch';
+import RecoverySetting from './pages/RecoverySettings/index';
+import Transfer from './pages/Transfer';
+import RecoverAccount from './pages/RecoverAccount';
+import TxSuccess from './pages/TxSuccess';
 
 export const SIDE_PANEL_ROUTE_PATHS = {
   Home: '/',
@@ -29,7 +33,10 @@ export const SIDE_PANEL_ROUTE_PATHS = {
   LocalProfile: '/local-profile',
   Connection: '/connection',
   ChainChange: '/chain-change',
-  Launch: '/launch',
+  RecoverySetting: '/recovery-setting',
+  RecoverAccount: '/recover-account',
+  Transfer: '/transfer',
+  TxSuccess: '/tx-success',
 } as const;
 
 export const routes: TRoute[] = [
@@ -38,8 +45,8 @@ export const routes: TRoute[] = [
     component: Launch,
   },
   {
-    path: SIDE_PANEL_ROUTE_PATHS.Launch,
-    component: Launch,
+    path: SIDE_PANEL_ROUTE_PATHS.RecoverySetting,
+    component: RecoverySetting,
   },
   {
     path: SIDE_PANEL_ROUTE_PATHS.Dashboard,
@@ -89,5 +96,17 @@ export const routes: TRoute[] = [
   {
     path: SIDE_PANEL_ROUTE_PATHS.ChainChange,
     component: ChainChange,
+  },
+  {
+    path: SIDE_PANEL_ROUTE_PATHS.Transfer,
+    component: Transfer,
+  },
+  {
+    path: SIDE_PANEL_ROUTE_PATHS.RecoverAccount,
+    component: RecoverAccount,
+  },
+  {
+    path: SIDE_PANEL_ROUTE_PATHS.TxSuccess,
+    component: TxSuccess,
   },
 ];

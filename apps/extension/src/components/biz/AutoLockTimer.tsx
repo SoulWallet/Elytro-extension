@@ -67,7 +67,7 @@ export default function AutoLockTimerModal({
                   aria-label={option.label}
                   key={option.value}
                 >
-                  <div className="elytro-setting-item w-full bg-transparent">
+                  <div className="border p-lg rounded-md text-lg font-medium bg-white cursor-pointer flex items-center w-full bg-transparent">
                     {option.label}
                   </div>
                 </ToggleGroupItem>

@@ -322,6 +322,46 @@ class WalletController {
   public async changePassword(oldPassword: string, newPassword: string) {
     return await keyring.changePassword(oldPassword, newPassword);
   }
+
+  public async getRecoveryInfoOfCurrentAccount() {
+    return await elytroSDK.getRecoveryInfo(
+      accountManager.currentAccount?.address
+    );
+  }
+
+  public async queryRecoveryContactsOfCurrentAccount() {
+    return await elytroSDK.queryRecoveryContacts(
+      accountManager.currentAccount?.address
+    );
+  }
+
+  public async generateRecoveryContactsSettingTxs(
+    contacts: string[],
+    threshold: number
+  ) {
+    const newHash = await elytroSDK.calculateRecoveryContactsHash(
+      contacts,
+      threshold
+    );
+    const prevHash = (
+      await elytroSDK.getRecoveryInfo(accountManager.currentAccount?.address)
+    )?.contactsHash;
+
+    if (prevHash === newHash) {
+      throw new Error(
+        'Elytro: New recovery contacts hash is the same as the previous.'
+      );
+    }
+
+    const infoRecordTx = await elytroSDK.generateRecoveryInfoRecordTx(
+      contacts,
+      threshold
+    );
+    const contactsSettingTx =
+      await elytroSDK.generateRecoveryContactsSettingTxInfo(newHash);
+
+    return [infoRecordTx, contactsSettingTx];
+  }
 }
 
 const walletController = new WalletController();

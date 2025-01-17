@@ -16,6 +16,7 @@ import {
   Activity,
   ShieldQuestion,
 } from 'lucide-react';
+import { useChain } from '@/contexts/chain-context';
 const ActivityTypeMap = {
   [HistoricalActivityTypeEn.Send]: {
     name: 'Send',
@@ -67,6 +68,7 @@ export default function ActivityItem({
   value,
   type,
 }: UserOperationHistory) {
+  const { openExplorer } = useChain();
   const [latestStatus, setLatestStatus] = useState(status);
 
   const updateStatusFromMessage = (response: SafeObject) => {
@@ -89,17 +91,10 @@ export default function ActivityItem({
     : UnknownActivity;
   const { label, style } = ActivityStatusMap[latestStatus];
 
-  const openExplorer = () => {
-    // TODO: jiffyscan seems to be the best explorer for now. etherscan is not working well on userOpHash
-    chrome.tabs.create({
-      url: `https://jiffyscan.xyz/userOpHash/${opHash}`,
-    });
-  };
-
   return (
     <div
       className="flex items-center justify-between cursor-pointer py-md"
-      onClick={openExplorer}
+      onClick={() => openExplorer(opHash)}
     >
       <div className="flex items-center gap-4">
         <IconComponent className={`size-8 p-1 ${bg} rounded-full`} />

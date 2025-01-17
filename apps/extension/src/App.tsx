@@ -15,7 +15,7 @@ import { AlerterProvider } from '@/components/ui/alerter';
 const main = () => {
   const SidePanelApp: React.FC = () => (
     <ApolloProvider client={client}>
-      <PageContainer className="max-w-screen-md min-w-[360px]">
+      <PageContainer>
         <AccountProvider>
           <ApprovalProvider>
             <TxProvider>

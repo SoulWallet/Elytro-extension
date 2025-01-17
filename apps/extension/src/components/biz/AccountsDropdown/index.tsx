@@ -8,61 +8,119 @@ import AccountOption from './AccountOption';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getChainNameByChainId, getIconByChainId } from '@/constants/chains';
 import { formatAddressToShort } from '@/utils/format';
-import { useState } from 'react';
-import { ChevronDown, Copy } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { ChevronUp } from 'lucide-react';
-import { safeClipboard } from '@/utils/clipboard';
 import { Button } from '@/components/ui/button';
 import { groupBy } from 'lodash';
+import { SIDE_PANEL_ROUTE_PATHS } from '@/routes';
+import { useWallet } from '@/contexts/wallet';
+import { useChain } from '@/contexts/chain-context';
+import { useAccount } from '@/contexts/account-context';
+import { navigateTo } from '@/utils/navigation';
+import Spin from '@/components/ui/Spin';
+import { toast } from '@/hooks/use-toast';
+import { Skeleton } from '@/components/ui/skeleton';
 
-interface IAccountsDropdownProps {
-  accounts: TAccountInfo[];
-  currentAccount: TAccountInfo;
-  onAddAccount: () => void;
-  onSwitchAccount: (account: TAccountInfo) => void;
-  onRemoveAccount: (account: TAccountInfo) => void;
-}
-
-export default function AccountsDropdown({
-  accounts,
-  currentAccount,
-  onAddAccount,
-  onSwitchAccount,
-  onRemoveAccount,
-}: IAccountsDropdownProps) {
+export default function AccountsDropdown() {
   const [open, setOpen] = useState(false);
+  const {
+    accountInfo: currentAccount,
+    accounts,
+    updateTokens,
+    updateAccount,
+    getAccounts,
+    updateHistory,
+  } = useAccount();
+  const { wallet } = useWallet();
+  const { currentChain, getCurrentChain } = useChain();
+
+  const reloadAccount = async () => {
+    await getCurrentChain();
+    await getAccounts();
+    await updateAccount();
+    await updateTokens();
+    await updateHistory();
+  };
+
+  useEffect(() => {
+    reloadAccount();
+  }, []);
+
+  if (!currentChain || !currentAccount) {
+    return <Spin isLoading />;
+  }
+
+  // const { integerPart, decimalPart } = formatBalance(balance, {
+  //   threshold: 0.001,
+  //   maxDecimalLength: 8,
+  // });
+
+  const handleAddAccount = async () => {
+    navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.CreateNewAddress);
+  };
+
+  const handleSelectAccount = async (account: TAccountInfo) => {
+    try {
+      await wallet.switchAccountByChain(account.chainId);
+
+      await reloadAccount();
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Failed to switch account',
+        description: 'Please try again',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleRemoveAccount = async (account: TAccountInfo) => {
+    try {
+      await wallet.removeAccount(account.address);
+      await reloadAccount();
+      toast({
+        title: 'Account removed successfully',
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Failed to delete account',
+        description: 'Please try again',
+        variant: 'destructive',
+      });
+    }
+  };
 
   const ChevronIcon = open ? ChevronUp : ChevronDown;
-
-  const handleCopyAddress = (e: React.MouseEvent<SVGSVGElement>) => {
-    console.log('handleCopyAddress', e);
-    e.stopPropagation();
-    e.preventDefault();
-    safeClipboard(currentAccount.address);
-  };
 
   const accountGroupByChainId = groupBy(accounts, 'chainId');
 
   const handleSwitchAccount = (account: TAccountInfo) => {
-    onSwitchAccount(account);
+    handleSelectAccount(account);
     setOpen(false);
   };
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <div onClick={() => setOpen(!open)}>
-        <div className="flex items-center gap-x-sm border border-gray-200 rounded-[8px] bg-white px-sm py-xs text-gray-750">
+        <div className="max-w-fit flex items-center gap-x-sm border border-gray-200 rounded-[8px] bg-white px-sm py-xs text-gray-750">
           <DropdownMenuTrigger asChild>
             <Avatar className="size-4">
               <AvatarImage src={getIconByChainId(currentAccount.chainId)} />
-              <AvatarFallback>{currentAccount.chainId}</AvatarFallback>
+              <AvatarFallback>
+                <Skeleton className="size-4" />
+              </AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
 
-          <div className="flex items-center gap-x-sm">
-            <span>{formatAddressToShort(currentAccount.address)}</span>
-            <Copy className="size-3 z-50" onClick={handleCopyAddress} />
-          </div>
+          <span>
+            {currentAccount?.address ? (
+              formatAddressToShort(currentAccount.address)
+            ) : (
+              <Skeleton className="w-[90px] h-[18px] rounded-[8px] bg-gray-100" />
+            )}
+          </span>
 
           <ChevronIcon className="size-3" />
         </div>
@@ -80,9 +138,9 @@ export default function AccountsDropdown({
           </span>
           <Button
             variant="outline"
-            size="sm"
+            size="small"
             className="elytro-text-tiny-body"
-            onClick={onAddAccount}
+            onClick={handleAddAccount}
           >
             Create new account
           </Button>
@@ -99,7 +157,7 @@ export default function AccountsDropdown({
                   key={account.address}
                   account={account}
                   isSelected={account.address === currentAccount.address}
-                  onDelete={() => onRemoveAccount(account)}
+                  onDelete={() => handleRemoveAccount(account)}
                   onSelect={() => handleSwitchAccount(account)}
                 />
               ))}

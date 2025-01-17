@@ -23,16 +23,10 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline text-black-blue hover:text-blue',
       },
       size: {
-        // TODO: remove this
-        default: 'h-10 px-4 py-2',
-        sm: 'h-9 rounded-md px-3',
-        lg: 'h-11 rounded-md px-8',
-        icon: 'h-10 w-10',
-
-        large: 'px-3xl py-xl elytro-text-bold-body',
-        medium: 'px-2xl py-lg elytro-text-bold-body',
-        small: 'px-xl py-md elytro-text-small',
-        tiny: 'px-lg py-sm elytro-text-tiny-body',
+        large: 'px-2xl py-lg elytro-text-bold-body',
+        medium: 'px-xl py-md elytro-text-small',
+        small: 'px-lg py-sm elytro-text-smaller-body',
+        tiny: 'px-md py-3xs elytro-text-tiny-body',
       },
     },
     defaultVariants: {

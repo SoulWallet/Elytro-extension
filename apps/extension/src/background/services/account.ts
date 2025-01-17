@@ -80,6 +80,7 @@ class AccountManager {
         address: newAccountAddress,
         chainId,
         isDeployed: false,
+        hasRecoveryContacts: false,
       };
 
       // ! push method will not trigger state update, so we need to reset the array

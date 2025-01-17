@@ -195,7 +195,7 @@ const initUIMessage = (port: chrome.runtime.Port) => {
     } catch (error) {
       UIPortManager.sendMessage(
         msgKey,
-        { error: (error as Error).message },
+        { error: (error as Error).message || 'Unknown error' },
         port.sender?.origin
       );
     }
