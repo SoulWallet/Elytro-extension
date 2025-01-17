@@ -133,7 +133,7 @@ export default function AccountsDropdown() {
         className="w-full max-w-fit bg-white rounded-md shadow-lg py-lg px-0"
       >
         <div className="flex items-center justify-between  gap-x-5xl px-lg pb-sm">
-          <span className="elytro-text-bold-body text-gray-600">
+          <span className="elytro-text-bold-body text-gray-900">
             Switch account
           </span>
           <Button
@@ -149,7 +149,7 @@ export default function AccountsDropdown() {
         <div className="flex flex-col gap-y-sm">
           {Object.entries(accountGroupByChainId).map(([chainId, accounts]) => (
             <div key={chainId}>
-              <div className="elytro-text-smaller-bold-body  text-gray-600 px-lg py-sm">
+              <div className="elytro-text-smaller-bold-body text-gray-600 px-lg py-sm">
                 {getChainNameByChainId(Number(chainId))}
               </div>
               {accounts.map((account) => (

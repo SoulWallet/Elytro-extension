@@ -44,7 +44,7 @@ export default function AccountOption({
   return (
     <div
       className={cn(
-        'flex items-center gap-x-xl justify-between px-lg py-sm hover:bg-gray-100',
+        'flex items-center gap-x-xl justify-between px-lg py-md hover:bg-gray-100',
         isSelected && 'bg-gray-200'
       )}
       onClick={onSelect}
@@ -58,7 +58,9 @@ export default function AccountOption({
           <AvatarFallback>{account.chainId}</AvatarFallback>
         </Avatar>
 
-        <span>{formatAddressToShort(account.address)}</span>
+        <span className="font-bold text-sm">
+          {formatAddressToShort(account.address)}
+        </span>
       </div>
 
       <div className="elytro-text-small-body text-gray-600 flex flex-row items-center gap-sm">

@@ -38,7 +38,7 @@ export type TChainItem = Chain & {
 export const SUPPORTED_CHAINS: TChainItem[] = [
   {
     ...optimism,
-    icon: 'https://assets.coingecko.com/coins/images/25244/standard/Optimism.png',
+    icon: 'https://optimistic.etherscan.io/assets/optimism/images/svg/logos/token-secondary-light.svg',
     endpoint:
       'https://opt-mainnet.g.alchemy.com/v2/GCSFuO3fOSch0AQ4JQThV5CO_McJvA0V', //this.chain.rpcUrls.default.http[0], //
     bundler:
@@ -58,7 +58,7 @@ export const SUPPORTED_CHAINS: TChainItem[] = [
   },
   {
     ...optimismSepolia,
-    icon: 'https://assets.coingecko.com/coins/images/25244/standard/Optimism.png',
+    icon: 'https://optimistic.etherscan.io/assets/optimism/images/svg/logos/token-secondary-light.svg',
     endpoint:
       'https://opt-sepolia.g.alchemy.com/v2/7EJnXZWkG9HIhjj0ZLx7vk_lexCq25Pr',
     // 'https://optimism-sepolia-rpc.publicnode.com',
