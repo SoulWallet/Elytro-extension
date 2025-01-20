@@ -24,7 +24,7 @@ const ENSInfo = ({ ensInfo }: { ensInfo: EnsAddress }) => {
       )}
       <div className="text-base">
         <div>{ensInfo.name}</div>
-        <div className="text-xs font-light">
+        <div className="text-xs font-normal">
           <SplittedGrayAddress address={ensInfo.address} />
         </div>
       </div>

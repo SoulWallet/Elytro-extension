@@ -14,21 +14,21 @@ export default function AmountInput({
   price: string | number;
 }) {
   const dynamicFontSize = useMemo(
-    () => (field.value?.length > 10 ? 'text-xl' : 'text-xl'),
+    () => (field.value?.length > 10 ? 'text-lg' : 'text-xl'),
     [field.value]
   );
   return (
-    <div className="bg-white px-3 py-4 rounded-md flex flex-row items-center">
+    <div className="bg-white px-2 py-3 rounded-md flex flex-row items-center">
       <Input
         {...field}
-        className={cn('border-none', dynamicFontSize)}
+        className={cn('border-none', dynamicFontSize, 'font-bold')}
         placeholder="0"
         disabled={isDisabled}
       />
       <div className="bg-gray-300 p-2 rounded-sm">
         <ArrowRightLeftIcon className="w-4 h-4" />
       </div>
-      <div className="text-lg px-4 font-light text-gray-600">${price}</div>
+      <div className="text-lg px-4 font-normal text-gray-600">${price}</div>
     </div>
   );
 }

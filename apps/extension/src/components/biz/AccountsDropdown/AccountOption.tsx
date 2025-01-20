@@ -63,7 +63,7 @@ export default function AccountOption({
         </span>
       </div>
 
-      <div className="elytro-text-small-body text-gray-600 flex flex-row items-center gap-sm">
+      <div className="elytro-text-small text-gray-600 flex flex-row items-center gap-sm">
         <span>{formatTokenAmount(account.balance)}</span>
         <Trash className="size-3" onClick={handleDelete} />
       </div>

@@ -159,7 +159,7 @@ export default function AddressInput({
   }, [value]);
 
   return (
-    <div className="bg-white rounded-md px-5 py-4 flex items-center mb-4 relative">
+    <div className="bg-white rounded-md px-3 py-3 flex items-center mb-4 relative">
       <Input
         className="text-lg border-none"
         placeholder={

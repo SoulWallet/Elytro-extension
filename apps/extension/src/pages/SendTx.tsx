@@ -122,7 +122,7 @@ export default function SendTx() {
       <div>
         <Form {...form}>
           <div className="bg-light-green rounded-sm">
-            <h3 className="text-lg font-bold p-4">Sending</h3>
+            <h3 className="text-lg font-bold px-4 py-3">Sending</h3>
             <FormField
               control={form.control}
               name="amount"
@@ -156,7 +156,7 @@ export default function SendTx() {
                   </FormItem>
                   <Button
                     disabled={!form.getValues('token')}
-                    className="absolute right-4 top-3 text-lg bg-green"
+                    className="absolute right-4 top-5 bg-green"
                     size="tiny"
                     onClick={() => handleFillMax()}
                   >
@@ -166,8 +166,8 @@ export default function SendTx() {
               )}
             />
           </div>
-          <div className="bg-light-blue p-4 rounded-sm mb-4">
-            <h3 className="text-xl font-bold mb-4">To</h3>
+          <div className="bg-light-blue p-4 pt-3 rounded-sm mb-4">
+            <h3 className="text-lg font-bold mb-3">To</h3>
             <FormField
               control={form.control}
               name="to"
@@ -201,7 +201,7 @@ export default function SendTx() {
             <div className="font-bold text-base text-gray-750">
               Network cost
             </div>
-            <div className="text-gray-600 text-base font-light">
+            <div className="text-gray-600 text-sm font-normal">
               To be calculated
             </div>
           </div>

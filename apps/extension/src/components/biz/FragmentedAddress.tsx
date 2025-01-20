@@ -18,7 +18,7 @@ interface IProps {
 const SIZE_MAP = {
   sm: {
     icon: 'size-4',
-    text: 'elytro-text-small-body',
+    text: 'elytro-text-smaller-body',
   },
   md: {
     icon: 'size-8',
