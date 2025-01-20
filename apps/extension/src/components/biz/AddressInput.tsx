@@ -178,7 +178,7 @@ export default function AddressInput({
         <div className="absolute top-full left-0 right-0 bg-white shadow-md rounded-md mt-1 z-10 overflow-hidden">
           {recentAddress && (
             <div className="w-full">
-              <div className="text-base text-gray-600 font-semibold p-4">
+              <div className="text-base text-gray-600 font-bold p-4">
                 Recent
               </div>
               <div>
@@ -221,7 +221,7 @@ export default function AddressInput({
           )}
           {(ensInfo || loading) && (
             <div>
-              <div className="text-base text-gray-600 font-semibold px-4 py-2">
+              <div className="text-base text-gray-600 font-bold px-4 py-2">
                 ENS Search
               </div>
               <div className="relative min-h-16">

@@ -43,6 +43,17 @@ module.exports = {
         'elytro-background': 'var(--elytro-background-image)',
         'elytro-btn-bg': 'var(--elytro-btn-bg)',
       },
+      backgroundColor: {
+        gray: {
+          900: '#3C3F45',
+          750: '#676B75',
+          600: '#95979C',
+          450: '#BDC0C7',
+          300: '#E2E2E2',
+          150: '#F2F3F5',
+          0: '#FFFFFF',
+        },
+      },
       colors: {
         // Elytro Theme Overrides
         gray: {

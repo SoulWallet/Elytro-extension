@@ -14,7 +14,7 @@ export default function AmountInput({
   price: string | number;
 }) {
   const dynamicFontSize = useMemo(
-    () => (field.value?.length > 10 ? 'text-xl' : 'text-5xl'),
+    () => (field.value?.length > 10 ? 'text-xl' : 'text-xl'),
     [field.value]
   );
   return (

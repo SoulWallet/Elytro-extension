@@ -61,7 +61,7 @@ export default function CreateNewAddress() {
         </Button>
       }
     >
-      <div className=" text-lg font-semibold mb-2">Create a new address</div>
+      <div className=" text-lg font-bold mb-2">Create a new address</div>
       <div className="text-gray-600 mb-2">
         You are about to create a new address within the below network. You can
         use the same local password to access it.

@@ -10,7 +10,7 @@ export default function Assets() {
 
   if (loadingTokens)
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 px-4 mt-3">
         <Skeleton className="w-full h-[40px]" />
         <Skeleton className="w-full h-[40px]" />
         <Skeleton className="w-full h-[40px]" />

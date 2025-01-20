@@ -16,7 +16,7 @@ import { SUPPORTED_CHAINS } from '@/constants/chains';
 function URLSection({ title, items }: { title: string; items: string[] }) {
   return (
     <div className="border-t pt-4 max-h-32 overflow-y-auto">
-      <h3 className="font-semibold text-lg">{title}</h3>
+      <h3 className="font-bold text-lg">{title}</h3>
       <ul className="list-disc list-inside">
         {items.length ? (
           items.map((item, index) => (
@@ -79,8 +79,7 @@ export default function ChainChange() {
           <AvatarFallback>{dApp.name}</AvatarFallback>
         </Avatar>
         <div className="elytro-text-body">
-          {dApp.name} wants to <span className="font-semibold">{method}</span>{' '}
-          chain
+          {dApp.name} wants to <span className="font-bold">{method}</span> chain
         </div>
       </CardHeader>
       <CardContent className="flex flex-col h-full p-6 space-y-6 border-1 border-gray-200 rounded-lg mx-lg my-md">
@@ -89,9 +88,9 @@ export default function ChainChange() {
           <div className="text-base text-gray-700">
             <p>
               Current chain is{' '}
-              <span className="font-semibold">{currentChain?.name}</span>. Do
-              you want to switch to{' '}
-              <span className="font-semibold">
+              <span className="font-bold">{currentChain?.name}</span>. Do you
+              want to switch to{' '}
+              <span className="font-bold">
                 {chainName ||
                   SUPPORTED_CHAINS.find((chain) => chain.id === Number(chainId))
                     ?.name}
@@ -104,11 +103,11 @@ export default function ChainChange() {
         {method === 'add' && (
           <div className="text-base text-gray-700 space-y-4">
             <p>
-              Chain <span className="font-semibold">{chainName}</span> (
-              {chainId}) will be added to your wallet.
+              Chain <span className="font-bold">{chainName}</span> ({chainId})
+              will be added to your wallet.
             </p>
             <div className="border-t pt-4">
-              <h3 className="font-semibold text-lg">Native Currency</h3>
+              <h3 className="font-bold text-lg">Native Currency</h3>
               <p>{nativeCurrency?.name || '--'}</p>
             </div>
             <URLSection title="RPC URLs" items={rpcUrls || []} />

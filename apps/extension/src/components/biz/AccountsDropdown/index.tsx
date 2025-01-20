@@ -128,12 +128,12 @@ export default function AccountsDropdown() {
       <DropdownMenuContent
         side="bottom"
         align="start"
-        alignOffset={-8}
+        alignOffset={-9}
         sideOffset={10}
-        className="w-full max-w-fit bg-white rounded-md shadow-lg py-lg px-0"
+        className="w-[330px] max-w-fit bg-white rounded-md shadow-lg py-lg px-0"
       >
-        <div className="flex items-center justify-between  gap-x-5xl px-lg pb-sm">
-          <span className="elytro-text-bold-body text-gray-900">
+        <div className="flex items-center justify-between  gap-x-3xl px-lg pb-sm">
+          <span className="elytro-text-small-bold text-gray-900">
             Switch account
           </span>
           <Button
@@ -142,7 +142,7 @@ export default function AccountsDropdown() {
             className="elytro-text-tiny-body"
             onClick={handleAddAccount}
           >
-            Create new account
+            Add new account
           </Button>
         </div>
 

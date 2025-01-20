@@ -122,7 +122,7 @@ export default function SendTx() {
       <div>
         <Form {...form}>
           <div className="bg-light-green rounded-sm">
-            <h3 className="text-xl font-semibold p-4">Sending</h3>
+            <h3 className="text-lg font-bold p-4">Sending</h3>
             <FormField
               control={form.control}
               name="amount"
@@ -167,7 +167,7 @@ export default function SendTx() {
             />
           </div>
           <div className="bg-light-blue p-4 rounded-sm mb-4">
-            <h3 className="text-xl font-semibold mb-4">To</h3>
+            <h3 className="text-xl font-bold mb-4">To</h3>
             <FormField
               control={form.control}
               name="to"
@@ -189,7 +189,7 @@ export default function SendTx() {
         </Form>
         <div className="p-4 bg-gray-150 rounded-sm space-y-2">
           <div className="flex justify-between items-center">
-            <div className="font-semibold text-base text-gray-750">
+            <div className="font-bold text-base text-gray-750">
               From account
             </div>
             <FragmentedAddress
@@ -198,7 +198,7 @@ export default function SendTx() {
             />
           </div>
           <div className="flex justify-between items-center">
-            <div className="font-semibold text-base text-gray-750">
+            <div className="font-bold text-base text-gray-750">
               Network cost
             </div>
             <div className="text-gray-600 text-base font-light">

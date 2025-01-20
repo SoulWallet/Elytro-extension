@@ -61,7 +61,7 @@ const GasEstimation = ({ onGasChange }: IGasEstimationProps) => {
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-semibold">Gas Estimation</CardTitle>
+        <CardTitle className="text-sm font-bold">Gas Estimation</CardTitle>
         <Badge variant="outline" className="ml-2">
           {loading ? (
             <Loader className="mr-2 h-4 w-4 animate-spin" />
