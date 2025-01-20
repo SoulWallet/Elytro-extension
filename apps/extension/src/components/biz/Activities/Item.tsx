@@ -100,7 +100,7 @@ export default function ActivityItem({
         <IconComponent className={`size-8 p-1 ${bg} rounded-full`} />
 
         <div className="flex flex-col">
-          <span className="text-sm font-medium elytro-text-smaller-bold-body">
+          <span className="text-sm font-bold elytro-text-smaller-bold-body">
             {name}
             <span
               className={`elytro-text-tiny-body px-1 rounded-sm ml-sm text-white ${style} `}

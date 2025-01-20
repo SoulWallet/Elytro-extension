@@ -11,7 +11,7 @@ export default function ReceiveAddressBadge({
   chainId,
 }: IReceiveProps) {
   return (
-    <div className="px-2xl py-4xl bg-light-green rounded-lg flex flex-col items-center gap-y-2xl w-full">
+    <div className="px-2xl py-4xl bg-light-green rounded-sm flex flex-col items-center gap-y-2xl w-full">
       <QRCodeSVG value={address} size={205} />
 
       <FragmentedAddress

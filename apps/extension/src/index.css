@@ -89,6 +89,8 @@
     @apply bg-background text-foreground;
     user-select: none;
     font-family: ElytroSohne;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 

@@ -81,12 +81,12 @@ export default function BasicAccountInfo() {
             <>
               <ActionButton
                 className="bg-light-green"
-                icon={<ArrowDownLeft />}
+                icon={<ArrowDownLeft className="w-5 h-5" />}
                 label="Receive"
                 onClick={onClickReceive}
               />
               <ActionButton
-                icon={<ArrowUpRight />}
+                icon={<ArrowUpRight className="w-5 h-5" />}
                 label="Send"
                 onClick={onClickSend}
               />

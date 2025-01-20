@@ -24,7 +24,7 @@ const Welcome = () => (
       <img src={ElytroIcon} alt="Elytro" className="size-xl" />
       Elytro
     </header>
-    <main className="rounded-lg p-4xl bg-white w-[480px]">
+    <main className="rounded-sm p-4xl bg-white w-[480px]">
       <h1 className="elytro-text-headline mb-lg ">Welcome to Elytro</h1>
       <p className="elytro-text-body opacity-60">
         You can now add or import your smart contract accounts to start

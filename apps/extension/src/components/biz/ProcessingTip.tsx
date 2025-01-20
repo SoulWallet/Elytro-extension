@@ -8,13 +8,13 @@ interface IProcessingTipProps {
 }
 
 const ProcessingTip = ({
-  body = 'Preparing & calculating',
-  subBody = 'This may take up to 15 seconds',
+  body = 'Preparing...',
+  subBody = '',
   className,
 }: IProcessingTipProps) => (
   <div
     className={cn(
-      'flex flex-col items-center justify-center gap-y-sm py-lg',
+      'flex flex-col items-center justify-center gap-y-sm h-screen -mt-16',
       className
     )}
   >

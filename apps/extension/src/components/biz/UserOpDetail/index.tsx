@@ -93,7 +93,9 @@ export function UserOpDetail({
                 </span>
               )}
               <span
-                className={cn({ 'line-through': calcResult?.hasSponsored })}
+                className={cn({
+                  'line-through text-gray-600': calcResult?.hasSponsored,
+                })}
               >
                 {formatGasUsed(calcResult?.gasUsed)} ETH
               </span>

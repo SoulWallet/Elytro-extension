@@ -121,7 +121,7 @@ export default function SendTx() {
     >
       <div>
         <Form {...form}>
-          <div className="bg-light-green rounded-lg">
+          <div className="bg-light-green rounded-sm">
             <h3 className="text-xl font-semibold p-4">Sending</h3>
             <FormField
               control={form.control}
@@ -166,7 +166,7 @@ export default function SendTx() {
               )}
             />
           </div>
-          <div className="bg-light-blue p-4 rounded-lg mb-4">
+          <div className="bg-light-blue p-4 rounded-sm mb-4">
             <h3 className="text-xl font-semibold mb-4">To</h3>
             <FormField
               control={form.control}
@@ -187,7 +187,7 @@ export default function SendTx() {
             </div>
           </div>
         </Form>
-        <div className="p-4 bg-gray-150 rounded-lg space-y-2">
+        <div className="p-4 bg-gray-150 rounded-sm space-y-2">
           <div className="flex justify-between items-center">
             <div className="font-semibold text-base text-gray-750">
               From account
