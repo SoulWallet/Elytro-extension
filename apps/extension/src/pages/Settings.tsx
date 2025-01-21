@@ -27,13 +27,13 @@ export default function Settings() {
       footer={
         <div className="flex flex-col space-y-2 w-full">
           <Button variant="secondary" onClick={handleLock}>
-            <LockKeyholeIcon />
-            <span className="ml-sm">Lock Elytro</span>
+            <LockKeyholeIcon className="w-4 h-4 mr-2 duration-100 group-hover:stroke-white" />
+            Lock Elytro
           </Button>
 
           <Button variant="outline">
-            <ExternalLinkIcon />
-            <span className="ml-sm">FAQ</span>
+            <ExternalLinkIcon className="w-4 h-4 mr-2" />
+            FAQ
           </Button>
 
           <div className="text-center text-gray-750">

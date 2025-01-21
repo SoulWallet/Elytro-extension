@@ -5,14 +5,14 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utils/shadcn/utils';
 
 const buttonVariants = cva(
-  'rounded-pill inline-flex items-center justify-center whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'rounded-pill inline-flex items-center duration-100 justify-center whitespace-nowrap ring-offset-background group transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
         default:
           'bg-primary text-primary-foreground hover:bg-hover-primary hover:text-hover-primary-foreground',
         secondary:
-          'bg-secondary text-secondary-foreground hover:bg-hover-secondary hover:text-hover-secondary-foreground hover:text-white',
+          'bg-secondary text-secondary-foreground hover:bg-hover-secondary hover:text-white',
         tertiary:
           'bg-tertiary text-tertiary-foreground hover:bg-hover-tertiary hover:text-hover-tertiary-foreground',
         destructive:
@@ -26,7 +26,7 @@ const buttonVariants = cva(
         large: 'px-2xl py-lg elytro-text-bold-body',
         medium: 'px-xl py-md elytro-text-small',
         small: 'px-lg py-sm elytro-text-smaller-body',
-        tiny: 'px-md py-3xs elytro-text-tiny-body',
+        tiny: 'px-md py-2xs elytro-text-tiny-body',
       },
     },
     defaultVariants: {

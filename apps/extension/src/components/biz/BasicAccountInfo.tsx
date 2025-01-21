@@ -80,13 +80,18 @@ export default function BasicAccountInfo() {
           {accountInfo.isDeployed ? (
             <>
               <ActionButton
-                className="bg-light-green"
-                icon={<ArrowDownLeft className="w-5 h-5" />}
+                className="bg-light-green hover:bg-green hover:stroke-white"
+                icon={
+                  <ArrowDownLeft className="w-5 h-5 mr-1 duration-100 transition-all group-hover:stroke-white" />
+                }
                 label="Receive"
                 onClick={onClickReceive}
               />
               <ActionButton
-                icon={<ArrowUpRight className="w-5 h-5" />}
+                className="hover:stroke-white"
+                icon={
+                  <ArrowUpRight className="w-5 h-5 mr-1 duration-100 transition-all group-hover:stroke-white" />
+                }
                 label="Send"
                 onClick={onClickSend}
               />

@@ -138,7 +138,7 @@ export default function AccountsDropdown() {
           </span>
           <Button
             variant="outline"
-            size="small"
+            size="tiny"
             className="elytro-text-tiny-body"
             onClick={handleAddAccount}
           >

@@ -156,7 +156,7 @@ export default function SendTx() {
                   </FormItem>
                   <Button
                     disabled={!form.getValues('token')}
-                    className="absolute right-4 top-5 bg-green"
+                    className="absolute right-4 top-4 bg-green !text-white !py-2"
                     size="tiny"
                     onClick={() => handleFillMax()}
                   >
