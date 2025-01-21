@@ -139,7 +139,7 @@
   }
 
   .elytro-clickable-icon {
-    @apply size-xl text-dark-blue cursor-pointer hover:text-gray-500;
+    @apply size-xl text-dark-blue cursor-pointer hover:text-gray-600 hover:stroke-gray-600;
   }
 
   .elytro-gradient-bg {

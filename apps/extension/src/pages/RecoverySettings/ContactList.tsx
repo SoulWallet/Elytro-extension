@@ -140,8 +140,8 @@ export default function ContactList({
             <img src={ContactsImg} className="size-36" />
             <span className="elytro-text-subtitle">Add a new contact</span>
 
-            <Button variant="secondary" size="small" onClick={onAddContact}>
-              <Plus className="size-lg" />
+            <Button variant="secondary" size="tiny" onClick={onAddContact}>
+              <Plus className="h-4 w-4 mr-1 stroke-[1.5px] group-hover:stroke-white" />
               Add a new contact
             </Button>
           </div>

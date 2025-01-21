@@ -48,7 +48,7 @@ export default function ContactDetail({
             className=" size-8"
           />
           <Input
-            className="border-none bg-transparent"
+            className="border-none bg-transparent text-lg"
             placeholder="Enter account address"
             value={address}
             onChange={handleAddressChange}
@@ -58,7 +58,7 @@ export default function ContactDetail({
         <Input
           placeholder="Name of contact (optional)"
           value={name}
-          className="w-full bg-gray-150 rounded-md px-lg py-2xl border-none "
+          className="w-full bg-gray-150 rounded-md px-lg py-[32px] border-none text-lg"
           onChange={handleNameChange}
         />
       </div>
