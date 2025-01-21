@@ -1,10 +1,11 @@
-import ProcessingTip from '@/components/biz/ProcessingTip';
+import ProcessingTip from '@/components/ui/ProcessingTip';
 import SecondaryPageWrapper from '@/components/biz/SecondaryPageWrapper';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import ContactList from './ContactList';
 import ContactDetail from './ContactDetail';
 import { useWallet } from '@/contexts/wallet';
+import { useAccount } from '@/contexts/account-context';
 
 enum ShowType {
   List = 'list',
@@ -13,6 +14,9 @@ enum ShowType {
 
 export default function RecoverySettings() {
   const { wallet } = useWallet();
+  const {
+    accountInfo: { address },
+  } = useAccount();
   const [loading, setLoading] = useState(false);
   const [contacts, setContacts] = useState<TRecoveryContact[]>([]);
   const [threshold, setThreshold] = useState<number>(0);
@@ -24,13 +28,11 @@ export default function RecoverySettings() {
     try {
       setLoading(true);
 
-      const { contacts = [], threshold = 0 } =
-        await wallet.queryRecoveryContactsOfCurrentAccount();
+      const { guardians = [], threshold = 0 } =
+        (await wallet.queryRecoveryContactsByAddress(address)) || {};
 
-      setContacts(contacts.map((c) => ({ address: c })));
+      setContacts(guardians.map((c) => ({ address: c })));
       setThreshold(threshold);
-
-      // TODO: get recovery contacts
     } catch (error) {
       console.error(error);
     } finally {

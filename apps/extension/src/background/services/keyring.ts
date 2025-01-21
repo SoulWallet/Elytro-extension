@@ -12,7 +12,6 @@ import LocalSubscribableStore from '@/utils/store/LocalSubscribableStore';
 
 type KeyringServiceState = {
   data?: TPasswordEncryptedData;
-  hasOwner?: boolean;
 };
 
 const KEYRING_STORAGE_KEY = 'elytroKeyringState';
@@ -33,11 +32,7 @@ class KeyringService {
   }
 
   get hasOwner() {
-    return this._store.state.hasOwner ?? false;
-  }
-
-  private set _hasOwner(value: boolean) {
-    this._store.state.hasOwner = value;
+    return !!this._store.state.data;
   }
 
   private get _encryptData() {
@@ -86,9 +81,9 @@ class KeyringService {
         password
       );
       this._encryptData = encryptedData;
-      this._hasOwner = true;
       this._locked = false;
-    } catch {
+    } catch (error) {
+      console.error(error);
       this._locked = true;
       throw new Error('Elytro: Failed to create new owner');
     }

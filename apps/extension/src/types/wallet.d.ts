@@ -92,4 +92,11 @@ type TApprovalInfo = {
 type TRecoveryContact = {
   name?: string;
   address: string;
+  confirmed?: boolean;
+};
+
+type TGuardianInfo = {
+  salt: string;
+  threshold: number;
+  guardians: string[];
 };

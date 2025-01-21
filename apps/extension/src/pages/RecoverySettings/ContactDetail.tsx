@@ -1,7 +1,7 @@
+import AddressInputWithChainIcon from '@/components/ui/AddressInputer';
 import { Button } from '@/components/ui/button';
 import HelperText from '@/components/ui/HelperText';
 import { Input } from '@/components/ui/input';
-import { getIconByChainId } from '@/constants/chains';
 import { useAccount } from '@/contexts/account-context';
 import React, { useState } from 'react';
 import { isAddress } from 'viem';
@@ -18,10 +18,6 @@ export default function ContactDetail({
   const { accountInfo: currentAccount } = useAccount();
   const [address, setAddress] = useState<string>(contact?.address || '');
   const [name, setName] = useState<string>(contact?.name || '');
-
-  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAddress(e.target.value);
-  };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -42,18 +38,11 @@ export default function ContactDetail({
         />
 
         {/* If Wallet Address: input address and name(optional) */}
-        <div className="w-full flex flex-row items-center  bg-gray-150 rounded-md px-lg py-sm elytro-text-body text-gray-600">
-          <img
-            src={getIconByChainId(currentAccount.chainId)}
-            className=" size-8"
-          />
-          <Input
-            className="border-none bg-transparent"
-            placeholder="Enter account address"
-            value={address}
-            onChange={handleAddressChange}
-          />
-        </div>
+        <AddressInputWithChainIcon
+          chainId={currentAccount.chainId}
+          address={address}
+          onChange={setAddress}
+        />
 
         <Input
           placeholder="Name of contact (optional)"

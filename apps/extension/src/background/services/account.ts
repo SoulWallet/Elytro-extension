@@ -2,10 +2,15 @@ import { elytroSDK } from './sdk';
 import { EVENT_TYPES } from '@/constants/events';
 import eventBus from '@/utils/eventBus';
 import LocalSubscribableStore from '@/utils/store/LocalSubscribableStore';
+import { Address } from 'viem';
 
 type TAccountsState = {
   accounts: TAccountInfo[];
   currentAccount: TAccountInfo | null;
+  recoveryRecord: {
+    id: string;
+    address: Address;
+  } | null;
 };
 
 const ACCOUNTS_STORAGE_KEY = 'elytroAccounts';
@@ -41,6 +46,14 @@ class AccountManager {
 
   private set _currentAccount(currentAccount: TAccountInfo | null) {
     this._store.state.currentAccount = currentAccount;
+  }
+
+  get recoveryRecord() {
+    return this._store.state.recoveryRecord || null;
+  }
+
+  set recoveryRecord(record: { address: Address; id: string } | null) {
+    this._store.state.recoveryRecord = record;
   }
 
   // TODO: maybe make _accounts public?

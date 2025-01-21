@@ -27,7 +27,7 @@ export default function SecondaryPageWrapper({
 }: ISecondaryPageWrapperProps) {
   const handleClose = () => {
     onClose?.();
-    navigateTo('side-panel', '/dashboard');
+    navigateTo('side-panel', '/');
   };
 
   const handleBack = () => {

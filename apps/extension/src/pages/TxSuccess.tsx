@@ -2,6 +2,7 @@ import SecondaryPageWrapper from '@/components/biz/SecondaryPageWrapper';
 import { Button } from '@/components/ui/button';
 import { useChain } from '@/contexts/chain-context';
 import useSearchParams from '@/hooks/use-search-params';
+import { SIDE_PANEL_ROUTE_PATHS } from '@/routes';
 import { navigateTo } from '@/utils/navigation';
 import { ExternalLink } from 'lucide-react';
 
@@ -9,7 +10,7 @@ export default function TxSuccess() {
   const { openExplorer } = useChain();
   const handleClose = () => {
     if (history.length > 1) {
-      navigateTo('side-panel', '/');
+      navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Dashboard);
     } else {
       window.close();
     }

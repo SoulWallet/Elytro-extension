@@ -3,8 +3,11 @@ import { Button } from '@/components/ui/button';
 import { SIDE_PANEL_ROUTE_PATHS } from '@/routes';
 import { navigateTo } from '@/utils/navigation';
 import { toast } from '@/hooks/use-toast';
+import { useWallet } from '@/contexts/wallet';
 
 export default function Transfer() {
+  // TODO: dev mock only. delete this when new creation process is done.
+  const { wallet } = useWallet();
   const handleJumpPage = (
     path: (typeof SIDE_PANEL_ROUTE_PATHS)[keyof typeof SIDE_PANEL_ROUTE_PATHS]
   ) => {
@@ -34,7 +37,18 @@ export default function Transfer() {
         </Button>
         <Button
           variant="secondary"
-          onClick={() => handleJumpPage(SIDE_PANEL_ROUTE_PATHS.RecoverAccount)}
+          onClick={async () => {
+            try {
+              // TODO: dev mock only. delete this when new creation process is done.
+
+              await wallet.createNewOwner('123123A');
+              await wallet.switchChain(11155420);
+
+              handleJumpPage(SIDE_PANEL_ROUTE_PATHS.AccountRecovery);
+            } catch (error) {
+              console.error(error);
+            }
+          }}
         >
           Recover an account
         </Button>

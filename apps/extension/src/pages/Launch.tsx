@@ -36,7 +36,7 @@ export default function Launch() {
 
   const renderContent = useMemo(() => {
     if (status === WalletStatusEn.NoAccount) {
-      navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Unlock);
+      navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.AccountRecovery);
       return null;
     }
 
@@ -80,7 +80,15 @@ export default function Launch() {
               Get Started
             </Button>
             {/* TODO: navigate to import/recover account page */}
-            <Button variant="secondary">I already have an account</Button>
+            <Button
+              variant="secondary"
+              onClick={() =>
+                // TODO: this is a temporary dev mock: go to recover account page without user's confirmation
+                navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Transfer)
+              }
+            >
+              I already have an account
+            </Button>
           </>
         ),
       },

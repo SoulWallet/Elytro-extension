@@ -8,16 +8,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getIconByChainId } from '@/constants/chains';
 import { useAccount } from '@/contexts/account-context';
 import { useTx } from '@/contexts/tx-context';
 import { UserOpType } from '@/contexts/tx-context';
 import { useWallet } from '@/contexts/wallet';
 import { toast } from '@/hooks/use-toast';
-import { formatAddressToShort } from '@/utils/format';
-import { Plus } from 'lucide-react';
+import { Edit, Plus, Trash } from 'lucide-react';
 import { useState } from 'react';
 import ContactsImg from '@/assets/contacts.png';
+import ShortedAddress from '@/components/ui/ShortedAddress';
 
 interface IContactListProps {
   contacts: TRecoveryContact[];
@@ -69,15 +68,10 @@ export default function ContactList({
 
         {/* Operation Bar */}
         <div className="flex flex-row justify-between">
-          <span className="flex flex-row items-center gap-x-sm p-xs rounded-2xs bg-gray-150">
-            <img
-              src={getIconByChainId(currentAccount.chainId)}
-              className="size-4 rounded-full"
-            />
-            <span className="elytro-text-tiny-body text-gray-750">
-              {formatAddressToShort(currentAccount.address)}
-            </span>
-          </span>
+          <ShortedAddress
+            address={currentAccount.address}
+            chainId={currentAccount.chainId}
+          />
 
           {isEmptyContacts ? null : (
             <Button variant="secondary" size="tiny" onClick={onAddContact}>
@@ -98,8 +92,20 @@ export default function ContactList({
               <ContactItem
                 key={contact.address}
                 contact={contact}
-                onEdit={() => onEditContact(contact)}
-                onDelete={() => onDeleteContact(contact)}
+                rightContent={
+                  <div className="flex items-center gap-x-sm flex-shrink-0">
+                    <Edit
+                      onClick={() => onEditContact(contact)}
+                      className="size-2xl cursor-pointer"
+                      color="#95979C"
+                    />
+                    <Trash
+                      onClick={() => onDeleteContact(contact)}
+                      className="size-2xl cursor-pointer"
+                      color="#95979C"
+                    />
+                  </div>
+                }
               />
             ))}
 

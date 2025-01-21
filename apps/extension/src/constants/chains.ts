@@ -119,8 +119,8 @@ export const SUPPORTED_CHAINS: TChainItem[] = [
 
 export const SUPPORTED_CHAIN_IDS = SUPPORTED_CHAINS.map((chain) => chain.id);
 
-export const getIconByChainId = (chainId: number) =>
-  SUPPORTED_CHAINS.find((chain) => chain.id === chainId)?.icon;
+export const getIconByChainId = (chainId: number | undefined) =>
+  chainId ? SUPPORTED_CHAINS.find((chain) => chain.id === chainId)?.icon : '';
 
 export const getChainNameByChainId = (chainId: number) =>
   SUPPORTED_CHAINS.find((chain) => chain.id === chainId)?.name;

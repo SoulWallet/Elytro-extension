@@ -14,13 +14,13 @@ import ChainChange from './pages/ChainChange';
 import Launch from './pages/Launch';
 import RecoverySetting from './pages/RecoverySettings/index';
 import Transfer from './pages/Transfer';
-import RecoverAccount from './pages/RecoverAccount';
+import AccountRecovery from './pages/AccountRecovery';
 import TxSuccess from './pages/TxSuccess';
+import RetrieveContacts from './pages/AccountRecovery/RetrieveContacts';
 
 export const SIDE_PANEL_ROUTE_PATHS = {
   Home: '/',
   Settings: '/settings',
-  Unlock: '/unlock',
   Dashboard: '/dashboard',
   Activate: '/activate',
   Receive: '/receive',
@@ -34,7 +34,8 @@ export const SIDE_PANEL_ROUTE_PATHS = {
   Connection: '/connection',
   ChainChange: '/chain-change',
   RecoverySetting: '/recovery-setting',
-  RecoverAccount: '/recover-account',
+  AccountRecovery: '/account-recovery',
+  RetrieveContacts: '/retrieve-contacts',
   Transfer: '/transfer',
   TxSuccess: '/tx-success',
 } as const;
@@ -86,6 +87,10 @@ export const routes: TRoute[] = [
     component: CreateNewAddress,
   },
   {
+    path: SIDE_PANEL_ROUTE_PATHS.RetrieveContacts,
+    component: RetrieveContacts,
+  },
+  {
     path: SIDE_PANEL_ROUTE_PATHS.LocalProfile,
     component: LocalProfile,
   },
@@ -102,8 +107,12 @@ export const routes: TRoute[] = [
     component: Transfer,
   },
   {
-    path: SIDE_PANEL_ROUTE_PATHS.RecoverAccount,
-    component: RecoverAccount,
+    path: SIDE_PANEL_ROUTE_PATHS.AccountRecovery,
+    component: AccountRecovery,
+  },
+  {
+    path: SIDE_PANEL_ROUTE_PATHS.RetrieveContacts,
+    component: RetrieveContacts,
   },
   {
     path: SIDE_PANEL_ROUTE_PATHS.TxSuccess,

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { UserOpType, useTx } from '@/contexts/tx-context';
 import { useChain } from '@/contexts/chain-context';
-import ProcessingTip from '@/components/biz/ProcessingTip';
+import ProcessingTip from '@/components/ui/ProcessingTip';
 import { Button } from '@/components/ui/button';
 import { navigateTo } from '@/utils/navigation';
 import { SIDE_PANEL_ROUTE_PATHS } from '../routes';

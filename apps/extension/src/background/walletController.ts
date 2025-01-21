@@ -12,11 +12,15 @@ import {
 } from '@/utils/format';
 import historyManager from './services/history';
 import { UserOperationHistory } from '@/constants/operations';
-import { formatEther, Hex, isHex, toHex } from 'viem';
+import { Address, formatEther, Hex, isHex, toHex } from 'viem';
 import chainService from './services/chain';
 import accountManager from './services/account';
 import type { Transaction } from '@soulwallet/sdk';
 import { TChainItem } from '@/constants/chains';
+import {
+  createRecoveryRecord,
+  getRecoveryRecord,
+} from '@/utils/ethRpc/recovery';
 
 enum WalletStatusEn {
   NoOwner = 'NoOwner',
@@ -203,7 +207,7 @@ class WalletController {
     const basicInfo = accountManager.currentAccount;
 
     if (!basicInfo) {
-      throw new Error('Elytro: No current account');
+      return null;
     }
 
     if (!basicInfo.isDeployed) {
@@ -229,12 +233,12 @@ class WalletController {
       throw new Error('Elytro: No owner address. Try create owner first.');
     }
 
-    await this._switchChain(chainId);
+    await this.switchChain(chainId);
     await accountManager.createAccountAsCurrent(keyring.owner.address, chainId);
     this._onAccountChanged();
   }
 
-  private async _switchChain(chainId: number) {
+  public async switchChain(chainId: number) {
     if (chainId === chainService.currentChain?.id) {
       return;
     }
@@ -256,7 +260,7 @@ class WalletController {
   }
 
   public async switchAccountByChain(chainId: number) {
-    this._switchChain(chainId);
+    this.switchChain(chainId);
     accountManager.switchAccountByChainId(chainId);
     this._broadcastToConnectedSites('accountsChanged', []);
     this._onAccountChanged();
@@ -329,10 +333,8 @@ class WalletController {
     );
   }
 
-  public async queryRecoveryContactsOfCurrentAccount() {
-    return await elytroSDK.queryRecoveryContacts(
-      accountManager.currentAccount?.address
-    );
+  public async queryRecoveryContactsByAddress(address: Address) {
+    return await elytroSDK.queryRecoveryContacts(address);
   }
 
   public async generateRecoveryContactsSettingTxs(
@@ -361,6 +363,47 @@ class WalletController {
       await elytroSDK.generateRecoveryContactsSettingTxInfo(newHash);
 
     return [infoRecordTx, contactsSettingTx];
+  }
+
+  public async localRecoveryAddress() {
+    return accountManager.recoveryRecord?.address;
+  }
+
+  public async getRecoveryRecord(address: Address) {
+    console.log('accountManager.recoveryRecord', accountManager.recoveryRecord);
+    if (accountManager.recoveryRecord) {
+      return await getRecoveryRecord(accountManager.recoveryRecord.id);
+    }
+
+    const newOwner = keyring.owner?.address;
+    const chainId = chainService.currentChain?.id;
+    if (!newOwner || !chainId) {
+      throw new Error('Elytro: No new owner or chain id found');
+    }
+
+    const guardianInfo = await this.queryRecoveryContactsByAddress(address);
+
+    if (!guardianInfo) {
+      throw new Error('Elytro: No guardian info found');
+    }
+
+    const recoveryRecord = await createRecoveryRecord({
+      newOwner,
+      chainID: chainId,
+      address: address,
+      guardianInfo,
+    });
+
+    if (!recoveryRecord) {
+      throw new Error('Elytro: failed to create recovery record');
+    }
+
+    accountManager.recoveryRecord = {
+      address,
+      id: recoveryRecord.recoveryRecordID,
+    };
+
+    return recoveryRecord;
   }
 }
 

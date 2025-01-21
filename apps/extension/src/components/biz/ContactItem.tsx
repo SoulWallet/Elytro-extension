@@ -1,15 +1,14 @@
-import { Edit, Trash, UserRound } from 'lucide-react';
+import { UserRound } from 'lucide-react';
 
 interface IContactItemProps {
   contact: TRecoveryContact;
-  onEdit: () => void;
-  onDelete: () => void;
+
+  rightContent?: React.ReactNode;
 }
 
 export default function ContactItem({
   contact,
-  onEdit,
-  onDelete,
+  rightContent,
 }: IContactItemProps) {
   return (
     <div className="flex w-full items-center justify-between rounded-md border border-gray-300 bg-white p-lg">
@@ -27,18 +26,7 @@ export default function ContactItem({
         </div>
       </div>
 
-      <div className="flex items-center gap-x-sm flex-shrink-0">
-        <Edit
-          onClick={onEdit}
-          className="size-2xl cursor-pointer"
-          color="#95979C"
-        />
-        <Trash
-          onClick={onDelete}
-          className="size-2xl cursor-pointer"
-          color="#95979C"
-        />
-      </div>
+      <div className="flex items-center flex-shrink-0">{rightContent}</div>
     </div>
   );
 }

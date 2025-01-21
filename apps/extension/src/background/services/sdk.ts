@@ -638,17 +638,17 @@ class ElytroSDK {
     // Decode the events
     const parseContactFromLog = (log: (typeof logs)[number]) => {
       if (!log || !log.args) {
-        return { contacts: [], threshold: 0 };
+        return null;
       }
       const parsedLog = decodeAbiParameters(
         parseAbiParameters(['address[]', 'uint256', 'bytes32']),
         (log.args as SafeAny).data
       );
       return {
-        contacts: parsedLog[0],
+        guardians: parsedLog[0],
         threshold: Number(parsedLog[1]),
-        // salt: parsedLog[2],
-      };
+        salt: parsedLog[2],
+      } as TGuardianInfo;
     };
 
     const latestRecoveryContacts = parseContactFromLog(logs[logs.length - 1]);
