@@ -10,13 +10,13 @@ export default function LocalProfile() {
     <SecondaryPageWrapper title="Local Profile">
       <div className="space-y-2">
         <div
-          className="elytro-rounded-border-item-wrapper "
+          className="elytro-rounded-border-item-wrapper hover:bg-gray-150"
           onClick={() => setOpenChangePasswordModal(true)}
         >
           Change password
         </div>
         <div
-          className="elytro-rounded-border-item-wrapper "
+          className="elytro-rounded-border-item-wrapper hover:bg-gray-150"
           onClick={() => setOpenAutoLockTimerModal(true)}
         >
           Auto lock timer
