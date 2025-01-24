@@ -179,6 +179,8 @@ importers:
       '@eslint/eslintrc': ^3
       '@radix-ui/react-dialog': ^1.1.4
       '@radix-ui/react-slot': ^1.1.1
+      '@radix-ui/react-toast': ^1.2.1
+      '@soulwallet/sdk': ^0.3.13
       '@tanstack/react-query': 5.45.1
       '@types/node': ^20
       '@types/react': ^19
@@ -210,6 +212,8 @@ importers:
       '@apollo/client': 3.12.3_3vxntq5tkpa5a46gzryfqgf3xu
       '@radix-ui/react-dialog': 1.1.4_uah2musuksu5kh3w2kypik6f24
       '@radix-ui/react-slot': 1.1.1_sxyau5tq6s5pjvweokh2pjpg2i
+      '@radix-ui/react-toast': 1.2.4_uah2musuksu5kh3w2kypik6f24
+      '@soulwallet/sdk': 0.3.13_y6wxsxaa6r4nlp4r77vfekaive
       '@tanstack/react-query': 5.45.1_react@19.0.0
       class-variance-authority: 0.7.1
       clsx: 2.1.1
@@ -2668,6 +2672,29 @@ packages:
       react-dom: 18.3.1_react@18.3.1
     dev: false
 
+  /@radix-ui/react-collection/1.1.1_uah2musuksu5kh3w2kypik6f24:
+    resolution: {integrity: sha512-LwT3pSho9Dljg+wY2KN2mrrh6y3qELfftINERIzBUO9e0N+t0oMTyn3k9iv+ZqgrwGkRnLpNJrsMv9BZlt2yuA==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@radix-ui/react-compose-refs': 1.1.1_sxyau5tq6s5pjvweokh2pjpg2i
+      '@radix-ui/react-context': 1.1.1_sxyau5tq6s5pjvweokh2pjpg2i
+      '@radix-ui/react-primitive': 2.0.1_uah2musuksu5kh3w2kypik6f24
+      '@radix-ui/react-slot': 1.1.1_sxyau5tq6s5pjvweokh2pjpg2i
+      '@types/react': 19.0.7
+      '@types/react-dom': 19.0.3_@types+react@19.0.7
+      react: 19.0.0
+      react-dom: 19.0.0_react@19.0.0
+    dev: false
+
   /@radix-ui/react-collection/1.1.1_wqpz4i3lfwfru5ookkkzees7uu:
     resolution: {integrity: sha512-LwT3pSho9Dljg+wY2KN2mrrh6y3qELfftINERIzBUO9e0N+t0oMTyn3k9iv+ZqgrwGkRnLpNJrsMv9BZlt2yuA==}
     peerDependencies:
@@ -3361,6 +3388,37 @@ packages:
       react-dom: 18.3.1_react@18.3.1
     dev: false
 
+  /@radix-ui/react-toast/1.2.4_uah2musuksu5kh3w2kypik6f24:
+    resolution: {integrity: sha512-Sch9idFJHJTMH9YNpxxESqABcAFweJG4tKv+0zo0m5XBvUSL8FM5xKcJLFLXononpePs8IclyX1KieL5SDUNgA==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@radix-ui/primitive': 1.1.1
+      '@radix-ui/react-collection': 1.1.1_uah2musuksu5kh3w2kypik6f24
+      '@radix-ui/react-compose-refs': 1.1.1_sxyau5tq6s5pjvweokh2pjpg2i
+      '@radix-ui/react-context': 1.1.1_sxyau5tq6s5pjvweokh2pjpg2i
+      '@radix-ui/react-dismissable-layer': 1.1.3_uah2musuksu5kh3w2kypik6f24
+      '@radix-ui/react-portal': 1.1.3_uah2musuksu5kh3w2kypik6f24
+      '@radix-ui/react-presence': 1.1.2_uah2musuksu5kh3w2kypik6f24
+      '@radix-ui/react-primitive': 2.0.1_uah2musuksu5kh3w2kypik6f24
+      '@radix-ui/react-use-callback-ref': 1.1.0_sxyau5tq6s5pjvweokh2pjpg2i
+      '@radix-ui/react-use-controllable-state': 1.1.0_sxyau5tq6s5pjvweokh2pjpg2i
+      '@radix-ui/react-use-layout-effect': 1.1.0_sxyau5tq6s5pjvweokh2pjpg2i
+      '@radix-ui/react-visually-hidden': 1.1.1_uah2musuksu5kh3w2kypik6f24
+      '@types/react': 19.0.7
+      '@types/react-dom': 19.0.3_@types+react@19.0.7
+      react: 19.0.0
+      react-dom: 19.0.0_react@19.0.0
+    dev: false
+
   /@radix-ui/react-toast/1.2.4_wqpz4i3lfwfru5ookkkzees7uu:
     resolution: {integrity: sha512-Sch9idFJHJTMH9YNpxxESqABcAFweJG4tKv+0zo0m5XBvUSL8FM5xKcJLFLXononpePs8IclyX1KieL5SDUNgA==}
     peerDependencies:
@@ -3618,6 +3676,26 @@ packages:
       '@radix-ui/react-use-layout-effect': 1.1.0_tnkfhq5d5u6qtopeeyurvvz5au
       '@types/react': 18.3.17
       react: 18.3.1
+    dev: false
+
+  /@radix-ui/react-visually-hidden/1.1.1_uah2musuksu5kh3w2kypik6f24:
+    resolution: {integrity: sha512-vVfA2IZ9q/J+gEamvj761Oq1FpWgCDaNOOIfbPVp2MVPLEomUr5+Vf7kJGwQ24YxZSlQVar7Bes8kyTo5Dshpg==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@radix-ui/react-primitive': 2.0.1_uah2musuksu5kh3w2kypik6f24
+      '@types/react': 19.0.7
+      '@types/react-dom': 19.0.3_@types+react@19.0.7
+      react: 19.0.0
+      react-dom: 19.0.0_react@19.0.0
     dev: false
 
   /@radix-ui/react-visually-hidden/1.1.1_wqpz4i3lfwfru5ookkkzees7uu:
@@ -4011,6 +4089,17 @@ packages:
       - utf-8-validate
     dev: false
 
+  /@soulwallet/sdk/0.3.13_y6wxsxaa6r4nlp4r77vfekaive:
+    resolution: {integrity: sha512-QeqcHMu0gEV9Zn0bG3KxPfFnWj+P9zABPiE+qOICfV8fAulUdrDM2eIocFI5/h8VYUIb4lWwmQXfpaeZFGog3Q==}
+    dependencies:
+      '@soulwallet/abi': 0.3.4
+      '@soulwallet/result': 0.2.1
+      ethers: 6.13.4_y6wxsxaa6r4nlp4r77vfekaive
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
   /@stablelib/aead/1.0.1:
     resolution: {integrity: sha512-q39ik6sxGHewqtO0nP4BuSe3db5G1fEJE8ukvngS2gLkBXyy6E7pLubhbYgnkDFv6V8cWaxcE4Xn0t6LWcJkyg==}
     dev: false
@@ -4237,7 +4326,7 @@ packages:
   /@types/conventional-commits-parser/5.0.0:
     resolution: {integrity: sha512-loB369iXNmAZglwWATL+WRe+CRMmmBPtpolYzIebFaX4YA3x+BEfLqhUAV9WanycKI3TG1IMr5bMJDajDKLlUQ==}
     dependencies:
-      '@types/node': 22.7.5
+      '@types/node': 20.17.14
     dev: true
 
   /@types/cookies/0.9.0:
@@ -7717,6 +7806,22 @@ packages:
       aes-js: 4.0.0-beta.5
       tslib: 2.7.0
       ws: 8.17.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
+  /ethers/6.13.4_y6wxsxaa6r4nlp4r77vfekaive:
+    resolution: {integrity: sha512-21YtnZVg4/zKkCQPjrDj38B1r4nQvTZLopUGMLQ1ePU2zV/joCfDC3t3iKQjWRzjjjbzR+mdAIoikeBRNkdllA==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@adraffy/ens-normalize': 1.10.1
+      '@noble/curves': 1.2.0
+      '@noble/hashes': 1.3.2
+      '@types/node': 22.7.5
+      aes-js: 4.0.0-beta.5
+      tslib: 2.7.0
+      ws: 8.17.1_y6wxsxaa6r4nlp4r77vfekaive
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate

@@ -1,24 +1,17 @@
 import { http, cookieStorage, createConfig, createStorage } from 'wagmi';
 import {
-  mainnet,
-  sepolia,
-  optimism,
-  optimismSepolia,
-  scroll,
-  scrollSepolia,
-} from 'wagmi/chains';
-import {
   coinbaseWallet,
   injected,
   metaMask,
   walletConnect,
 } from 'wagmi/connectors';
+import { SUPPORTED_CHAINS } from './constants/chains';
 
 const WALLETCONNECT_PROJECT_ID = '8cbad7c19c42240ceef404623a8e5efc';
 
 export function getConfig() {
   return createConfig({
-    chains: [mainnet, sepolia],
+    chains: SUPPORTED_CHAINS,
     connectors: [
       injected(),
       metaMask(),
@@ -32,15 +25,10 @@ export function getConfig() {
     storage: createStorage({
       storage: cookieStorage,
     }),
-    ssr: true,
-    transports: {
-      [mainnet.id]: http(),
-      [sepolia.id]: http(),
-      [optimism.id]: http(),
-      [optimismSepolia.id]: http(),
-      [scroll.id]: http(),
-      [scrollSepolia.id]: http(),
-    },
+    ssr: false,
+    transports: Object.fromEntries(
+      SUPPORTED_CHAINS.map((chain) => [chain.id, http()])
+    ),
   });
 }
 

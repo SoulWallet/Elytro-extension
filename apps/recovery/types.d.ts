@@ -1,5 +1,6 @@
 type SafeAny = any;
 type TRecoveryInfo = {
+  recoveryRecordID: string;
   status: number;
   newOwners: string[];
   guardianInfo: {

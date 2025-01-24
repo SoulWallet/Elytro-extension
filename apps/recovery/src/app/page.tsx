@@ -1,35 +1,55 @@
 'use client';
 
-import { query } from '@/requests/client';
-import { QUERY_GET_RECOVERY_INFO } from '@/requests/gqls';
-import { useQuery } from '@tanstack/react-query';
+import { useRecoveryRecord } from '@/contexts';
 import { LoaderCircle } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
+import AddressWithChain from '@/components/AddressWithChain';
+import ContentWrapper from '@/components/ContentWrapper';
+import { Button } from '@/components/ui/button';
+import { Clock, Search, Shield } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
+
+interface ITipBlockProps {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+}
+
+const TipBlock = ({ title, description, icon }: ITipBlockProps) => {
+  return (
+    <div className="flex flex-col gap-x-xl w-[128px]">
+      {icon}
+      <div className="text-small-bold mt-md mb-2xs">{title}</div>
+      <div className="text-tiny whitespace-pre-wrap ">{description}</div>
+    </div>
+  );
+};
+
+const TIP_BLOCKS = [
+  {
+    title: 'Recovery signatures',
+    description: 'Minimum required was set by account owner',
+    icon: <Search />,
+  },
+  {
+    title: 'Begin recovery and wait 48 hrs',
+    description: 'The 48 hours is needed for security reasons',
+    icon: <Shield />,
+  },
+  {
+    title: 'Complete recovery ',
+    description: 'Regain access once recovery is completed',
+    icon: <Clock />,
+  },
+];
 
 export default function Home() {
-  const searchParams = useSearchParams();
-  const recoveryRecordId = searchParams.get('id');
+  const { recoveryRecord, loading } = useRecoveryRecord();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['record'],
-    queryFn: () => {
-      return query(QUERY_GET_RECOVERY_INFO, {
-        recoveryRecordId,
-      });
-    },
-    enabled: !!recoveryRecordId,
-  });
-
-  const getRecoveryInfo = (data as SafeAny)?.getRecoveryInfo as
-    | TRecoveryInfo
-    | undefined;
-
-  console.log(getRecoveryInfo);
-
-  if (!isLoading) {
-    // TODO: replace this <ProcessingTip/> once the component has been extracted to shared-components project
-    return (
-      <div className="flex flex-col items-center justify-center gap-y-sm py-2xl">
+  // TODO: replace this <ProcessingTip/> once the component has been extracted to shared-components project
+  return (
+    <div className="flex flex-col items-center justify-center gap-y-sm py-2xl">
+      {loading ? (
         <div className="bg-blue rounded-pill p-md">
           <LoaderCircle
             className="size-12 animate-spin"
@@ -37,15 +57,27 @@ export default function Home() {
             strokeOpacity={0.9}
           />
         </div>
-        <div className="text-bold-body">Fetching recovery details...</div>
-      </div>
-    );
-  }
+      ) : (
+        <ContentWrapper title="Account recovery for">
+          <div className="flex flex-col gap-xl items-center">
+            <AddressWithChain
+              className="bg-gray-150 w-fit "
+              address={recoveryRecord?.address}
+              chainID={Number(recoveryRecord?.chainID)}
+            />
 
-  return (
-    <div>
-      {getRecoveryInfo?.status}
-      {getRecoveryInfo?.guardianInfo?.guardians}
+            <div className="flex flex-row gap-x-2 flex-nowrap justify-between p-xl rounded-lg bg-gray-150">
+              {TIP_BLOCKS.map((tip) => (
+                <TipBlock key={tip.title} {...tip} />
+              ))}
+            </div>
+
+            <Button>
+              <Link href="/contacts">Recovery status</Link>
+            </Button>
+          </div>
+        </ContentWrapper>
+      )}
     </div>
   );
 }

@@ -28,3 +28,15 @@ export const QUERY_GET_RECOVERY_INFO = gql`
     }
   }
 `;
+
+export const MUTATION_ADD_CONTACT_SIGNATURE = gql`
+  mutation AddGuardianSignature($input: GuardianSignatureInput!) {
+    addGuardianSignature(input: $input) {
+      recoveryRecordID
+      guardian
+      signatureType
+      guardianSignature
+      updateTimestamp
+    }
+  }
+`;

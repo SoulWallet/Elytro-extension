@@ -103,15 +103,23 @@
 
 @layer utilities {
   .text-title {
-    @apply text-xl font-medium leading-[100%] text-black-blue;
+    @apply text-xl font-medium leading-[100%];
   }
 
   .text-bold-body {
-    @apply text-lg font-medium leading-[125%] text-black-blue;
+    @apply text-lg font-medium leading-[125%];
+  }
+
+  .text-small-bold {
+    @apply text-base font-medium leading-[130%];
   }
 
   .text-smaller {
-    @apply text-sm font-normal leading-[135%] text-black-blue;
+    @apply text-sm font-normal leading-[135%];
+  }
+
+  .text-tiny {
+    @apply text-xs font-normal leading-[140%];
   }
 }
 

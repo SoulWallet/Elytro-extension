@@ -13,6 +13,7 @@ import {
 import Image from 'next/image';
 
 import { X } from 'lucide-react';
+import AddressWithChain from './AddressWithChain';
 
 export default function ConnectControl() {
   const [showDialog, setShowDialog] = useState(false);
@@ -43,25 +44,11 @@ export default function ConnectControl() {
       <DialogTrigger asChild>
         {isConnected ? (
           <div className="flex items-center gap-2 py-sm px-md rounded-2xs bg-white bg-white">
-            {chain && (
-              <Image
-                src={`https://placehold.co/24x24?text=${chain.name}`}
-                alt={chain.name}
-                width={20}
-                height={20}
-                className="rounded-full"
-              />
-            )}
-            <div
-              className="text-smaller flex items-center gap-2"
-              title={address}
-            >
-              {address?.slice(0, 6)}
-              <span className="text-gray-500 bg-gray-300 rounded-xs px-1">
-                ...
-              </span>
-              {address?.slice(-4)}
-            </div>
+            <AddressWithChain
+              address={address}
+              chainID={chain?.id}
+              className="px-0 py-0 p-0"
+            />
             <div className="h-4 w-[1px] bg-gray-300" />
             <X
               onClick={handleDisconnect}
