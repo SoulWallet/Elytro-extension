@@ -673,3 +673,41 @@ export const getWalletNonce = async (wallet?: string, chainId?: number) => {
     return null;
   }
 };
+
+export const getSocialRecoveryTypedData = async (
+  wallet: string,
+  chainId: number,
+  nonce: number,
+  newOwners: string[]
+) => {
+  return {
+    domain: {
+      name: 'SocialRecovery',
+      version: '1',
+      chainId,
+      verifyingContract: SocialRecoveryContractConfig.address,
+    },
+    types: {
+      SocialRecovery: [
+        {
+          name: 'wallet',
+          type: 'address',
+        },
+        {
+          name: 'nonce',
+          type: 'uint256',
+        },
+        {
+          name: 'newOwners',
+          type: 'bytes32[]',
+        },
+      ],
+    },
+    message: {
+      wallet,
+      nonce: BigInt(nonce),
+      newOwners,
+    },
+    primaryType: 'SocialRecovery',
+  };
+};

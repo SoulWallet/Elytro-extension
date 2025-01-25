@@ -2,11 +2,11 @@
 
 import AddressWithChain from '@/components/AddressWithChain';
 import ContentWrapper from '@/components/ContentWrapper';
-import { Button } from '@/components/ui/button';
 import { useRecoveryRecord } from '@/contexts';
 import React, { useMemo } from 'react';
 import { useAccount } from 'wagmi';
-import ContactSign from './ContactSign';
+import Sign from './Sign';
+import Status from './Status';
 
 export default function Contacts() {
   const { recoveryRecord } = useRecoveryRecord();
@@ -20,30 +20,21 @@ export default function Contacts() {
     if (isGuardian) {
       return {
         subtitle: 'Please sign the recovery',
-        content: <ContactSign />,
+        content: <Sign />,
       };
     }
 
     return {
-      subtitle: 'Connect wallet address which in below list',
-      content: (
-        <div className="flex flex-col w-full gap-y-md ">
-          {recoveryRecord?.guardianInfo?.guardians?.map((guardian) => (
-            <AddressWithChain
-              className="border !p-lg border-gray-300 rounded-[16px]"
-              key={guardian}
-              address={guardian}
-              chainID={Number(recoveryRecord?.chainID)}
-            />
-          ))}
-        </div>
-      ),
+      subtitle: 'Connect to the following wallet address to sign the recovery',
+      content: <Status />,
     };
   }, [recoveryRecord, address]);
 
   return (
     <ContentWrapper
-      title={<div className="mr-5xl">Sign your friend’s recovery</div>}
+      title={
+        <div className="text-left mr-5xl">Sign your friend’s recovery</div>
+      }
       allSteps={3}
       currentStep={1}
       subtitle={subtitle}

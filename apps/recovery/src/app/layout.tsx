@@ -8,6 +8,7 @@ import { getConfig } from '../wagmi';
 import { Providers } from './providers';
 import ConnectControl from '@/components/ConnectControl';
 import { LogoHeader } from '@/components/LogoHeader';
+import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
@@ -32,6 +33,7 @@ export default async function RootLayout({
         className={`${inter.className} antialiased w-screen h-screen screen-bg min-w-[800px]`}
       >
         <Providers initialState={initialState}>
+          <Toaster />
           <header className="fixed top-0 left-0 right-0 flex items-center justify-between gap-2 px-xl py-lg">
             <LogoHeader />
 

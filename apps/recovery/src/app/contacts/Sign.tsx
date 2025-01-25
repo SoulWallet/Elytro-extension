@@ -1,77 +1,46 @@
 'use client';
 import AddressWithChain from '@/components/AddressWithChain';
-import { useAccount, useSignTypedData } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { useRecoveryRecord } from '@/contexts';
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import {
+  getSocialRecoveryTypedData,
   getWalletNonce,
-  SocialRecoveryContractConfig,
 } from '@/requests/contract';
-import { getAccount, signTypedData } from 'wagmi/actions';
-import { SocialRecovery } from '@soulwallet/sdk';
-import { Address, TypedData } from 'viem';
+import { signTypedData } from 'wagmi/actions';
+import { Address } from 'viem';
 import { getConfig } from '@/wagmi';
 import { mutate } from '@/requests/client';
 import { MUTATION_ADD_CONTACT_SIGNATURE } from '@/requests/gqls';
 import { toast } from '@/hooks/use-toast';
 
-export default function ContactSign() {
+export default function Sign() {
   const { address, isConnected, connector } = useAccount();
   const { recoveryRecord } = useRecoveryRecord();
+
+  const isSigned = recoveryRecord?.guardianSignatures?.some(
+    ({ guardian }) => guardian === address?.toLowerCase()
+  );
 
   const sendSignatureRequest = async () => {
     try {
       const nonce = await getWalletNonce(
-        address,
+        recoveryRecord?.address,
         Number(recoveryRecord?.chainID)
       );
 
       if (nonce === null) return;
 
-      const typedData = SocialRecovery.getSocialRecoveryTypedData(
-        Number(recoveryRecord?.chainID),
-        SocialRecoveryContractConfig.address,
-        address as Address,
-        nonce,
-        recoveryRecord?.newOwners as []
-      );
-
-      console.log(typedData, '--');
-
       const signature = await signTypedData(getConfig(), {
+        ...getSocialRecoveryTypedData(
+          recoveryRecord?.address as Address,
+          Number(recoveryRecord?.chainID),
+          nonce,
+          recoveryRecord?.newOwners as []
+        ),
         connector,
-        domain: {
-          name: 'SocialRecovery',
-          version: '1',
-          chainId: 11155420,
-          verifyingContract: '0x36693563E41BcBdC8d295bD3C2608eb7c32b1cCb',
-        },
-        types: {
-          SocialRecovery: [
-            {
-              name: 'wallet',
-              type: 'address',
-            },
-            {
-              name: 'nonce',
-              type: 'uint256',
-            },
-            {
-              name: 'newOwners',
-              type: 'bytes32[]',
-            },
-          ],
-        },
-        message: {
-          wallet: '0xb9d3eF27DDBAD4D361A412dc419EBB3A7Ee586c5',
-          nonce: BigInt(0),
-          newOwners: [
-            '0x0000000000000000000000008459D498fe9f19a076Ec06fc49d6c624294b06a4',
-          ],
-        },
-        primaryType: 'SocialRecovery',
-      });
+      } as any);
 
       if (signature) {
         await mutate(MUTATION_ADD_CONTACT_SIGNATURE, {
@@ -88,6 +57,7 @@ export default function ContactSign() {
         description: 'Signature sent successfully',
       });
     } catch (error) {
+      console.log(error, '--');
       toast({
         title: 'Failed to sign',
         description: 'Please try again',
@@ -105,13 +75,10 @@ export default function ContactSign() {
 
       <Button
         className="w-full mt-lg"
-        disabled={!isConnected}
-        onClick={() => {
-          console.log('sendSignatureRequest');
-          sendSignatureRequest();
-        }}
+        disabled={!isConnected || isSigned}
+        onClick={sendSignatureRequest}
       >
-        Sign
+        {isSigned ? 'You have already signed' : 'Sign'}
       </Button>
     </div>
   );

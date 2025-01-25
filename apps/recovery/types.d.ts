@@ -14,4 +14,13 @@ type TRecoveryInfo = {
   nonce: number;
   onchainID: string;
   createTimestamp: number;
+  guardianSignatures: TGuardianSignature[];
+};
+
+type TGuardianSignature = {
+  guardian: string;
+  guardianSignature: string;
+  recoveryRecordID: string;
+  signatureType: number;
+  updateTimestamp: string;
 };
