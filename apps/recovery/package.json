@@ -30,7 +30,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
-    "@types/react": "^19",
+    "@types/react": "^19.0.8",
     "@types/react-dom": "^19",
     "@wagmi/cli": "latest",
     "bufferutil": "^4.0.8",
@@ -42,7 +42,7 @@
     "postcss": "^8",
     "supports-color": "^9.4.0",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5",
+    "typescript": "^5.7.3",
     "utf-8-validate": "^5.0.2"
   }
 }
