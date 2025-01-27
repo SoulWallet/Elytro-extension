@@ -19,9 +19,9 @@ export default function Sign() {
   const { address, isConnected, connector } = useAccount();
   const { recoveryRecord } = useRecoveryRecord();
 
-  const isSigned = recoveryRecord?.guardianSignatures?.some(
-    ({ guardian }) => guardian === address?.toLowerCase()
-  );
+  const isSigned = (
+    recoveryRecord?.guardianSignatures as TGuardianSignature[]
+  )?.some(({ guardian }) => guardian === address?.toLowerCase());
 
   const sendSignatureRequest = async () => {
     try {
@@ -40,7 +40,7 @@ export default function Sign() {
           recoveryRecord?.newOwners as []
         ),
         connector,
-      } as any);
+      } as SafeAny);
 
       if (signature) {
         await mutate(MUTATION_ADD_CONTACT_SIGNATURE, {

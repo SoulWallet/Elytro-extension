@@ -1,6 +1,5 @@
 'use client';
 
-import AddressWithChain from '@/components/AddressWithChain';
 import ContentWrapper from '@/components/ContentWrapper';
 import { useRecoveryRecord } from '@/contexts';
 import React, { useMemo } from 'react';

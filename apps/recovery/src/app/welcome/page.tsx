@@ -41,7 +41,7 @@ const TIP_BLOCKS = [
   },
 ];
 
-export default function welcome() {
+export default function Welcome() {
   const { recoveryRecord } = useRecoveryRecord();
 
   return (
