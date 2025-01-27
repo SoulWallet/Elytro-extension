@@ -4,6 +4,7 @@ import { toast } from '@/hooks/use-toast';
 import { query } from '@/requests/client';
 import { QUERY_GET_RECOVERY_INFO } from '@/requests/gqls';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, {
   createContext,
   useContext,
@@ -16,6 +17,7 @@ interface IRecoveryRecordContext {
   loading: boolean;
   recoveryRecord: TRecoveryInfo | null;
   getRecoveryRecord: () => void;
+  backToHome: () => void;
 }
 
 const RecoveryRecordContext = createContext<IRecoveryRecordContext | undefined>(
@@ -25,16 +27,25 @@ const RecoveryRecordContext = createContext<IRecoveryRecordContext | undefined>(
 export const RecoveryRecordProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const [recoveryRecord, setRecoveryRecord] = useState<TRecoveryInfo | null>(
     null
   );
 
-  const recoveryRecordId = useSearchParams().get('id');
+  const recoveryRecordId =
+    useSearchParams().get('id') || recoveryRecord?.recoveryRecordID;
+
+  const backToHome = () => {
+    router.replace(`/?id=${recoveryRecordId}`);
+  };
 
   const getRecoveryRecord = async () => {
     try {
       setLoading(true);
+      if (!recoveryRecordId) {
+        throw new Error('Recovery record id is required');
+      }
       const res = await query(QUERY_GET_RECOVERY_INFO, {
         recoveryRecordId,
       });
@@ -43,7 +54,8 @@ export const RecoveryRecordProvider: React.FC<{ children: ReactNode }> = ({
     } catch (error) {
       toast({
         title: 'Get Recovery Record Failed',
-        description: 'Please try again later',
+        description: (error as Error)?.message || 'Please try again later',
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -51,14 +63,12 @@ export const RecoveryRecordProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
-    if (recoveryRecordId) {
-      getRecoveryRecord();
-    }
+    getRecoveryRecord();
   }, [recoveryRecordId]);
 
   return (
     <RecoveryRecordContext.Provider
-      value={{ recoveryRecord, getRecoveryRecord, loading }}
+      value={{ recoveryRecord, getRecoveryRecord, loading, backToHome }}
     >
       {children}
     </RecoveryRecordContext.Provider>

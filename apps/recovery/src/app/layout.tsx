@@ -41,7 +41,7 @@ export default async function RootLayout({
               <ConnectControl />
             </div>
           </header>
-          <main className="pt-[20%] h-full flex flex-col items-center flex-grow">
+          <main className=" h-full flex flex-col items-center flex-grow">
             {children}
           </main>
         </Providers>

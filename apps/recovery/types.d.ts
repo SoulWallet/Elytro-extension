@@ -3,11 +3,7 @@ type TRecoveryInfo = {
   recoveryRecordID: string;
   status: number;
   newOwners: string[];
-  guardianInfo: {
-    threshold: number;
-    salt: string;
-    guardians: string[];
-  };
+  guardianInfo: TGuardianInfo;
   validTime: number;
   chainID: string;
   address: string;
@@ -21,6 +17,12 @@ type TGuardianSignature = {
   guardian: string;
   guardianSignature: string;
   recoveryRecordID: string;
-  signatureType: number;
+  signatureType: 0 | 1 | 2 | 3;
   updateTimestamp: string;
+};
+
+type TGuardianInfo = {
+  threshold: number;
+  salt: string;
+  guardians: string[];
 };

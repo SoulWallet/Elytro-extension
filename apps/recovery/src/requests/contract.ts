@@ -1,5 +1,6 @@
 import { getConfig } from '@/wagmi';
-import { Address, isAddress } from 'viem';
+import { GuardianSignature, SocialRecovery } from '@soulwallet/sdk';
+import { Address, encodeFunctionData, Hex, isAddress } from 'viem';
 import { readContract } from 'wagmi/actions';
 
 export const SocialRecoveryContractConfig = {
@@ -669,7 +670,7 @@ export const getWalletNonce = async (wallet?: string, chainId?: number) => {
       chainId: chainId,
     });
     return Number(res);
-  } catch (error) {
+  } catch {
     return null;
   }
 };
@@ -709,5 +710,134 @@ export const getSocialRecoveryTypedData = async (
       newOwners,
     },
     primaryType: 'SocialRecovery',
+  };
+};
+
+// const getRawGuardian = ({
+//   guardians,
+//   threshold,
+//   salt,
+// }: TGuardianInfo) => {
+//   if (guardians.length === 0) {
+//     return '0x';
+//   }
+
+//   guardians = [...guardians];
+//   guardians.sort((a, b) => {
+//     const aBig = BigInt(a);
+//     const bBig = BigInt(b);
+//     if (aBig === bBig) {
+//       throw new Error(`guardian address is duplicated: ${a}`);
+//     } else if (aBig < bBig) {
+//       return -1;
+//     } else {
+//       return 1;
+//     }
+//   });
+
+//   const guardianData = encodeAbiParameters(
+//     parseAbiParameters(['address[]', 'uint256', 'uint256']),
+//     [guardians as Address[], BigInt(threshold), BigInt(salt)]
+//   );
+//   return guardianData;
+// };
+
+const generateGuardianSignatures = (
+  guardianSignatures: TGuardianSignature[],
+  threshold: number,
+  guardians: string[]
+) => {
+  const guardianSignatureMap = new Map(
+    guardianSignatures.map((sig) => [sig.guardian.toLowerCase(), sig])
+  );
+
+  const result: GuardianSignature[] = [];
+
+  for (
+    let j = 0, collectedSign = 0;
+    j < guardians.length && collectedSign < threshold;
+    j++
+  ) {
+    const guardianAddress = guardians[j].toLowerCase();
+
+    if (collectedSign >= threshold) {
+      result.push({
+        signatureType: 3, // no signature
+        address: guardianAddress,
+        signature: '',
+      });
+    } else {
+      const _guardianSignature = guardianSignatureMap.get(guardianAddress);
+
+      if (_guardianSignature) {
+        result.push({
+          signatureType: 2,
+          address: guardianAddress,
+          signature: _guardianSignature.guardianSignature,
+        });
+        collectedSign++;
+      } else {
+        result.push({
+          signatureType: 3, // no signature
+          address: guardianAddress,
+          signature: '',
+        });
+      }
+    }
+  }
+
+  return result;
+};
+
+export const getRecoveryStartTxData = (
+  walletAddress: string,
+  newOwners: string[],
+  guardianInfo: TGuardianInfo,
+  guardianSignatures: TGuardianSignature[]
+) => {
+  const rawGuardian = SocialRecovery.getGuardianBytes(
+    guardianInfo.guardians,
+    guardianInfo.threshold,
+    guardianInfo.salt
+  );
+
+  const packedGuardianSignature = SocialRecovery.packGuardianSignature(
+    generateGuardianSignatures(
+      guardianSignatures,
+      guardianInfo.threshold,
+      guardianInfo.guardians
+    )
+  );
+
+  const data = encodeFunctionData({
+    abi: SocialRecoveryContractConfig.abi,
+    functionName: 'scheduleRecovery',
+    args: [
+      walletAddress as Address,
+      newOwners as Address[],
+      rawGuardian as Hex,
+      packedGuardianSignature as Hex,
+    ],
+  });
+
+  return {
+    data,
+    to: SocialRecoveryContractConfig.address,
+  };
+};
+
+export const getExecuteRecoveryTxData = (
+  walletAddress: string,
+  newOwners: string[]
+) => {
+  const data = encodeFunctionData({
+    abi: SocialRecoveryContractConfig.abi,
+    functionName: 'executeRecovery',
+    args: [walletAddress as Address, newOwners as Address[]],
+  });
+
+  return {
+    data,
+    to: SocialRecoveryContractConfig.address,
   };
 };
