@@ -50,12 +50,15 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="mt-[30%] bg-blue rounded-pill p-md">
-        <LoaderCircle
-          className="size-12 animate-spin"
-          stroke="#fff"
-          strokeOpacity={0.9}
-        />
+      <div className="my-auto flex flex-col items-center justify-center gap-y-sm">
+        <div className="bg-blue rounded-pill p-md">
+          <LoaderCircle
+            className="size-12 animate-spin"
+            stroke="#fff"
+            strokeOpacity={0.9}
+          />
+        </div>
+        <div className="text-bold-body">Fetching recovery details...</div>
       </div>
     );
   }

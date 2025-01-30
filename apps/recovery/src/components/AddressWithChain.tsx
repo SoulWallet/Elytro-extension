@@ -2,7 +2,6 @@
 
 import { CHAIN_LOGOS } from '@/constants/chains';
 import { cn } from '@/lib/utils';
-import { isNumber } from 'lodash';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
@@ -32,7 +31,7 @@ export default function AddressWithChain({
         {chainID && (
           <Image
             src={CHAIN_LOGOS[chainID]}
-            alt={isNumber(chainID) ? chainID.toString() : ''}
+            alt={!Number.isNaN(chainID) ? chainID.toString() : ''}
             width={20}
             height={20}
             className="rounded-full size-6"
