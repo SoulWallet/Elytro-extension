@@ -25,7 +25,7 @@ const DELAY_TIME = 48 * 60 * 60 * 1_000; // 48 hours
 const TimeBlock = ({ time, unit }: { time: number; unit: string }) => {
   return (
     <div className="flex flex-col items-center gap-y-sm">
-      <div className="text-title leading-normal text-center p-md rounded-sm bg-gray-150 w-14">
+      <div className="elytro-text-title leading-normal text-center p-md rounded-sm bg-gray-150 w-14">
         {String(time > 0 ? time : 0).padStart(2, '0')}
       </div>
       <div className="text-tiny">{unit}</div>

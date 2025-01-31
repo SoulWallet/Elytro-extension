@@ -62,7 +62,7 @@ export function UserOpDetail({
     <div className="flex flex-col w-full gap-y-md">
       {/* UserOp Title */}
       <div className="flex items-center justify-between">
-        <span className="text-body-bold">{UserOpTitleMap[opType]}</span>
+        <span className="elytro-text-body-bold">{UserOpTitleMap[opType]}</span>
 
         {/* Advanced view: for deploy wallet no need to show */}
         {opType === UserOpType.DeployWallet ? null : (

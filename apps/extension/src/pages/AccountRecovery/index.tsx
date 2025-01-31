@@ -47,7 +47,7 @@ export default function AccountRecovery() {
       }
     >
       <div className="flex flex-col gap-y-sm mb-md">
-        <h1 className="text-body-bold">Account Address</h1>
+        <h1 className="elytro-text-body-bold">Account Address</h1>
         <p className="text-smaller text-gray-600">
           Enter your account address for us to retrieve your recovery contacts
         </p>

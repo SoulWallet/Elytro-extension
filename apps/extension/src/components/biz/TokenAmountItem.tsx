@@ -20,7 +20,10 @@ export default function TokenAmountItem({
 
   return (
     <span
-      className={cn('flex items-center gap-x-sm text-body-bold', className)}
+      className={cn(
+        'flex items-center gap-x-sm elytro-text-body-bold',
+        className
+      )}
     >
       {/* TODO: no fromInfo. no logo & name */}
       <img

@@ -80,27 +80,28 @@
 }
 
 @layer components {
+
   .elytro-text-hero {
-    @apply text-[52px] font-medium leading-[100%] text-black-blue;
+    @apply text-[52px] font-medium leading-[100%] ;
   }
   .elytro-text-headline {
-    @apply text-[40px] font-medium leading-[100%] text-black-blue;
+    @apply text-[40px] font-medium leading-[100%];
   }
 
-  .text-title {
-    @apply text-[28px] font-medium leading-[120%] text-black-blue;
+  .elytro-text-title {
+    @apply text-[28px] font-medium leading-[120%] ;
   }
 
   .elytro-text-body {
-    @apply text-[18px] font-normal leading-[125%] text-black-blue;
+    @apply text-[18px] font-normal leading-[125%] ;
   }
 
-  .text-body-bold {
+  .elytro-text-body-bold {
     @apply elytro-text-body font-medium;
   }
 
   .elytro-text-small {
-    @apply text-[16px] font-normal leading-[130%] text-black-blue;
+    @apply text-[16px] font-normal leading-[130%];
   }
 
   .elytro-text-small-bold {
@@ -142,7 +143,7 @@
   }
 
   .elytro-rounded-border-item-wrapper {
-    @apply p-lg rounded-md border text-body-bold border-gray-300 bg-white cursor-pointer;
+    @apply p-lg rounded-md border elytro-text-body-bold border-gray-300 bg-white cursor-pointer;
   }
 
   .elytro-select-content {

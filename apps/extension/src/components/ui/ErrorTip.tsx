@@ -34,7 +34,7 @@ const ErrorTip = ({
         stroke-linejoin="round"
       />
     </svg>
-    <div className="text-body-bold text-center w-full">{title}</div>
+    <div className="elytro-text-body-bold text-center w-full">{title}</div>
   </div>
 );
 

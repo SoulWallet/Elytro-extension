@@ -123,7 +123,7 @@ export default function Home() {
         </svg>
 
         <div className="flex flex-col items-center gap-y-sm text-center">
-          <h1 className="text-title">Recovery already in progress</h1>
+          <h1 className="elytro-text-title">Recovery already in progress</h1>
           <p className="text-smaller text-gray-600">
             Other contacts are assisting your friend with account recovery.
             <br />

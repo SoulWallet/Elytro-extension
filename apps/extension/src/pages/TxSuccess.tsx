@@ -50,7 +50,7 @@ export default function TxSuccess() {
             strokeLinejoin="round"
           />
         </svg>
-        <span className="text-body-bold">Confirmed successfully</span>
+        <span className="elytro-text-body-bold">Confirmed successfully</span>
         <Button
           variant="outline"
           size="tiny"

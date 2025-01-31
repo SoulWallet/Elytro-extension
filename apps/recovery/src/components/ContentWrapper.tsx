@@ -19,7 +19,7 @@ export default function ContentWrapper({
   return (
     <section className="mt-[15%] bg-white rounded-lg min-w-fit min-h-fit px-4xl py-3xl inline-block">
       {title && (
-        <h1 className="text-title text-center mb-xl">
+        <h1 className="elytro-text-title text-center mb-xl">
           {allSteps && currentStep && (
             <div className="flex flex-row gap-x-sm flex-nowrap mb-lg">
               {Array.from({ length: allSteps }, (_, index) => (

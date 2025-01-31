@@ -17,6 +17,7 @@ import {
   ShieldQuestion,
 } from 'lucide-react';
 import { useChain } from '@/contexts/chain-context';
+import { useAccount } from '@/contexts/account-context';
 const ActivityTypeMap = {
   [HistoricalActivityTypeEn.Send]: {
     name: 'Send',

@@ -102,7 +102,7 @@
 }
 
 @layer utilities {
-  .text-title {
+  .elytro-text-title {
     @apply text-xl font-medium leading-[100%];
   }
 

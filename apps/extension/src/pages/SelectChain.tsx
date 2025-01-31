@@ -24,7 +24,7 @@ const ChainGroup = ({
 }: IChainGroupProps) => {
   return (
     <div className="flex flex-col gap-y-sm">
-      <h2 className="text-body-bold text-gray-600">{title}</h2>
+      <h2 className="elytro-text-body-bold text-gray-600">{title}</h2>
       {chains.map((chain) => (
         <ChainItem
           key={chain.id}
@@ -80,7 +80,7 @@ export default function SelectChain() {
       }
     >
       <div className="flex flex-col gap-y-2xl">
-        <h1 className="text-body-bold">Set a network</h1>
+        <h1 className="elytro-text-body-bold">Set a network</h1>
 
         <ChainGroup
           chains={mainnet}

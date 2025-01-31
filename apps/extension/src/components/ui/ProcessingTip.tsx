@@ -25,7 +25,7 @@ const ProcessingTip = ({
         strokeOpacity={0.9}
       />
     </div>
-    <div className="text-body-bold">{body}</div>
+    <div className="elytro-text-body-bold">{body}</div>
     <div className="elytro-text-tiny-body text-gray-600">{subBody}</div>
   </div>
 );

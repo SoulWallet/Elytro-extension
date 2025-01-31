@@ -19,7 +19,7 @@ export function LogoHeader() {
         height={20}
         priority
       />
-      <span className="text-title">Elytro</span>
+      <span className="elytro-text-title">Elytro</span>
     </div>
   );
 }

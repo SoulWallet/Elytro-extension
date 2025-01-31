@@ -64,7 +64,7 @@ export default function ContactList({
   return (
     <div className="flex flex-col justify-between h-full">
       <div className="flex flex-col gap-y-md">
-        <h1 className="text-body-bold">Your recovery contacts</h1>
+        <h1 className="elytro-text-body-bold">Your recovery contacts</h1>
 
         {/* Operation Bar */}
         <div className="flex flex-row justify-between">
@@ -110,7 +110,7 @@ export default function ContactList({
             ))}
 
             <div>
-              <h1 className="text-body-bold mb-2xs">
+              <h1 className="elytro-text-body-bold mb-2xs">
                 Minimum confirmations required
               </h1>
 
@@ -144,7 +144,7 @@ export default function ContactList({
         ) : (
           <div className="flex flex-col gap-y-md items-center mt-4xl">
             <img src={ContactsImg} className="size-36" />
-            <span className="text-title">Add a new contact</span>
+            <span className="elytro-text-title">Add a new contact</span>
 
             <Button variant="secondary" size="small" onClick={onAddContact}>
               <Plus className="size-lg" />

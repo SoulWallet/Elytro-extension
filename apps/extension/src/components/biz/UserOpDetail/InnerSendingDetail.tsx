@@ -20,7 +20,7 @@ export default function InnerSendingDetail({
         <span className="text-smaller text-gray-600">--</span>
       </div>
 
-      <div className="text-body-bold">To</div>
+      <div className="elytro-text-body-bold">To</div>
 
       <FragmentedAddress
         address={decodedUserOp?.to}

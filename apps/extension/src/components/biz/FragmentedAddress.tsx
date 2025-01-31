@@ -22,7 +22,7 @@ const SIZE_MAP = {
   },
   md: {
     icon: 'size-8',
-    text: 'text-body-bold',
+    text: 'elytro-text-body-bold',
   },
 };
 

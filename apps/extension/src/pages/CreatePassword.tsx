@@ -27,15 +27,22 @@ export default function CreatePassword() {
   };
 
   return (
-    <div className="elytro-gradient-bg flex flex-1 flex-col items-center justify-center px-3xl h-full gap-y-3xl">
-      <img src={passwordIcon} alt="Password" className="size-[164px] p-xl" />
-      <div className="flex flex-col gap-y-md text-center">
-        <h1 className="text-title">Create a passcode</h1>
-        <p className="text-smaller text-gray-600">
-          This is for accessing your accounts on this device
-        </p>
+    <div className="elytro-gradient-bg  p-3xl h-full gap-y-3xl flex flex-col justify-between">
+      <div className="flex flex-1 flex-col items-center justify-center">
+        <img src={passwordIcon} alt="Password" className="size-[164px] p-xl" />
+        <div className="flex flex-col gap-y-md text-center">
+          <h1 className="elytro-text-title">Create a passcode</h1>
+          <p className="text-smaller text-gray-600">
+            This is for accessing your accounts on this device
+          </p>
+        </div>
       </div>
-      <PasswordSetter onSubmit={handleCreatePassword} loading={loading} />
+
+      <PasswordSetter
+        className="flex flex-1"
+        onSubmit={handleCreatePassword}
+        loading={loading}
+      />
     </div>
   );
 }

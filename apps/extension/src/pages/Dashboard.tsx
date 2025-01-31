@@ -7,6 +7,7 @@ import Assets from '@/components/biz/Assets';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useEffect } from 'react';
+import { toast } from '@/hooks/use-toast';
 
 export default function Dashboard() {
   const { loading, getAccounts, updateAccount } = useAccount();
@@ -43,6 +44,11 @@ export default function Dashboard() {
         variant="secondary"
         size="tiny"
         className="fixed bottom-4 left-1/2 transform -translate-x-1/2"
+        onClick={() => {
+          toast({
+            title: 'This feature is not available yet',
+          });
+        }}
       >
         <Plus className="w-3 h-3" />
         Import token

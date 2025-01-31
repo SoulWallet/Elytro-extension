@@ -22,7 +22,7 @@ const ConnectedSiteItem = ({
     >
       <div className="flex flex-row items-center gap-x-sm">
         <img src={icon} alt={name} className="size-8 rounded-full" />
-        <span className="text-body-bold ">{getHostname(origin)}</span>
+        <span className="elytro-text-body-bold ">{getHostname(origin)}</span>
       </div>
 
       <Unlink

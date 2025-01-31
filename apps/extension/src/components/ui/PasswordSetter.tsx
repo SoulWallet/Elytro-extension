@@ -13,17 +13,17 @@ import {
 } from '@/components/ui/form';
 import { useState } from 'react';
 import PasswordInput from '@/components/ui/PasswordInputer';
+import { cn } from '@/utils/shadcn/utils';
 
 const passwordForm = z
   .object({
     password: z
       .string()
       .min(6, {
-        message:
-          'The password should be more than 6 characters and include more than 1 capitalized letter.',
+        message: 'Must be more than 6 characters.',
       })
       .refine((value) => /[A-Z]/.test(value), {
-        message: 'The password should include more than 1 capitalized letter.',
+        message: 'Must include more than 1 capitalized letter.',
       }),
     confirm: z.string(),
   })
@@ -35,9 +35,14 @@ const passwordForm = z
 interface PasswordSetterProps {
   loading: boolean;
   onSubmit: (pwd: string) => void;
+  className?: string;
 }
 
-export function PasswordSetter({ onSubmit, loading }: PasswordSetterProps) {
+export function PasswordSetter({
+  className,
+  onSubmit,
+  loading,
+}: PasswordSetterProps) {
   const form = useForm<z.infer<typeof passwordForm>>({
     resolver: zodResolver(passwordForm),
     mode: 'onChange',
@@ -52,68 +57,65 @@ export function PasswordSetter({ onSubmit, loading }: PasswordSetterProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="w-[416px] space-y-3xl"
+        className={cn('space-y-3xl ', className)}
       >
-        <div className="space-y-sm">
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <PasswordInput
-                    field={field}
-                    disabled={loading}
-                    placeholder="Enter password"
-                    onPwdVisibleChange={setIsPwdVisible}
-                  />
-                </FormControl>
-
-                {form.formState.errors.password ? (
-                  <FormMessage />
-                ) : (
-                  <FormDescription>
-                    The password should be more than 6 characters and include
-                    more than 1 capitalized letter.
-                  </FormDescription>
-                )}
-              </FormItem>
-            )}
-          />
-
-          {(loading ||
-            (form.getValues('password')?.length > 0 &&
-              form.formState.errors.password === undefined)) && (
+        <div className="flex flex-col w-full h-full justify-between">
+          <div className="space-y-sm ">
             <FormField
               control={form.control}
-              name="confirm"
+              name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <PasswordInput
                       field={field}
                       disabled={loading}
-                      placeholder="Repeat password"
-                      showEye={false}
-                      outerPwdVisible={isPwdVisible}
+                      placeholder="Enter password"
+                      onPwdVisibleChange={setIsPwdVisible}
                     />
                   </FormControl>
 
-                  <FormMessage />
+                  {form.formState.errors.password ? (
+                    <FormMessage />
+                  ) : (
+                    <FormDescription>
+                      Must be more than 6 characters with more than 1
+                      capitalized letter.
+                    </FormDescription>
+                  )}
                 </FormItem>
               )}
             />
-          )}
-        </div>
 
-        <Button
-          type="submit"
-          className="w-full rounded-full h-14"
-          disabled={loading}
-          size="large"
-        >
-          {loading ? 'Creating...' : 'Next'}
-        </Button>
+            {(loading ||
+              (form.getValues('password')?.length > 0 &&
+                form.formState.errors.password === undefined)) && (
+              <FormField
+                control={form.control}
+                name="confirm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <PasswordInput
+                        field={field}
+                        disabled={loading}
+                        placeholder="Repeat password"
+                        showEye={false}
+                        outerPwdVisible={isPwdVisible}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+          </div>
+
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? 'Creating...' : 'Next'}
+          </Button>
+        </div>
       </form>
     </Form>
   );
