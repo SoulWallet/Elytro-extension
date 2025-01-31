@@ -20,7 +20,7 @@ const SocialMediaIcon: React.FC<{
 
 const Welcome = () => (
   <div className="w-screen h-screen elytro-horizontal-gradient-bg flex flex-col items-center justify-center">
-    <header className="fixed top-4 left-4 elytro-text-subtitle flex items-center gap-3xs">
+    <header className="fixed top-4 left-4 text-title flex items-center gap-3xs">
       <img src={ElytroIcon} alt="Elytro" className="size-xl" />
       Elytro
     </header>

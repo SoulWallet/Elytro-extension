@@ -94,7 +94,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      'elytro-text-bold-body leading-none tracking-tight text-left',
+      'text-body-bold leading-none tracking-tight text-left',
       className
     )}
     {...props}
@@ -109,7 +109,7 @@ const DialogDescription = React.forwardRef<
   <DialogPrimitive.Description
     ref={ref}
     className={cn(
-      'elytro-text-smaller-body text-gray-600 text-muted-foreground text-left',
+      'text-smaller text-gray-600 text-muted-foreground text-left',
       className
     )}
     {...props}

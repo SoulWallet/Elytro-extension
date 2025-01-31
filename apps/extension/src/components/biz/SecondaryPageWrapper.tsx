@@ -49,7 +49,7 @@ export default function SecondaryPageWrapper({
               onClick={handleBack}
             />
           )}
-          <h3 className="elytro-text-bold-body">{title}</h3>
+          <h3 className="text-body-bold">{title}</h3>
           {closeable && (
             <X
               className="elytro-clickable-icon absolute right-0"

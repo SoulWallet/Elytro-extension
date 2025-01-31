@@ -17,6 +17,8 @@ import Transfer from './pages/Transfer';
 import AccountRecovery from './pages/AccountRecovery';
 import TxSuccess from './pages/TxSuccess';
 import RetrieveContacts from './pages/AccountRecovery/RetrieveContacts';
+import CreatePassword from './pages/CreatePassword';
+import SelectChain from './pages/SelectChain';
 
 export const SIDE_PANEL_ROUTE_PATHS = {
   Home: '/',
@@ -38,12 +40,22 @@ export const SIDE_PANEL_ROUTE_PATHS = {
   RetrieveContacts: '/retrieve-contacts',
   Transfer: '/transfer',
   TxSuccess: '/tx-success',
+  CreatePassword: '/create-password',
+  SelectChain: '/select-chain',
 } as const;
 
 export const routes: TRoute[] = [
   {
     path: SIDE_PANEL_ROUTE_PATHS.Home,
     component: Launch,
+  },
+  {
+    path: SIDE_PANEL_ROUTE_PATHS.CreatePassword,
+    component: CreatePassword,
+  },
+  {
+    path: SIDE_PANEL_ROUTE_PATHS.SelectChain,
+    component: SelectChain,
   },
   {
     path: SIDE_PANEL_ROUTE_PATHS.RecoverySetting,

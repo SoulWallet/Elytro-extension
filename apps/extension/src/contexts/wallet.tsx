@@ -37,18 +37,23 @@ const walletControllerProxy = new Proxy(
 type IWalletContext = {
   wallet: WalletController;
   status: WalletStatusEn;
+  getWalletStatus: () => Promise<void>;
 };
 
 const WalletContext = createContext<IWalletContext>({
   wallet: walletControllerProxy as WalletController,
   status: WalletStatusEn.NoOwner,
+  getWalletStatus: async () => {},
 });
 
 export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const [status, setStatus] = useState<WalletStatusEn>(WalletStatusEn.NoOwner);
+  const [loading, setLoading] = useState(false);
 
   const getWalletStatus = async () => {
+    if (loading) return;
     try {
+      setLoading(true);
       const res = await walletControllerProxy.getWalletStatus();
 
       if (res !== WalletStatusEn.HasAccountAndUnlocked) {
@@ -62,6 +67,8 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
         variant: 'destructive',
       });
       setStatus(WalletStatusEn.NoOwner);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,14 +77,20 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   }, [walletControllerProxy]);
 
   return (
-    <WalletContext.Provider value={{ wallet: walletControllerProxy, status }}>
+    <WalletContext.Provider
+      value={{ wallet: walletControllerProxy, status, getWalletStatus }}
+    >
       {children}
     </WalletContext.Provider>
   );
 };
 
 export const useWallet = () => {
-  const { wallet, status } = useContext(WalletContext);
+  const context = useContext(WalletContext);
 
-  return { wallet, status };
+  if (!context) {
+    throw new Error('useWallet must be used within a WalletProvider');
+  }
+
+  return context;
 };

@@ -133,9 +133,7 @@ export default function AccountsDropdown() {
         className="w-full max-w-fit bg-white rounded-md shadow-lg py-lg px-0"
       >
         <div className="flex items-center justify-between  gap-x-5xl px-lg pb-sm">
-          <span className="elytro-text-bold-body text-gray-600">
-            Switch account
-          </span>
+          <span className="text-body-bold text-gray-600">Switch account</span>
           <Button
             variant="outline"
             size="small"

@@ -1,7 +1,7 @@
 import LaunchImg from '@/assets/launch.png';
 import { Button } from '@/components/ui/button';
 import PasswordInput from '@/components/ui/PasswordInputer';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { SIDE_PANEL_ROUTE_PATHS } from '@/routes';
 import { navigateTo } from '@/utils/navigation';
 import { toast } from '@/hooks/use-toast';
@@ -11,9 +11,14 @@ import Spin from '@/components/ui/Spin';
 import { useApproval } from '@/contexts/approval-context';
 
 export default function Launch() {
-  const { wallet, status } = useWallet();
+  const { wallet, status, getWalletStatus } = useWallet();
   const { resolve, reject } = useApproval();
   const [pwd, setPwd] = useState('');
+
+  useEffect(() => {
+    getWalletStatus();
+  }, [wallet]);
+
   const handleUnlock = async () => {
     try {
       const locked = await wallet.unlock(pwd);
@@ -35,8 +40,13 @@ export default function Launch() {
   };
 
   const renderContent = useMemo(() => {
-    if (status === WalletStatusEn.NoAccount) {
+    if (status === WalletStatusEn.UnderRecovery) {
       navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.AccountRecovery);
+      return null;
+    }
+
+    if (status === WalletStatusEn.NoAccount) {
+      navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.SelectChain);
       return null;
     }
 
@@ -66,15 +76,7 @@ export default function Launch() {
             {/* TODO: navigate to new create account page */}
             <Button
               onClick={async () => {
-                // TODO: this is a temporary dev mock: pretend to create owner and account successfully
-                try {
-                  await wallet.createNewOwner('123123A');
-                  await wallet.createAccount(11155420); // op sepolia
-
-                  navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Dashboard);
-                } catch (error) {
-                  console.error(error);
-                }
+                navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.CreatePassword);
               }}
             >
               Get Started

@@ -27,6 +27,7 @@ enum WalletStatusEn {
   NoAccount = 'NoAccount',
   HasAccountButLocked = 'HasAccountButLocked',
   HasAccountAndUnlocked = 'HasAccountAndUnlocked',
+  UnderRecovery = 'UnderRecovery',
 }
 
 // ! DO NOT use getter. They can not be proxied.
@@ -52,7 +53,9 @@ class WalletController {
     }
 
     if (accountManager.accounts.length === 0) {
-      return WalletStatusEn.NoAccount;
+      return accountManager.recoveryRecord
+        ? WalletStatusEn.UnderRecovery
+        : WalletStatusEn.NoAccount;
     }
 
     return keyring.locked

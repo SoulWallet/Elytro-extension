@@ -23,9 +23,9 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline text-black-blue hover:text-blue',
       },
       size: {
-        large: 'px-2xl py-lg elytro-text-bold-body',
+        large: 'px-2xl py-lg text-body-bold',
         medium: 'px-xl py-md elytro-text-small',
-        small: 'px-lg py-sm elytro-text-smaller-body',
+        small: 'px-lg py-sm text-smaller',
         tiny: 'px-md py-3xs elytro-text-tiny-body',
       },
     },

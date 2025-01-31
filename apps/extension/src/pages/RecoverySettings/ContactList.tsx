@@ -64,7 +64,7 @@ export default function ContactList({
   return (
     <div className="flex flex-col justify-between h-full">
       <div className="flex flex-col gap-y-md">
-        <h1 className="elytro-text-bold-body">Your recovery contacts</h1>
+        <h1 className="text-body-bold">Your recovery contacts</h1>
 
         {/* Operation Bar */}
         <div className="flex flex-row justify-between">
@@ -110,11 +110,11 @@ export default function ContactList({
             ))}
 
             <div>
-              <h1 className="elytro-text-bold-body mb-2xs">
+              <h1 className="text-body-bold mb-2xs">
                 Minimum confirmations required
               </h1>
 
-              <p className="elytro-text-smaller-body text-gray-600 mb-md">
+              <p className="text-smaller text-gray-600 mb-md">
                 How many recovery contacts are needed for your account recovery
               </p>
 
@@ -144,7 +144,7 @@ export default function ContactList({
         ) : (
           <div className="flex flex-col gap-y-md items-center mt-4xl">
             <img src={ContactsImg} className="size-36" />
-            <span className="elytro-text-subtitle">Add a new contact</span>
+            <span className="text-title">Add a new contact</span>
 
             <Button variant="secondary" size="small" onClick={onAddContact}>
               <Plus className="size-lg" />

@@ -26,7 +26,7 @@ export default function ContactDetail({
   return (
     <div className="flex flex-col h-full justify-between ">
       <div className=" flex flex-col gap-y-md">
-        <h1 className="elytro-text-bold-body my-1">
+        <h1 className="text-body-bold my-1">
           {contact ? 'Edit' : 'Add'} a recovery contact
         </h1>
 

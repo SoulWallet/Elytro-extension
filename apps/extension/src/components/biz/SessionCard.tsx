@@ -19,7 +19,7 @@ export default function SessionCard({
           <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
 
-        <span className="elytro-text-bold-body">{name}</span>
+        <span className="text-body-bold">{name}</span>
       </span>
 
       <span className="elytro-text-smaller-bold-body text-gray-600">

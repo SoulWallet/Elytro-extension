@@ -87,15 +87,15 @@
     @apply text-[40px] font-medium leading-[100%] text-black-blue;
   }
 
-  .elytro-text-subtitle {
-    @apply text-[28px] font-medium leading-[105%] text-black-blue;
+  .text-title {
+    @apply text-[28px] font-medium leading-[120%] text-black-blue;
   }
 
   .elytro-text-body {
     @apply text-[18px] font-normal leading-[125%] text-black-blue;
   }
 
-  .elytro-text-bold-body {
+  .text-body-bold {
     @apply elytro-text-body font-medium;
   }
 
@@ -107,12 +107,12 @@
     @apply elytro-text-small font-medium;
   }
 
-  .elytro-text-smaller-body {
+  .text-smaller {
     @apply text-[14px] font-normal leading-[135%] text-black-blue;
   }
 
   .elytro-text-smaller-bold-body {
-    @apply elytro-text-smaller-body font-medium;
+    @apply text-smaller font-medium;
   }
 
   .elytro-text-tiny-body {
@@ -142,7 +142,7 @@
   }
 
   .elytro-rounded-border-item-wrapper {
-    @apply p-lg rounded-md border elytro-text-bold-body border-gray-300 bg-white cursor-pointer;
+    @apply p-lg rounded-md border text-body-bold border-gray-300 bg-white cursor-pointer;
   }
 
   .elytro-select-content {

@@ -68,11 +68,13 @@ export default function ActivityItem({
   value,
   type,
 }: UserOperationHistory) {
+  const { updateTokens } = useAccount();
   const { openExplorer } = useChain();
   const [latestStatus, setLatestStatus] = useState(status);
 
   const updateStatusFromMessage = (response: SafeObject) => {
     setLatestStatus(response?.status || UserOperationStatusEn.pending);
+    updateTokens();
   };
 
   useEffect(() => {

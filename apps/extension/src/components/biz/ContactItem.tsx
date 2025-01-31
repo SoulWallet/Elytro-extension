@@ -16,7 +16,7 @@ export default function ContactItem({
         <UserRound className="size-2xl" />
 
         <div className="flex flex-col flex-1 min-w-0">
-          <p className="elytro-text-bold-body">{contact.name || '--'}</p>
+          <p className="text-body-bold">{contact.name || '--'}</p>
           <p
             className="elytro-text-tiny-body text-gray-600 overflow-hidden text-ellipsis whitespace-nowrap"
             title={contact.address}

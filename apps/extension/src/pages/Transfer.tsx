@@ -17,10 +17,8 @@ export default function Transfer() {
     <div className="elytro-gradient-bg flex flex-col items-center justify-center gap-y-2xl p-3xl">
       <img src={WalletImg} alt="Wallet" className="size-[144px]" />
       <div className="text-center flex flex-col gap-y-2xs">
-        <h1 className="elytro-text-subtitle">
-          Manage your smart contract accounts
-        </h1>
-        <p className="elytro-text-smaller-body text-gray-600">
+        <h1 className="text-title">Manage your smart contract accounts</h1>
+        <p className="text-smaller text-gray-600">
           We don’t manage externally owned accounts (EOAs)
         </p>
       </div>

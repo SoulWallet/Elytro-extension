@@ -17,10 +17,10 @@ export default function InnerSendingDetail({
           amount={decodedUserOp?.value?.toString()}
         />
         {/* TODO: no token price API. */}
-        <span className="elytro-text-smaller-body text-gray-600">--</span>
+        <span className="text-smaller text-gray-600">--</span>
       </div>
 
-      <div className="elytro-text-bold-body">To</div>
+      <div className="text-body-bold">To</div>
 
       <FragmentedAddress
         address={decodedUserOp?.to}

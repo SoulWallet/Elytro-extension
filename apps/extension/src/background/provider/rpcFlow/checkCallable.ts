@@ -1,4 +1,3 @@
-import accountManager from '@/background/services/account';
 import {
   approvalService,
   ApprovalTypeEn,
@@ -17,37 +16,38 @@ const UNSUPPORTED_METHODS: Record<string, string> = {
 };
 
 // These methods are banned when the account is not deployed
-const BANNED_METHODS_WITHOUT_DEPLOYMENT: ProviderMethodType[] = [
-  'eth_signTypedData_v4',
-  'eth_signTypedData_v3',
-  'eth_signTypedData',
-  'eth_sendTransaction',
-  'eth_getTransactionByHash',
-  'eth_decrypt',
-  'eth_requestAccounts',
-  'eth_accounts',
-  'wallet_getPermissions',
-  'wallet_requestPermissions',
-  'wallet_revokePermissions',
-];
+// const BANNED_METHODS_WITHOUT_DEPLOYMENT: ProviderMethodType[] = [
+//   'eth_signTypedData_v4',
+//   'eth_signTypedData_v3',
+//   'eth_signTypedData',
+//   'eth_sendTransaction',
+//   'eth_getTransactionByHash',
+//   'eth_decrypt',
+//   'eth_requestAccounts',
+//   'eth_accounts',
+//   'wallet_getPermissions',
+//   'wallet_requestPermissions',
+//   'wallet_revokePermissions',
+// ];
 
 export const checkMethodExist: TFlowMiddleWareFn = async (ctx, next) => {
   const { rpcReq, dApp } = ctx.request;
 
-  if (
-    BANNED_METHODS_WITHOUT_DEPLOYMENT.includes(rpcReq.method) &&
-    !accountManager.currentAccount?.isDeployed
-  ) {
-    // TODO: Alert window may popup multiple times when there are multiple requests in a short time
-    return await approvalService.request(ApprovalTypeEn.Alert, {
-      dApp,
-      options: {
-        name: rpcReq.method,
-        reason:
-          'Your current account is not deployed yet, please deploy first.',
-      },
-    });
-  }
+  // TODO: comment out for now. bring back after fixing multiple requests issue
+  // if (
+  //   BANNED_METHODS_WITHOUT_DEPLOYMENT.includes(rpcReq.method) &&
+  //   !accountManager.currentAccount?.isDeployed
+  // ) {
+  //   // TODO: Alert window may popup multiple times when there are multiple requests in a short time
+  //   return await approvalService.request(ApprovalTypeEn.Alert, {
+  //     dApp,
+  //     options: {
+  //       name: rpcReq.method,
+  //       reason:
+  //         'Your current account is not deployed yet, please deploy first.',
+  //     },
+  //   });
+  // }
 
   const reason = UNSUPPORTED_METHODS[rpcReq.method];
   if (reason) {

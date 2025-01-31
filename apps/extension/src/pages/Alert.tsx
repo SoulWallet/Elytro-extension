@@ -35,7 +35,7 @@ export default function BlockedAlert() {
             </Avatar>
           </div>
           <div className="mb-6">
-            <div className="elytro-text-subtitle">{dApp.name}</div>
+            <div className="text-title">{dApp.name}</div>
             <div className="elytro-text-body">{dApp.origin}</div>
           </div>
           <div className="elytro-text-body">
