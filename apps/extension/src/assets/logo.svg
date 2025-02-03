@@ -1,5 +1,19 @@
-<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Symbol">
-<path id="Union" fill-rule="evenodd" clip-rule="evenodd" d="M7.65506 0.400391C9.03914 3.62644 12.2442 5.88608 15.9771 5.88608H17.897V7.80609L8.84564 7.80609C4.75559 7.80609 1.43994 4.49044 1.43994 0.400391H7.65506ZM7.65506 19.6004C9.03913 16.3743 12.2442 14.1147 15.9771 14.1147H17.897V12.1947H8.84564C4.75559 12.1947 1.43994 15.5103 1.43994 19.6004H7.65506ZM17.897 8.90322V11.0975C5.89635 11.0975 1.43995 11.6461 1.43995 11.6461L1.43995 8.35465C1.43995 8.35465 6.03671 8.90322 17.897 8.90322Z" fill="black"/>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 20 20">
+  <!-- Generator: Adobe Illustrator 29.2.1, SVG Export Plug-In . SVG Version: 2.1.0 Build 116)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill-rule: evenodd;
+      }
+
+      .st1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <rect class="st1" width="20" height="20"/>
+  <g id="Symbol">
+    <path id="Union" class="st0" d="M8.1,2.3c1.1,2.6,3.7,4.4,6.7,4.4h1.5v1.5h-7.3c-3.3,0-6-2.7-6-6h5ZM8.1,17.7c1.1-2.6,3.7-4.4,6.7-4.4h1.5v-1.5h-7.3c-3.3,0-6,2.7-6,6h5ZM16.3,9.1v1.8c-9.6,0-13.2.4-13.2.4v-2.6s3.7.4,13.2.4Z"/>
+  </g>
 </svg>

@@ -27,25 +27,23 @@ export default function ConnectionConfirmation({
   ];
   return (
     <Card className="w-full h-full flex flex-col justify-between border-none rounded-none shadow-none">
-      <CardHeader className="text-center mb-6">
+      <CardHeader className="text-center mb-6 mt-20">
         <div className="flex justify-center mb-2">
-          <Avatar className="w-16 h-16 relative left-4 z-10 rounded-none">
+          <Avatar className="w-20 h-20 relative left-4 z-10 rounded-none">
             <AvatarImage src={LogoWithCircle} alt={`${dApp.name} icon`} />
             <AvatarFallback>{dApp.name}</AvatarFallback>
           </Avatar>
-          <Avatar className="w-16 h-16 relative z-0 rounded-none mr-4">
+          <Avatar className="w-20 h-20 relative z-0 rounded-none mr-4">
             <AvatarImage src={dApp.icon} alt={`${dApp.name} icon`} />
             <AvatarFallback>{dApp.name}</AvatarFallback>
           </Avatar>
         </div>
         <CardTitle>
-          <div className="text-3xl font-medium mb-2">
-            Connect to {dApp.name}
-          </div>
-          <div className="text-gray-300 text-lg font-normal">{dApp.origin}</div>
+          <div className="text-xl font-bold mb-3">Connect to {dApp.name}</div>
+          <div className="text-gray-600 text-lg font-normal">{dApp.origin}</div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col p-6">
+      <CardContent className="flex flex-col">
         <ul className="space-y-2">
           {tips.map((tip) => (
             <li className="flex justify-center text-sm" key={tip}>
@@ -55,7 +53,7 @@ export default function ConnectionConfirmation({
           ))}
         </ul>
       </CardContent>
-      <CardFooter className="flex justify-between space-x-4">
+      <CardFooter className="flex justify-between space-x-2">
         <Button variant="outline" className="flex-1" onClick={onCancel}>
           Cancel
         </Button>
