@@ -26,7 +26,7 @@ const copyWithExecCommand = (text: string): Promise<void> =>
       textarea.select();
       const success = document.execCommand('copy');
       if (!success) {
-        throw new Error('复制指令执行失败');
+        throw new Error('Copy failed');
       }
       resolve();
     } catch (err) {

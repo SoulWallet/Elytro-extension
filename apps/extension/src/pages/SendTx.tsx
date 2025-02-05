@@ -143,7 +143,7 @@ export default function SendTx() {
               control={form.control}
               name="token"
               render={() => (
-                <div className="relative mb-4">
+                <div className="relative mb-4 py-2">
                   <FormItem>
                     <FormControl>
                       <TokenSelector
@@ -156,7 +156,7 @@ export default function SendTx() {
                   </FormItem>
                   <Button
                     disabled={!form.getValues('token')}
-                    className="absolute right-4 top-4 bg-green !text-white !py-2"
+                    className="absolute right-4 top-6 bg-green !text-white !py-2"
                     size="tiny"
                     onClick={() => handleFillMax()}
                   >

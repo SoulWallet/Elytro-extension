@@ -129,6 +129,9 @@ module.exports = {
           secondaryForeground: 'hsl(var(--hover-secondary-foreground))',
         },
       },
+      boxShadow: {
+        lg: '0px 12px 24px 0px rgba(0, 0, 0, 0.16)',
+      },
     },
   },
   plugins: [

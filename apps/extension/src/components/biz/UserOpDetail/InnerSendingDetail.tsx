@@ -11,7 +11,7 @@ export default function InnerSendingDetail({
 }: IInnerSendingDetailProps) {
   return (
     <>
-      <div className="flex items-center justify-between p-2xs">
+      <div className="flex items-center justify-between px-lg py-md rounded-md bg-gray-150 ">
         <TokenAmountItem
           {...decodedUserOp?.fromInfo}
           amount={decodedUserOp?.value?.toString()}
