@@ -23,6 +23,7 @@ export default function InnerSendingDetail({
       <div className="elytro-text-bold-body">To</div>
 
       <FragmentedAddress
+        size="md"
         address={decodedUserOp?.to}
         chainId={decodedUserOp?.toInfo?.chainId}
         className="bg-gray-150 px-lg py-md rounded-md"

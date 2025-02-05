@@ -14,7 +14,7 @@ import { UserOpDetail } from '@/components/biz/UserOpDetail';
 
 const UserOpTitleMap = {
   [UserOpType.DeployWallet]: 'Activate account',
-  [UserOpType.SendTransaction]: "You' are sending",
+  [UserOpType.SendTransaction]: 'Send',
   [UserOpType.ApproveTransaction]: 'Confirm Transaction',
 };
 

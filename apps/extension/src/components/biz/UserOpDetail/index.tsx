@@ -23,7 +23,7 @@ interface IUserOpDetailProps {
 
 const UserOpTitleMap = {
   [UserOpType.DeployWallet]: 'Activate account',
-  [UserOpType.SendTransaction]: "You' are sending",
+  [UserOpType.SendTransaction]: 'You are sending',
   [UserOpType.ApproveTransaction]: 'Confirm Transaction',
 };
 
