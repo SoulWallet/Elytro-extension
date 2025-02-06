@@ -27,7 +27,7 @@ const SelectTrigger = React.forwardRef<
     {children}
     {needDropdown && (
       <SelectPrimitive.Icon asChild>
-        <ChevronDown className="h-6 w-6" />
+        <ChevronDown className="h-5 w-5 stroke-gray-600 ml-2" />
       </SelectPrimitive.Icon>
     )}
   </SelectPrimitive.Trigger>

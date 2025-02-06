@@ -1,4 +1,4 @@
-import { Edit, Trash, UserRound } from 'lucide-react';
+import { PencilLine, Trash2, UserRound } from 'lucide-react';
 
 interface IContactItemProps {
   contact: TRecoveryContact;
@@ -28,15 +28,13 @@ export default function ContactItem({
       </div>
 
       <div className="flex items-center gap-x-sm flex-shrink-0">
-        <Edit
+        <PencilLine
           onClick={onEdit}
-          className="size-2xl cursor-pointer"
-          color="#95979C"
+          className="size-xl cursor-pointer stroke-gray-600 hover:stroke-gray-900"
         />
-        <Trash
+        <Trash2
           onClick={onDelete}
-          className="size-2xl cursor-pointer"
-          color="#95979C"
+          className="size-xl cursor-pointer stroke-gray-600 hover:stroke-gray-900"
         />
       </div>
     </div>

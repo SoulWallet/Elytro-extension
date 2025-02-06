@@ -5,9 +5,11 @@ interface IHelperTextProps {
 
 export default function HelperText({ title, description }: IHelperTextProps) {
   return (
-    <div className="flex flex-col rounded-sm bg-purple py-md px-lg text-gray-750">
-      <h2 className="elytro-text-small-bold ">{title}</h2>
-      <p className="elytro-text-tiny-body mt-2xs">{description}</p>
+    <div className="flex flex-col rounded-sm bg-purple py-md px-lg">
+      <h2 className="elytro-text-small-bold text-gray-750">{title}</h2>
+      <p className="elytro-text-tiny-body mt-2xs text-gray-750">
+        {description}
+      </p>
     </div>
   );
 }

@@ -80,8 +80,13 @@ export default function ContactList({
           </span>
 
           {isEmptyContacts ? null : (
-            <Button variant="secondary" size="tiny" onClick={onAddContact}>
-              <Plus className="size-lg" />
+            <Button
+              className="group"
+              variant="secondary"
+              size="tiny"
+              onClick={onAddContact}
+            >
+              <Plus className="size-3 mr-1 group-hover:stroke-gray-0" />
               Add
             </Button>
           )}
@@ -103,9 +108,9 @@ export default function ContactList({
               />
             ))}
 
-            <div>
+            <div className="mt-xl">
               <h1 className="elytro-text-bold-body mb-2xs">
-                Minimum confirmations required
+                Signatures required
               </h1>
 
               <p className="elytro-text-smaller-body text-gray-600 mb-md">

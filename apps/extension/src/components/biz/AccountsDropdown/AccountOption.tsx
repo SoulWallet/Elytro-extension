@@ -4,7 +4,7 @@ import { toast } from '@/hooks/use-toast';
 import { formatAddressToShort, formatTokenAmount } from '@/utils/format';
 import { cn } from '@/utils/shadcn/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
-import { Trash } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 
 interface IAccountOptionProps {
   account: TAccountInfo;
@@ -64,8 +64,13 @@ export default function AccountOption({
       </div>
 
       <div className="elytro-text-small text-gray-600 flex flex-row items-center gap-sm">
-        <span>{formatTokenAmount(account.balance)}</span>
-        <Trash className="size-3" onClick={handleDelete} />
+        <span className="text-gray-600">
+          {formatTokenAmount(account.balance)}
+        </span>
+        <Trash2
+          className="size-4 stroke-gray-600 hover:stroke-gray-900"
+          onClick={handleDelete}
+        />
       </div>
     </div>
   );
