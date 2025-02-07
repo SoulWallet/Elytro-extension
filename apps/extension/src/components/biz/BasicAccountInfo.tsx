@@ -2,7 +2,7 @@ import {
   ArrowDownLeft,
   ArrowUpRight,
   Copy,
-  Ellipsis,
+  Settings2Icon,
   RefreshCcw,
 } from 'lucide-react';
 import { SIDE_PANEL_ROUTE_PATHS } from '@/routes';
@@ -52,18 +52,22 @@ export default function BasicAccountInfo() {
   return (
     <div className="flex flex-col p-sm pb-0 ">
       {/* Chain & Address */}
-      <div className="flex flex-row gap-2 w-full items-center justify-between mb-lg">
-        <AccountsDropdown />
-        <div className="flex flex-row gap-x-md">
+      <div className="flex flex-row gap-3 w-full items-center justify-between mb-lg">
+        <div className="flex flex-row gap-x-md items-center">
+          <AccountsDropdown />
           <Copy
-            className="elytro-clickable-icon"
+            className="elytro-clickable-icon size-4 stroke-gray-600 hover:stroke-gray-900"
             onClick={() => safeClipboard(accountInfo.address)}
           />
-
-          <Ellipsis className="elytro-clickable-icon" onClick={onClickMore} />
+        </div>
+        <div className="flex flex-row gap-x-md">
           <RefreshCcw
             className="elytro-clickable-icon"
             onClick={reloadAccount}
+          />
+          <Settings2Icon
+            className="elytro-clickable-icon"
+            onClick={onClickMore}
           />
         </div>
       </div>
@@ -77,17 +81,22 @@ export default function BasicAccountInfo() {
 
       {/* Actions */}
       <div>
-        <div className="flex flex-row gap-sm">
+        <div className="flex flex-row gap-md">
           {accountInfo.isDeployed ? (
             <>
               <ActionButton
-                className="bg-light-green"
-                icon={<ArrowDownLeft />}
+                className="bg-light-green hover:bg-green hover:stroke-white"
+                icon={
+                  <ArrowDownLeft className="w-5 h-5 mr-1 duration-100 transition-all group-hover:stroke-white" />
+                }
                 label="Receive"
                 onClick={onClickReceive}
               />
               <ActionButton
-                icon={<ArrowUpRight />}
+                className="hover:stroke-white"
+                icon={
+                  <ArrowUpRight className="w-5 h-5 mr-1 duration-100 transition-all group-hover:stroke-white" />
+                }
                 label="Send"
                 onClick={onClickSend}
               />

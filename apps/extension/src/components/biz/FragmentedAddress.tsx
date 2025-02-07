@@ -18,7 +18,7 @@ interface IProps {
 const SIZE_MAP = {
   sm: {
     icon: 'size-4',
-    text: 'elytro-text-small-body',
+    text: 'elytro-text-smaller-body',
   },
   md: {
     icon: 'size-8',
@@ -58,9 +58,9 @@ export default function FragmentedAddress({
           </TooltipTrigger>
           <TooltipContent className="bg-dark-blue p-4 ">
             <div className="text-blue">
-              <span className="text-light-blue">{prefix}</span>
+              <span className="text-light-blue font-bold">{prefix}</span>
               {address.slice(6, -6)}
-              <span className="text-light-blue">{suffix}</span>
+              <span className="text-light-blue font-bold">{suffix}</span>
             </div>
           </TooltipContent>
         </Tooltip>

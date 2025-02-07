@@ -11,8 +11,8 @@ function SelectedToken({ token }: { token?: TokenDTO }) {
   if (!token)
     return (
       <div className="flex items-center">
-        <div className="text-lg w-full text-left">Select a token</div>
-        <ChevronDown className="text-gray-600" />
+        <div className="text-md w-full text-left">Select a token</div>
+        <ChevronDown className="stroke-gray-600" />
       </div>
     );
   return (
@@ -24,11 +24,11 @@ function SelectedToken({ token }: { token?: TokenDTO }) {
       />
       <div className="text-left ml-2">
         <div className="flex items-center">
-          <div className="text-lg">{token.name}</div>
-          <ChevronDown className="text-gray-600" />
+          <div className="text-lg font-bold">{token.name}</div>
+          <ChevronDown className="stroke-gray-600" />
         </div>
 
-        <div className="text-gray-600">
+        <div className="text-gray-600 -mt-0.5">
           Balance: {formatEther(BigInt(token.tokenBalance))}
         </div>
       </div>

@@ -121,8 +121,8 @@ export default function SendTx() {
     >
       <div>
         <Form {...form}>
-          <div className="bg-light-green rounded-lg">
-            <h3 className="text-xl font-semibold p-4">Sending</h3>
+          <div className="bg-light-green rounded-sm">
+            <h3 className="text-lg font-bold px-4 py-3">Sending</h3>
             <FormField
               control={form.control}
               name="amount"
@@ -143,7 +143,7 @@ export default function SendTx() {
               control={form.control}
               name="token"
               render={() => (
-                <div className="relative mb-4">
+                <div className="relative mb-4 py-2">
                   <FormItem>
                     <FormControl>
                       <TokenSelector
@@ -156,7 +156,7 @@ export default function SendTx() {
                   </FormItem>
                   <Button
                     disabled={!form.getValues('token')}
-                    className="absolute right-4 top-3 text-lg bg-green"
+                    className="absolute right-4 top-6 bg-green !text-white !py-2"
                     size="tiny"
                     onClick={() => handleFillMax()}
                   >
@@ -166,8 +166,8 @@ export default function SendTx() {
               )}
             />
           </div>
-          <div className="bg-light-blue p-4 rounded-lg mb-4">
-            <h3 className="text-xl font-semibold mb-4">To</h3>
+          <div className="bg-light-blue p-4 pt-3 rounded-sm mb-4">
+            <h3 className="text-lg font-bold mb-3">To</h3>
             <FormField
               control={form.control}
               name="to"
@@ -187,9 +187,9 @@ export default function SendTx() {
             </div>
           </div>
         </Form>
-        <div className="p-4 bg-gray-150 rounded-lg space-y-2">
+        <div className="p-4 bg-gray-150 rounded-sm space-y-2">
           <div className="flex justify-between items-center">
-            <div className="font-semibold text-base text-gray-750">
+            <div className="font-bold text-base text-gray-750">
               From account
             </div>
             <FragmentedAddress
@@ -198,10 +198,10 @@ export default function SendTx() {
             />
           </div>
           <div className="flex justify-between items-center">
-            <div className="font-semibold text-base text-gray-750">
+            <div className="font-bold text-base text-gray-750">
               Network cost
             </div>
-            <div className="text-gray-600 text-base font-light">
+            <div className="text-gray-600 text-sm font-normal">
               To be calculated
             </div>
           </div>

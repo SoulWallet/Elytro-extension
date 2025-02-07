@@ -24,7 +24,7 @@ export default function Dashboard() {
 
       <div className="h-full bg-white rounded-3xl ">
         <Tabs defaultValue="assets">
-          <TabsList className="px-4">
+          <TabsList className="px-5">
             <TabsTrigger value="assets">Assets</TabsTrigger>
             <TabsTrigger value="activities">Activity</TabsTrigger>
           </TabsList>
@@ -42,9 +42,9 @@ export default function Dashboard() {
       <Button
         variant="secondary"
         size="tiny"
-        className="fixed bottom-4 left-1/2 transform -translate-x-1/2"
+        className="fixed bottom-6 left-1/2 transform -translate-x-1/2"
       >
-        <Plus className="w-3 h-3" />
+        <Plus className="w-3 h-3 mr-1 duration-100 group-hover:stroke-white" />
         Import token
       </Button>
     </div>

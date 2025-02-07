@@ -13,7 +13,7 @@ import { useTx } from '@/contexts/tx-context';
 import { UserOpType } from '@/contexts/tx-context';
 import { useWallet } from '@/contexts/wallet';
 import { toast } from '@/hooks/use-toast';
-import { Edit, Plus, Trash } from 'lucide-react';
+import { PencilLine, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import ContactsImg from '@/assets/contacts.png';
 import ShortedAddress from '@/components/ui/ShortedAddress';
@@ -74,8 +74,13 @@ export default function ContactList({
           />
 
           {isEmptyContacts ? null : (
-            <Button variant="secondary" size="tiny" onClick={onAddContact}>
-              <Plus className="size-lg" />
+            <Button
+              className="group"
+              variant="secondary"
+              size="tiny"
+              onClick={onAddContact}
+            >
+              <Plus className="size-3 mr-1 group-hover:stroke-gray-0" />
               Add
             </Button>
           )}
@@ -94,24 +99,22 @@ export default function ContactList({
                 contact={contact}
                 rightContent={
                   <div className="flex items-center gap-x-sm flex-shrink-0">
-                    <Edit
+                    <PencilLine
                       onClick={() => onEditContact(contact)}
-                      className="size-2xl cursor-pointer"
-                      color="#95979C"
+                      className="size-xl cursor-pointer stroke-gray-600 hover:stroke-gray-900"
                     />
-                    <Trash
+                    <Trash2
                       onClick={() => onDeleteContact(contact)}
-                      className="size-2xl cursor-pointer"
-                      color="#95979C"
+                      className="size-xl cursor-pointer stroke-gray-600 hover:stroke-gray-900"
                     />
                   </div>
                 }
               />
             ))}
 
-            <div>
+            <div className="mt-xl">
               <h1 className="elytro-text-bold-body mb-2xs">
-                Minimum confirmations required
+                Signatures required
               </h1>
 
               <p className="elytro-text-smaller-body text-gray-600 mb-md">
@@ -146,8 +149,8 @@ export default function ContactList({
             <img src={ContactsImg} className="size-36" />
             <span className="elytro-text-subtitle">Add a new contact</span>
 
-            <Button variant="secondary" size="small" onClick={onAddContact}>
-              <Plus className="size-lg" />
+            <Button variant="secondary" size="tiny" onClick={onAddContact}>
+              <Plus className="h-4 w-4 mr-1 stroke-[1.5px] group-hover:stroke-white" />
               Add a new contact
             </Button>
           </div>

@@ -10,7 +10,7 @@ export default function ActivityGroup({
 }) {
   return (
     <div className="flex flex-col">
-      <div className="elytro-text-small-bold-body text-gray-600 py-xs">
+      <div className="elytro-text-small-bold-body text-gray-600 px-lg py-xs">
         {date}
       </div>
       {items.map((item) => (

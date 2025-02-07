@@ -13,7 +13,7 @@ import {
   ArrowDownLeft,
   ArrowUpRight,
   ChevronsLeftRight,
-  Activity,
+  Check,
   ShieldQuestion,
 } from 'lucide-react';
 import { useChain } from '@/contexts/chain-context';
@@ -30,20 +30,20 @@ const ActivityTypeMap = {
   },
   [HistoricalActivityTypeEn.ActivateAccount]: {
     name: 'Activate Account',
-    IconComponent: Activity,
-    bg: 'bg-green',
+    IconComponent: Check,
+    bg: 'bg-gray-300',
   },
   [HistoricalActivityTypeEn.ContractInteraction]: {
     name: 'Contract Interaction',
     IconComponent: ChevronsLeftRight,
-    bg: 'bg-light-red',
+    bg: 'bg-gray-300',
   },
 };
 
 const UnknownActivity = {
   name: 'Unknown Activity',
   IconComponent: ShieldQuestion,
-  bg: 'bg-gray-200',
+  bg: 'bg-gray-300',
 };
 
 const ActivityStatusMap = {
@@ -93,14 +93,14 @@ export default function ActivityItem({
 
   return (
     <div
-      className="flex items-center justify-between cursor-pointer py-md"
+      className="flex items-center justify-between px-lg cursor-pointer py-md hover:bg-gray-150 "
       onClick={() => openExplorer(opHash)}
     >
-      <div className="flex items-center gap-4">
-        <IconComponent className={`size-8 p-1 ${bg} rounded-full`} />
+      <div className="flex items-center gap-3">
+        <IconComponent className={`size-8 p-2 ${bg} rounded-full`} />
 
         <div className="flex flex-col">
-          <span className="text-sm font-medium elytro-text-smaller-bold-body">
+          <span className="font-bold text-base">
             {name}
             <span
               className={`elytro-text-tiny-body px-1 rounded-sm ml-sm text-white ${style} `}
@@ -116,7 +116,7 @@ export default function ActivityItem({
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="elytro-text-smaller-bold-body">
+        <span className="text-base font-bold">
           {/* TODO: history need currency info */}
           {formatEther(BigInt(value))} ETH
         </span>

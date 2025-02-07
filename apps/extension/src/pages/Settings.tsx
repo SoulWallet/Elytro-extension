@@ -6,7 +6,7 @@ import {
   ExternalLinkIcon,
   LayoutGridIcon,
   LockKeyholeIcon,
-  SettingsIcon,
+  Settings2Icon,
   ShieldIcon,
   UserRoundIcon,
 } from 'lucide-react';
@@ -27,13 +27,13 @@ export default function Settings() {
       footer={
         <div className="flex flex-col space-y-2 w-full">
           <Button variant="secondary" onClick={handleLock}>
-            <LockKeyholeIcon />
-            <span className="ml-sm">Lock Elytro</span>
+            <LockKeyholeIcon className="w-4 h-4 mr-2 duration-100 group-hover:stroke-white" />
+            Lock Elytro
           </Button>
 
           <Button variant="outline">
-            <ExternalLinkIcon />
-            <span className="ml-sm">FAQ</span>
+            <ExternalLinkIcon className="w-4 h-4 mr-2" />
+            FAQ
           </Button>
 
           <div className="text-center text-gray-750">
@@ -44,8 +44,8 @@ export default function Settings() {
         </div>
       }
     >
-      <div className="bg-gray-150 p-lg rounded-lg space-y-2">
-        <h2 className="elytro-text-small-bold text-gray-600 py-md">
+      <div className="bg-gray-150 p-lg rounded-sm space-y-2">
+        <h2 className="elytro-text-small-bold text-gray-600 pd-md">
           Account settings
         </h2>
         <div className="space-y-2">
@@ -63,15 +63,17 @@ export default function Settings() {
         </div>
       </div>
       <div className="mb-4">
-        <h2 className="text-gray-600 my-4">Elytro settings</h2>
+        <h2 className="elytro-text-small-bold text-gray-600 my-4">
+          Elytro settings
+        </h2>
         <div className="space-y-2">
           <SettingItem
             icon={UserRoundIcon}
-            label="Local Profile"
+            label="Device Profile"
             path={SIDE_PANEL_ROUTE_PATHS.LocalProfile}
           />
           <SettingItem
-            icon={SettingsIcon}
+            icon={Settings2Icon}
             label="Network configuration"
             // TODO: add network configuration page
             path={''} //SIDE_PANEL_ROUTE_PATHS.Network}

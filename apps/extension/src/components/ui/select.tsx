@@ -27,7 +27,7 @@ const SelectTrigger = React.forwardRef<
     {children}
     {needDropdown && (
       <SelectPrimitive.Icon asChild>
-        <ChevronDown className="h-6 w-6" />
+        <ChevronDown className="h-5 w-5 stroke-gray-600 ml-2" />
       </SelectPrimitive.Icon>
     )}
   </SelectPrimitive.Trigger>
@@ -106,7 +106,7 @@ const SelectLabel = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Label
     ref={ref}
-    className={cn('py-1.5 pl-8 pr-2 text-sm font-semibold', className)}
+    className={cn('py-1.5 pl-8 pr-2 text-sm font-bold', className)}
     {...props}
   />
 ));

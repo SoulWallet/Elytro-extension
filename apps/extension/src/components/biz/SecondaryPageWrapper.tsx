@@ -1,7 +1,6 @@
-import { BackArrow } from '@/assets/icons/BackArrow';
+import { X, ArrowLeft } from 'lucide-react';
 import { navigateTo } from '@/utils/navigation';
 import { cn } from '@/utils/shadcn/utils';
-import { X } from 'lucide-react';
 import React, { PropsWithChildren } from 'react';
 
 interface ISecondaryPageWrapperProps extends PropsWithChildren {
@@ -40,11 +39,11 @@ export default function SecondaryPageWrapper({
 
   return (
     <div className={cn('w-full h-full bg-gray-150 p-sm', className)}>
-      <div className="flex flex-col flex-grow w-full h-full bg-white px-lg pb-lg rounded-lg">
+      <div className="flex flex-col flex-grow w-full h-full bg-white px-lg pb-lg rounded-sm">
         {/* Header: back button, title, close button */}
         <div className="flex flex-row items-center justify-center relative py-lg mb-sm">
           {showBack && (
-            <BackArrow
+            <ArrowLeft
               className="elytro-clickable-icon absolute left-0"
               onClick={handleBack}
             />

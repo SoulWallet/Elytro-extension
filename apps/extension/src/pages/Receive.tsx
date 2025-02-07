@@ -31,10 +31,10 @@ export default function Receive() {
           <Button
             variant="secondary"
             size="large"
-            className="fixed bottom-lg  left-lg right-lg"
+            className="fixed bottom-lg  left-lg right-lg group hover:stroke-white"
             onClick={() => safeClipboard(address!)}
           >
-            <Copy className="elytro-clickable-icon mr-2xs" />
+            <Copy className="elytro-clickable-icon mr-2xs group-hover:stroke-white" />
             Copy Address
           </Button>
         </>

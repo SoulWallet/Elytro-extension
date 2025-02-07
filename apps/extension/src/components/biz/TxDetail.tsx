@@ -58,7 +58,7 @@ export default function TxDetail({ tx, type }: ITxDetail) {
   const [showRawData, setShowRawData] = useState(false);
 
   return (
-    <div className="bg-white rounded-lg p-4">
+    <div className="bg-white rounded-sm p-4">
       {/* Transaction Type */}
       <div className="text-lg font-bold mb-3">{title}</div>
 

@@ -18,13 +18,13 @@ const ENSInfo = ({ ensInfo }: { ensInfo: EnsAddress }) => {
           className="w-8 h-8 rounded-full mr-2"
         />
       ) : (
-        <div className="w-8 h-8 rounded-full flex items-center font-semibold justify-center text-white bg-blue mr-2">
+        <div className="w-8 h-8 rounded-full flex items-center font-bold justify-center text-white bg-blue mr-2">
           {ensInfo.name ? ensInfo.name[0].toUpperCase() : ''}
         </div>
       )}
       <div className="text-base">
         <div>{ensInfo.name}</div>
-        <div className="text-xs font-light">
+        <div className="text-xs font-normal">
           <SplittedGrayAddress address={ensInfo.address} />
         </div>
       </div>

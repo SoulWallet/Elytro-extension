@@ -4,7 +4,7 @@ import { toast } from '@/hooks/use-toast';
 import { formatAddressToShort, formatTokenAmount } from '@/utils/format';
 import { cn } from '@/utils/shadcn/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
-import { Trash } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 
 interface IAccountOptionProps {
   account: TAccountInfo;
@@ -44,8 +44,8 @@ export default function AccountOption({
   return (
     <div
       className={cn(
-        'flex items-center gap-x-xl justify-between px-lg py-sm hover:bg-gray-100',
-        isSelected && 'bg-gray-200'
+        'flex items-center gap-x-xl justify-between px-lg py-md cursor-pointer hover:bg-gray-300',
+        isSelected && 'bg-gray-150'
       )}
       onClick={onSelect}
     >
@@ -58,12 +58,19 @@ export default function AccountOption({
           <AvatarFallback>{account.chainId}</AvatarFallback>
         </Avatar>
 
-        <span>{formatAddressToShort(account.address)}</span>
+        <span className="font-bold text-sm">
+          {formatAddressToShort(account.address)}
+        </span>
       </div>
 
-      <div className="elytro-text-small-body text-gray-600 flex flex-row items-center gap-sm">
-        <span>{formatTokenAmount(account.balance)}</span>
-        <Trash className="size-3" onClick={handleDelete} />
+      <div className="elytro-text-small text-gray-600 flex flex-row items-center gap-sm">
+        <span className="text-gray-600">
+          {formatTokenAmount(account.balance)}
+        </span>
+        <Trash2
+          className="size-4 stroke-gray-600 hover:stroke-gray-900"
+          onClick={handleDelete}
+        />
       </div>
     </div>
   );

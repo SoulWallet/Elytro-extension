@@ -23,7 +23,7 @@ interface IUserOpDetailProps {
 
 const UserOpTitleMap = {
   [UserOpType.DeployWallet]: 'Activate account',
-  [UserOpType.SendTransaction]: "You' are sending",
+  [UserOpType.SendTransaction]: 'You are sending',
   [UserOpType.ApproveTransaction]: 'Confirm Transaction',
 };
 
@@ -93,7 +93,9 @@ export function UserOpDetail({
                 </span>
               )}
               <span
-                className={cn({ 'line-through': calcResult?.hasSponsored })}
+                className={cn({
+                  'line-through text-gray-600': calcResult?.hasSponsored,
+                })}
               >
                 {formatGasUsed(calcResult?.gasUsed)} ETH
               </span>

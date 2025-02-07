@@ -25,7 +25,7 @@ export default function Activities() {
   );
 
   return (
-    <div className="flex flex-col overflow-auto px-lg gap-y-lg">
+    <div className="flex flex-col overflow-auto gap-y-lg">
       {Object.entries(historiesByDay).map(([date, items]) => (
         <ActivityGroup key={date} date={date} items={items} />
       ))}

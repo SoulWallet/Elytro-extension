@@ -32,16 +32,27 @@ module.exports = {
         2: '2px',
       },
       fontSize: {
-        xs: '0.75rem',
-        sm: '0.875rem',
-        base: '1rem',
-        lg: '1.125rem',
-        xl: '1.25rem',
-        '2xl': '1.3rem',
+        xs: '0.75rem' /* 'tiny', 12px */,
+        sm: '0.875rem' /* 'smaller', 14px */,
+        base: '1rem' /*'small', 16px */,
+        lg: '1.125rem' /* 'body', 18px */,
+        xl: '1.75rem' /* 'title', 28px */,
+        '2xl': '2.5rem' /* 'headline', 40px */,
       },
       backgroundImage: {
         'elytro-background': 'var(--elytro-background-image)',
         'elytro-btn-bg': 'var(--elytro-btn-bg)',
+      },
+      backgroundColor: {
+        gray: {
+          900: '#3C3F45',
+          750: '#676B75',
+          600: '#95979C',
+          450: '#BDC0C7',
+          300: '#E2E2E2',
+          150: '#F2F3F5',
+          0: '#FFFFFF',
+        },
       },
       colors: {
         // Elytro Theme Overrides
@@ -117,6 +128,9 @@ module.exports = {
           secondary: 'hsl(var(--hover-secondary))',
           secondaryForeground: 'hsl(var(--hover-secondary-foreground))',
         },
+      },
+      boxShadow: {
+        lg: '0px 12px 24px 0px rgba(0, 0, 0, 0.16)',
       },
     },
   },
