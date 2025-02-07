@@ -17,7 +17,7 @@ import { toast } from '@/hooks/use-toast';
 
 export default function Sign() {
   const { address, isConnected, connector } = useAccount();
-  const { recoveryRecord } = useRecoveryRecord();
+  const { recoveryRecord, getRecoveryRecord } = useRecoveryRecord();
 
   const isSigned = (
     recoveryRecord?.guardianSignatures as TGuardianSignature[]
@@ -33,12 +33,12 @@ export default function Sign() {
       if (nonce === null) return;
 
       const signature = await signTypedData(getConfig(), {
-        ...getSocialRecoveryTypedData(
+        ...(await getSocialRecoveryTypedData(
           recoveryRecord?.address as Address,
           Number(recoveryRecord?.chainID),
           nonce,
           recoveryRecord?.newOwners as []
-        ),
+        )),
         connector,
       } as SafeAny);
 
@@ -56,8 +56,8 @@ export default function Sign() {
         title: 'Success',
         description: 'Signature sent successfully',
       });
-    } catch (error) {
-      console.log(error, '--');
+      getRecoveryRecord();
+    } catch {
       toast({
         title: 'Failed to sign',
         description: 'Please try again',

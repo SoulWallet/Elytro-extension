@@ -42,6 +42,8 @@ export default function Start() {
     seconds: 0,
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const startRecovery = async () => {
     if (!isConnected) {
       toast({
@@ -52,6 +54,7 @@ export default function Start() {
     }
 
     try {
+      setIsLoading(true);
       await sendTransaction(getConfig(), {
         connector,
         ...getRecoveryStartTxData(
@@ -68,12 +71,12 @@ export default function Start() {
         variant: 'destructive',
       });
     } finally {
+      setIsLoading(false);
       getRecoveryRecord();
     }
   };
 
   const { status } = useMemo(() => {
-    return { status: RecoveryStatusEn.Ready };
     const validTime = (recoveryRecord?.validTime || 0) * 1000;
     let status = RecoveryStatusEn.NonStarted;
 
@@ -92,6 +95,7 @@ export default function Start() {
 
   const completeRecovery = async () => {
     try {
+      setIsLoading(true);
       await sendTransaction(getConfig(), {
         connector,
         ...getExecuteRecoveryTxData(
@@ -106,6 +110,7 @@ export default function Start() {
         variant: 'destructive',
       });
     } finally {
+      setIsLoading(false);
       getRecoveryRecord();
     }
   };
@@ -157,16 +162,18 @@ export default function Start() {
           variant={
             status === RecoveryStatusEn.NonStarted ? 'default' : 'outline'
           }
-          disabled={status !== RecoveryStatusEn.NonStarted}
+          disabled={isLoading || status !== RecoveryStatusEn.NonStarted}
           onClick={startRecovery}
+          className="w-full"
         >
           Start Recovery
         </Button>
 
         <Button
           variant={status === RecoveryStatusEn.Ready ? 'default' : 'outline'}
-          disabled={status !== RecoveryStatusEn.Ready}
+          disabled={isLoading || status !== RecoveryStatusEn.Ready}
           onClick={completeRecovery}
+          className="w-full"
         >
           Complete Recovery
         </Button>

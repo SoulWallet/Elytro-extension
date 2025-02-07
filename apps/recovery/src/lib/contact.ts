@@ -6,3 +6,10 @@ export const isContactSigned = (
     ({ guardian }) => guardian === address?.toLowerCase()
   );
 };
+
+export const isConnectedAccountAContact = (
+  address: string,
+  guardians: string[] = []
+) => {
+  return guardians.includes(address.toLowerCase());
+};

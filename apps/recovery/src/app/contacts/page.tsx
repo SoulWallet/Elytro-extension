@@ -6,7 +6,7 @@ import React, { useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import Sign from './Sign';
 import Status from './Status';
-
+import { isConnectedAccountAContact } from '@/lib/contact';
 export default function Contacts() {
   const { recoveryRecord } = useRecoveryRecord();
   const { address } = useAccount();
@@ -14,7 +14,10 @@ export default function Contacts() {
   const { subtitle, content } = useMemo(() => {
     const isGuardian =
       address &&
-      recoveryRecord?.guardianInfo?.guardians?.includes(address.toLowerCase());
+      isConnectedAccountAContact(
+        address,
+        recoveryRecord?.guardianInfo?.guardians
+      );
 
     if (isGuardian) {
       return {

@@ -57,6 +57,7 @@ export const RecoveryRecordProvider: React.FC<{ children: ReactNode }> = ({
         description: (error as Error)?.message || 'Please try again later',
         variant: 'destructive',
       });
+      router.replace('/not-found');
     } finally {
       setLoading(false);
     }

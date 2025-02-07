@@ -23,7 +23,7 @@ export default function AddressWithChain({
   return (
     <div
       className={cn(
-        'flex items-center justify-between  py-sm px-md rounded-2xs bg-white',
+        'flex items-center justify-between  py-sm px-md rounded-sm bg-white',
         className
       )}
     >

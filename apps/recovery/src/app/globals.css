@@ -10,7 +10,7 @@
   );
   background-blend-mode: overlay;
 
-  color: rgba(255, 255, 255, 0.87);
+  color:#161F36;
   color-scheme: light dark;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-synthesis: none;
@@ -120,6 +120,10 @@
 
   .text-tiny {
     @apply text-xs font-normal leading-[140%];
+  }
+
+  .text-tiny-bold {
+    @apply text-tiny font-medium ;
   }
 }
 
