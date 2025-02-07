@@ -4,7 +4,7 @@ import DefaultTokenIcon from '@/assets/icons/ether.svg';
 
 export default function TokenItem({ token }: { token: TokenDTO }) {
   const balance = formatEther(hexToBigInt(token.tokenBalance));
-  const price = token.price ? Number(balance) * Number(token.price) : 0;
+  // const price = token.price ? Number(balance) * Number(token.price) : 0;
   return (
     <div className="flex flex-row items-center justify-between h-16 px-4">
       <div className="flex flex-row items-center gap-x-2">
