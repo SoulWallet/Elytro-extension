@@ -9,9 +9,9 @@ interface ISettingItemProps {
 const SettingItem = ({ icon: Icon, label, path }: ISettingItemProps) => (
   <Link
     href={path}
-    className="elytro-rounded-border-item-wrapper flex items-center hover:bg-gray-150"
+    className="elytro-rounded-border-item-wrapper flex text-base font-normal items-center hover:bg-gray-150"
   >
-    <Icon className="mr-3" />
+    <Icon className="size-5 mr-3" />
     {label}
   </Link>
 );

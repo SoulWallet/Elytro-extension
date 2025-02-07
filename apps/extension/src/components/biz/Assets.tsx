@@ -19,7 +19,7 @@ export default function Assets() {
 
   if (tokens)
     return (
-      <div className="flex flex-col gap-y-2">
+      <div className="flex flex-col">
         {tokens.map((item) => {
           return <TokenItem key={item.name} token={item} />;
         })}

@@ -6,7 +6,7 @@ import {
   ExternalLinkIcon,
   LayoutGridIcon,
   LockKeyholeIcon,
-  SettingsIcon,
+  Settings2Icon,
   ShieldIcon,
   UserRoundIcon,
 } from 'lucide-react';
@@ -73,7 +73,7 @@ export default function Settings() {
             path={SIDE_PANEL_ROUTE_PATHS.LocalProfile}
           />
           <SettingItem
-            icon={SettingsIcon}
+            icon={Settings2Icon}
             label="Network configuration"
             // TODO: add network configuration page
             path={''} //SIDE_PANEL_ROUTE_PATHS.Network}
