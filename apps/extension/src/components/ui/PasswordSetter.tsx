@@ -50,10 +50,7 @@ export function PasswordSetter({ onSubmit, loading }: PasswordSetterProps) {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleSubmit)}
-        className="w-[416px] space-y-3xl"
-      >
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3xl">
         <div className="space-y-sm">
           <FormField
             control={form.control}
@@ -81,29 +78,25 @@ export function PasswordSetter({ onSubmit, loading }: PasswordSetterProps) {
             )}
           />
 
-          {(loading ||
-            (form.getValues('password')?.length > 0 &&
-              form.formState.errors.password === undefined)) && (
-            <FormField
-              control={form.control}
-              name="confirm"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <PasswordInput
-                      field={field}
-                      disabled={loading}
-                      placeholder="Repeat password"
-                      showEye={false}
-                      outerPwdVisible={isPwdVisible}
-                    />
-                  </FormControl>
+          <FormField
+            control={form.control}
+            name="confirm"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <PasswordInput
+                    field={field}
+                    disabled={loading}
+                    placeholder="Repeat password"
+                    showEye={false}
+                    outerPwdVisible={isPwdVisible}
+                  />
+                </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
         <Button
@@ -112,7 +105,7 @@ export function PasswordSetter({ onSubmit, loading }: PasswordSetterProps) {
           disabled={loading}
           size="large"
         >
-          {loading ? 'Creating...' : 'Continue'}
+          {loading ? 'Creating...' : 'Next'}
         </Button>
       </form>
     </Form>

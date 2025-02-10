@@ -65,16 +65,9 @@ export default function Launch() {
           <>
             {/* TODO: navigate to new create account page */}
             <Button
-              onClick={async () => {
-                // TODO: this is a temporary dev mock: pretend to create owner and account successfully
-                try {
-                  await wallet.createNewOwner('123123A');
-                  await wallet.createAccount(11155420); // op sepolia
-
-                  navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Dashboard);
-                } catch (error) {
-                  console.error(error);
-                }
+              className="rounded-full w-full px-4 py-5 h-14 mb-4 font-medium text-lg leading-6"
+              onClick={() => {
+                navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.CreatePasscode);
               }}
             >
               Get Started

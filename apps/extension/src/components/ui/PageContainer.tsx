@@ -3,6 +3,7 @@ import RequestProvider from './RequestProvider';
 import '@/index.css';
 import { Toaster } from './toaster';
 import { WalletProvider } from '@/contexts/wallet';
+import { KeyringProvider } from '@/contexts/keyring';
 import ErrorBoundary from './ErrorBoundary';
 import { cn } from '@/utils/shadcn/utils';
 import { ChainProvider } from '@/contexts/chain-context';
@@ -23,9 +24,11 @@ function PageContainer({ children, className }: IPageContainerProps) {
           )}
         >
           <WalletProvider>
-            <ChainProvider>
-              <RequestProvider>{children}</RequestProvider>
-            </ChainProvider>
+            <KeyringProvider>
+              <ChainProvider>
+                <RequestProvider>{children}</RequestProvider>
+              </ChainProvider>
+            </KeyringProvider>
           </WalletProvider>
         </div>
       </ErrorBoundary>
