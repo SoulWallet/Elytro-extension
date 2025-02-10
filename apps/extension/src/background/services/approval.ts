@@ -14,6 +14,7 @@ const APPROVAL_TYPE_ROUTE_MAP: Record<ApprovalTypeEn, string> = {
   [ApprovalTypeEn.SendTx]: 'tx-confirm',
   [ApprovalTypeEn.Alert]: 'alert',
   [ApprovalTypeEn.Sign]: 'sign',
+  [ApprovalTypeEn.ChainChange]: 'chain-change',
 };
 
 class ApprovalService {

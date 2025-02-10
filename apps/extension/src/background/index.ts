@@ -21,10 +21,10 @@ chrome.runtime.onInstalled.addListener((details) => {
       // wait for 200ms to ensure the page is ready
       setTimeout(() => {
         chrome.tabs.create({
-          url: chrome.runtime.getURL(`src/entries/tab/index.html#/launch`),
+          url: chrome.runtime.getURL(`src/tab.html`),
         });
       }, 200);
-      break;
+
     // case chrome.runtime.OnInstalledReason.UPDATE:
     //   // TODO: do something
     //   break;
@@ -195,7 +195,7 @@ const initUIMessage = (port: chrome.runtime.Port) => {
     } catch (error) {
       UIPortManager.sendMessage(
         msgKey,
-        { error: (error as Error).message },
+        { error: (error as Error).message || 'Unknown error' },
         port.sender?.origin
       );
     }
@@ -203,8 +203,6 @@ const initUIMessage = (port: chrome.runtime.Port) => {
 };
 
 chrome.runtime.onConnect.addListener((port) => {
-  console.log('port.name', port.name, port.sender);
-
   if (port.name === 'elytro-ui') {
     initUIMessage(port);
     return;

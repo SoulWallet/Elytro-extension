@@ -46,7 +46,6 @@ export class PortMessageManager {
     });
 
     port.onDisconnect.addListener(() => {
-      console.log(`Elytro: Port ${portName} disconnected`);
       this.ports.delete(portName);
     });
   }

@@ -5,9 +5,16 @@ import {
   getEncodedSHA,
   DEFAULT_GUARDIAN_HASH,
   DEFAULT_GUARDIAN_SAFE_PERIOD,
+  GUARDIAN_INFO_KEY,
 } from '@/constants/sdk-config';
 import { formatHex, paddingZero } from '@/utils/format';
-import { Bundler, SignkeyType, SoulWallet, Transaction } from '@soulwallet/sdk';
+import {
+  Bundler,
+  SignkeyType,
+  SocialRecovery,
+  SoulWallet,
+  Transaction,
+} from '@soulwallet/sdk';
 import { DecodeUserOp } from '@soulwallet/decoder';
 import { canUserOpGetSponsor } from '@/utils/ethRpc/sponsor';
 import keyring from './keyring';
@@ -22,18 +29,36 @@ import {
   toHex,
   hashMessage,
   serializeSignature,
+  zeroHash,
+  encodeFunctionData,
+  encodeAbiParameters,
+  parseAbiParameters,
+  decodeAbiParameters,
+  parseAbiItem,
 } from 'viem';
 import { createAccount } from '@/utils/ethRpc/create-account';
 import { ethErrors } from 'eth-rpc-errors';
-import { ABI_SoulWallet } from '@soulwallet/abi';
+import { ABI_SoulWallet, ABI_SocialRecoveryModule } from '@soulwallet/abi';
 import eventBus from '@/utils/eventBus';
 import { EVENT_TYPES } from '@/constants/events';
+import { ABI_RECOVERY_INFO_RECORDER } from '@/constants/abi';
 
 class ElytroSDK {
   private _sdk!: SoulWallet;
   private _bundler!: Bundler;
   private _config!: TChainItem;
   private _pimlicoRpc: Nullable<PublicClient> = null;
+  private _client: Nullable<PublicClient> = null;
+
+  private _getClient() {
+    if (!this._client?.chain?.id || this._client.chain.id !== this._config.id) {
+      this._client = createPublicClient({
+        transport: http(this._config.endpoint),
+        chain: this._config,
+      });
+    }
+    return this._client!;
+  }
 
   constructor() {
     eventBus.on(EVENT_TYPES.CHAIN.CHAIN_INITIALIZED, (chain: TChainItem) => {
@@ -227,10 +252,7 @@ class ElytroSDK {
     messageHash: Hex,
     signature: Hex
   ) {
-    const _client = createPublicClient({
-      chain: this._config,
-      transport: http(this._config.endpoint),
-    });
+    const _client = this._getClient();
 
     const magicValue = await _client.readContract({
       address,
@@ -512,6 +534,126 @@ class ElytroSDK {
     } else {
       return _userOp.OK;
     }
+  }
+
+  public calculateRecoveryContactsHash(contacts: string[], threshold: number) {
+    return SocialRecovery.calcGuardianHash(contacts, threshold, zeroHash);
+  }
+
+  public async getRecoveryInfo(address: Address) {
+    const _client = this._getClient();
+
+    try {
+      const socialRecoveryInfo = (await _client.readContract({
+        address: this._config.recovery as Address,
+        abi: ABI_SocialRecoveryModule,
+        functionName: 'getSocialRecoveryInfo',
+        args: [address],
+      })) as SafeAny[];
+
+      if (socialRecoveryInfo?.length !== 3) {
+        throw new Error('Elytro: Failed to get recovery info.');
+      }
+
+      return {
+        contactsHash: socialRecoveryInfo[0] as string,
+        nonce: socialRecoveryInfo[1] as bigint,
+        delayPeriod: socialRecoveryInfo[2] as bigint,
+      };
+    } catch (error) {
+      console.error('Elytro: Failed to get recovery info.', error);
+      return null;
+    }
+  }
+
+  public async generateRecoveryInfoRecordTx(
+    guardians: string[],
+    threshold: number
+  ) {
+    if (!this._config.infoRecorder) {
+      throw new Error(
+        `Elytro: Info recorder on chain ${this._config.name} is not set.`
+      );
+    }
+
+    // Encode the guardian data
+    // Encode the guardian data
+    const guardianData = encodeAbiParameters(
+      parseAbiParameters(['address[]', 'uint256', 'bytes32']),
+      [guardians as Address[], BigInt(threshold), zeroHash]
+    );
+
+    // Encode the function call data using viem
+    const callData = encodeFunctionData({
+      abi: ABI_RECOVERY_INFO_RECORDER,
+      functionName: 'recordData',
+      args: [GUARDIAN_INFO_KEY, guardianData],
+    });
+
+    return {
+      to: this._config.infoRecorder,
+      data: callData,
+      gasLimit: undefined,
+      value: '0',
+    };
+  }
+
+  public async generateRecoveryContactsSettingTxInfo(newHash: string) {
+    const calldata = encodeFunctionData({
+      abi: ABI_SocialRecoveryModule,
+      functionName: 'setGuardian',
+      args: [newHash],
+    });
+
+    return {
+      to: this._config.recovery as Address,
+      data: calldata,
+      gasLimit: undefined,
+      value: '0',
+    };
+  }
+
+  public async queryRecoveryContacts(address: Address) {
+    if (!this._config.infoRecorder) {
+      throw new Error(
+        `Elytro: Info recorder on chain ${this._config.name} is not set.`
+      );
+    }
+
+    const _client = this._getClient();
+
+    const logs = await _client.getLogs({
+      address: this._config.infoRecorder as Address,
+      fromBlock: 20661477n,
+      toBlock: 'latest',
+      event: parseAbiItem(
+        'event DataRecorded(address indexed wallet, bytes32 indexed category, bytes data)'
+      ),
+      args: {
+        wallet: address,
+        category: GUARDIAN_INFO_KEY,
+      },
+    });
+
+    // Decode the events
+    const parseContactFromLog = (log: (typeof logs)[number]) => {
+      if (!log || !log.args) {
+        return null;
+      }
+      const parsedLog = decodeAbiParameters(
+        parseAbiParameters(['address[]', 'uint256', 'bytes32']),
+        (log.args as SafeAny).data
+      );
+      return {
+        guardians: parsedLog[0],
+        threshold: Number(parsedLog[1]),
+        salt: parsedLog[2],
+      } as TGuardianInfo;
+    };
+
+    const latestRecoveryContacts = parseContactFromLog(logs[logs.length - 1]);
+
+    return latestRecoveryContacts;
   }
 
   // public async getPreFund(

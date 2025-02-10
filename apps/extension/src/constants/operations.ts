@@ -35,6 +35,7 @@ export enum ApprovalTypeEn {
   SendTx = 'SendTx',
   Alert = 'Alert',
   Sign = 'Sign',
+  ChainChange = 'ChainChange',
 }
 
 // export enum TxStatusEn {

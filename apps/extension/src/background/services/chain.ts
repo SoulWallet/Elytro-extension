@@ -2,6 +2,7 @@ import { SUPPORTED_CHAINS, TChainItem } from '@/constants/chains';
 import { EVENT_TYPES } from '@/constants/events';
 import eventBus from '@/utils/eventBus';
 import LocalSubscribableStore from '@/utils/store/LocalSubscribableStore';
+import { ethErrors } from 'eth-rpc-errors';
 
 type TChainsState = {
   chains: TChainItem[];
@@ -67,7 +68,10 @@ class ChainService {
     const targetChain = this._chains.find((n) => n.id === chainId);
 
     if (!targetChain) {
-      throw new Error('Elytro::ChainService::_findChainById: chain not found');
+      throw ethErrors.rpc.server({
+        code: 4902,
+        message: `Unrecognized chain ID ${chainId}.`,
+      });
     }
 
     return targetChain;

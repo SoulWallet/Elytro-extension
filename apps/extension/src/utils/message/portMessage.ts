@@ -9,7 +9,6 @@ class PortMessage {
     try {
       this._port.postMessage({ type, data });
     } catch {
-      console.error(`Elytro: Port ${this._name} disconnected`);
       // TODO: check if we need to reconnect
       this._port = chrome.runtime.connect({ name: this._name });
     }

@@ -54,9 +54,7 @@ const getCryptoKeyWithBackup = async (
     );
 
     sessionStorage.save({
-      storedCryptoKey: JSON.stringify(
-        await crypto.subtle.exportKey('jwk', derivedKey)
-      ),
+      storedCryptoKey: await crypto.subtle.exportKey('jwk', derivedKey),
       storedSaltBase64: base64salt,
     });
 
@@ -65,13 +63,14 @@ const getCryptoKeyWithBackup = async (
     const { storedCryptoKey, storedSaltBase64 } = (await sessionStorage.get([
       'storedCryptoKey',
       'storedSaltBase64',
-    ])) as { storedCryptoKey: string; storedSaltBase64: string };
+    ])) as { storedCryptoKey: JsonWebKey; storedSaltBase64: string };
+
     if (!storedCryptoKey || !storedSaltBase64) {
       throw new Error('locked');
     }
     return await crypto.subtle.importKey(
       'jwk',
-      JSON.parse(storedCryptoKey as string),
+      storedCryptoKey,
       { name: DERIVED_KEY_FORMAT, length: 256 },
       false,
       ['encrypt', 'decrypt']

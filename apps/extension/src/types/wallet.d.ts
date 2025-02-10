@@ -65,6 +65,19 @@ type TApprovalData = {
   tx?: TTransactionInfo[];
   options?: unknown;
   sign?: TSignData;
+  chain?: {
+    method: 'switch' | 'add';
+    chainId: number;
+    chainName: string;
+    rpcUrls: string[];
+    nativeCurrency: {
+      name: string;
+      symbol: string;
+      decimals: number;
+    };
+    blockExplorerUrls: string[];
+    iconUrls: string[];
+  };
 };
 
 type TApprovalInfo = {
@@ -74,4 +87,16 @@ type TApprovalInfo = {
   resolve: (data?: unknown) => void;
   reject: (data?: unknown) => void;
   winId?: number;
+};
+
+type TRecoveryContact = {
+  name?: string;
+  address: string;
+  confirmed?: boolean;
+};
+
+type TGuardianInfo = {
+  salt: string;
+  threshold: number;
+  guardians: string[];
 };

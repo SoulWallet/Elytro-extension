@@ -17,7 +17,6 @@ type KeyringServiceState = {
 const KEYRING_STORAGE_KEY = 'elytroKeyringState';
 
 class KeyringService {
-  private _initialized = false;
   private _locked = true;
   private _signingKey: Nullable<SigningKey> = null;
   private _owner: Nullable<PrivateKeyAccount> = null;
@@ -25,14 +24,16 @@ class KeyringService {
 
   constructor() {
     this._store = new LocalSubscribableStore<KeyringServiceState>(
-      KEYRING_STORAGE_KEY
+      KEYRING_STORAGE_KEY,
+      () => {
+        this._verifyPassword();
+      }
     );
   }
 
-  private _initialize = async () => {
-    await this._verifyPassword();
-    this._initialized = true;
-  };
+  get hasOwner() {
+    return !!this._store.state.data;
+  }
 
   private get _encryptData() {
     return this._store.state.data;
@@ -40,10 +41,6 @@ class KeyringService {
 
   private set _encryptData(data: TPasswordEncryptedData | undefined) {
     this._store.state.data = data;
-  }
-
-  public get initialized() {
-    return this._initialized;
   }
 
   public get signingKey() {
@@ -85,7 +82,8 @@ class KeyringService {
       );
       this._encryptData = encryptedData;
       this._locked = false;
-    } catch {
+    } catch (error) {
+      console.error(error);
       this._locked = true;
       throw new Error('Elytro: Failed to create new owner');
     }
@@ -124,17 +122,12 @@ class KeyringService {
   }
 
   public async reset() {
-    this._encryptData = undefined;
     this._owner = null;
     this._locked = true;
     this._signingKey = null;
   }
 
   public async tryUnlock(callback?: () => void) {
-    if (!this._initialized) {
-      await this._initialize();
-    }
-
     if (this._locked) {
       await this._verifyPassword();
     }

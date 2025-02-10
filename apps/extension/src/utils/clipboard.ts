@@ -26,7 +26,7 @@ const copyWithExecCommand = (text: string): Promise<void> =>
       textarea.select();
       const success = document.execCommand('copy');
       if (!success) {
-        throw new Error('复制指令执行失败');
+        throw new Error('Copy failed');
       }
       resolve();
     } catch (err) {
@@ -49,7 +49,10 @@ const isClipboardAPISupported = (): boolean =>
  * @param text text to be copied
  * @returns Promise<void>
  */
-export const safeClipboard = async (text: string): Promise<void> => {
+export const safeClipboard = async (
+  text: string,
+  showToast = true
+): Promise<void> => {
   try {
     if (isClipboardAPISupported()) {
       await copyWithClipboardAPI(text);
@@ -57,9 +60,11 @@ export const safeClipboard = async (text: string): Promise<void> => {
       await copyWithExecCommand(text);
     }
 
-    toast({
-      title: 'Copied',
-    });
+    if (showToast) {
+      toast({
+        title: 'Copied',
+      });
+    }
   } catch (error) {
     toast({
       title: 'Copy failed',

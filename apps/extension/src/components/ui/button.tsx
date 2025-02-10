@@ -5,14 +5,14 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utils/shadcn/utils';
 
 const buttonVariants = cva(
-  'rounded-pill inline-flex items-center justify-center whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'rounded-pill inline-flex items-center duration-100 justify-center whitespace-nowrap ring-offset-background group transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
         default:
           'bg-primary text-primary-foreground hover:bg-hover-primary hover:text-hover-primary-foreground',
         secondary:
-          'bg-secondary text-secondary-foreground hover:bg-hover-secondary hover:text-hover-secondary-foreground hover:text-white',
+          'bg-secondary text-secondary-foreground hover:bg-hover-secondary hover:text-white',
         tertiary:
           'bg-tertiary text-tertiary-foreground hover:bg-hover-tertiary hover:text-hover-tertiary-foreground',
         destructive:
@@ -23,16 +23,10 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline text-black-blue hover:text-blue',
       },
       size: {
-        // TODO: remove this
-        default: 'h-10 px-4 py-2',
-        sm: 'h-9 rounded-md px-3',
-        lg: 'h-11 rounded-md px-8',
-        icon: 'h-10 w-10',
-
-        large: 'px-3xl py-xl elytro-text-bold-body',
-        medium: 'px-2xl py-lg elytro-text-bold-body',
-        small: 'px-xl py-md elytro-text-small',
-        tiny: 'px-lg py-sm elytro-text-tiny-body',
+        large: 'px-2xl py-lg elytro-text-bold-body',
+        medium: 'px-xl py-md elytro-text-small',
+        small: 'px-lg py-sm elytro-text-smaller-body',
+        tiny: 'px-md py-2xs elytro-text-tiny-body',
       },
     },
     defaultVariants: {

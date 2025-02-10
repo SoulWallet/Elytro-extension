@@ -1,0 +1,69 @@
+import {
+  ApolloClient,
+  InMemoryCache,
+  HttpLink,
+  from,
+  DocumentNode,
+} from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
+
+const GRAPHQL_ENDPOINT = 'https://api-dev.soulwallet.io/elytroapi/graphql/';
+
+const httpLink = new HttpLink({
+  uri: GRAPHQL_ENDPOINT,
+});
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.forEach(({ message, locations, path }) =>
+      console.error(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+      )
+    );
+
+  if (networkError) console.error(`[Network error]: ${networkError}`);
+});
+
+const client = new ApolloClient({
+  link: from([errorLink, httpLink]),
+  cache: new InMemoryCache(),
+});
+
+async function query<T>(
+  queryDocument: DocumentNode,
+  variables?: Record<string, unknown>
+): Promise<T> {
+  try {
+    const { data, errors } = await client.query({
+      query: queryDocument,
+      variables,
+    });
+    if (errors) {
+      throw errors;
+    }
+    return data as T;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function mutate<T>(
+  mutationDocument: DocumentNode,
+  variables?: Record<string, unknown>
+): Promise<T> {
+  try {
+    const { data, errors } = await client.mutate({
+      mutation: mutationDocument,
+      variables,
+    });
+
+    if (errors) {
+      throw errors;
+    }
+    return data as T;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { client, query, mutate };
