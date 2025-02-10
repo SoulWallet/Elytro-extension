@@ -13,7 +13,7 @@ export default function TokenItem({ token }: { token: TokenDTO }) {
           alt={token.name}
           className="w-8 h-8"
         />
-        <p className="text-lg font-bold">{token.name}</p>
+        <p className="text-lg font-bold">{token.symbol}</p>
       </div>
       <div className="flex flex-col items-end gap-x-2">
         <p className="text-lg font-bold text-gray-900">{balance}</p>

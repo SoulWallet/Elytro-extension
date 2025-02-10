@@ -135,6 +135,7 @@ export function formatBlockInfo(block: Block) {
 
 export function checkType(value: SafeAny) {
   const typeString = Object.prototype.toString.call(value);
+  console.log('typeString', typeString, value);
 
   switch (typeString) {
     case '[object BigInt]':
@@ -181,18 +182,18 @@ export const formatObjectWithBigInt = (obj: SafeAny): SafeAny => {
       return Object.fromEntries(
         Object.entries(obj).map(([key, value]) => [
           key,
-          formatBigIntToHex(value),
+          formatObjectWithBigInt(value),
         ])
       );
     case 'array':
       return (obj as SafeAny[]).map((value) => formatObjectWithBigInt(value));
+    case 'bigint':
+      return formatBigIntToHex(obj);
     case 'function':
     case 'undefined':
     case 'null':
-    case 'bigint':
-      return obj;
     default:
-      return formatBigIntToHex(obj);
+      return obj;
   }
 };
 
