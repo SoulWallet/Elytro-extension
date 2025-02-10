@@ -2,20 +2,20 @@ import React, { useState } from 'react';
 import { PasswordSetter } from '@/components/ui/PasswordSetter';
 import IconPasscode from '@/assets/passcode.png';
 import FullPageWrapper from '@/components/biz/FullPageWrapper';
-import { useKeyring } from '@/contexts/keyring';
 import { navigateTo } from '@/utils/navigation';
 import { SIDE_PANEL_ROUTE_PATHS } from '@/routes';
 import { toast } from '@/hooks/use-toast';
+import { useWallet } from '@/contexts/wallet';
 
 const Create: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const { createNewOwner } = useKeyring();
+  const { wallet } = useWallet();
 
   const handleCreatePassword = async (pwd: string) => {
     console.log(pwd);
     try {
       setLoading(true);
-      await createNewOwner(pwd);
+      await wallet.createNewOwner(pwd);
 
       navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.YouAreIn);
     } catch (error) {
