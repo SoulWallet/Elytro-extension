@@ -7,6 +7,9 @@ import SendTx from './pages/SendTx';
 import Alert from './pages/Alert';
 import Sign from './pages/Sign';
 import TxConfirm from './pages/TxConfirm';
+import Create from './pages/CreatePasscode';
+import CreateAccount from './pages/CreateAccount';
+import YouAreIn from './pages/YouAreIn';
 import CreateNewAddress from './pages/CreateNewAddress';
 import LocalProfile from './pages/LocalProfile';
 import Connection from './pages/Connection';
@@ -29,6 +32,9 @@ export const SIDE_PANEL_ROUTE_PATHS = {
   Alert: '/alert',
   Sign: '/sign',
   TxConfirm: '/tx-confirm',
+  CreatePasscode: '/create-passcode',
+  YouAreIn: '/you-are-in',
+  CreateAccount: '/create-account',
   CreateNewAddress: '/create-new-address',
   LocalProfile: '/local-profile',
   Connection: '/connection',
@@ -81,6 +87,18 @@ export const routes: TRoute[] = [
   {
     path: SIDE_PANEL_ROUTE_PATHS.TxConfirm,
     component: TxConfirm,
+  },
+  {
+    path: SIDE_PANEL_ROUTE_PATHS.CreatePasscode,
+    component: Create,
+  },
+  {
+    path: SIDE_PANEL_ROUTE_PATHS.YouAreIn,
+    component: YouAreIn,
+  },
+  {
+    path: SIDE_PANEL_ROUTE_PATHS.CreateAccount,
+    component: CreateAccount,
   },
   {
     path: SIDE_PANEL_ROUTE_PATHS.CreateNewAddress,

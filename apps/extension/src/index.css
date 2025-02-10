@@ -102,6 +102,10 @@
     @apply text-[40px] font-bold leading-[100%] text-black-blue;
   }
 
+  .elytro-text-title {
+    @apply text-[28px] font-medium leading-[100%] text-black-blue;
+  }
+
   .elytro-text-subtitle {
     @apply text-[28px] font-bold leading-[105%] text-black-blue;
   }
