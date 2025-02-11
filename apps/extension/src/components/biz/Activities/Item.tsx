@@ -7,8 +7,7 @@ import { UserOperationStatusEn } from '@/constants/operations';
 import { useState } from 'react';
 import { EVENT_TYPES } from '@/constants/events';
 import RuntimeMessage from '@/utils/message/runtimeMessage';
-import { formatEther } from 'viem';
-import { formatAddressToShort } from '@/utils/format';
+import { formatAddressToShort, formatTokenAmount } from '@/utils/format';
 import {
   ArrowDownLeft,
   ArrowUpRight,
@@ -17,6 +16,7 @@ import {
   ShieldQuestion,
 } from 'lucide-react';
 import { useChain } from '@/contexts/chain-context';
+
 const ActivityTypeMap = {
   [HistoricalActivityTypeEn.Send]: {
     name: 'Send',
@@ -65,8 +65,8 @@ export default function ActivityItem({
   opHash,
   status = UserOperationStatusEn.pending,
   to,
-  value,
   type,
+  transferredTokenInfo,
 }: UserOperationHistory) {
   const { openExplorer } = useChain();
   const [latestStatus, setLatestStatus] = useState(status);
@@ -115,12 +115,24 @@ export default function ActivityItem({
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
-        <span className="text-base font-bold">
-          {/* TODO: history need currency info */}
-          {formatEther(BigInt(value))} ETH
-        </span>
-      </div>
+      {transferredTokenInfo && (
+        <div className="flex flex-row items-center gap-2">
+          <span className="text-base font-bold">
+            {formatTokenAmount(
+              transferredTokenInfo.value,
+              transferredTokenInfo.decimals,
+              transferredTokenInfo.symbol
+            )}
+          </span>
+          {transferredTokenInfo.logoURI && (
+            <img
+              src={transferredTokenInfo.logoURI}
+              alt={transferredTokenInfo.symbol}
+              className="size-4 rounded-full"
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }

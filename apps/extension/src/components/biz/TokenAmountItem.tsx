@@ -3,20 +3,19 @@ import { cn } from '@/utils/shadcn/utils';
 import { TokenInfo } from '@soulwallet/decoder';
 
 interface ITokenAmountItemProps
-  extends Partial<Pick<TokenInfo, 'logoURI' | 'name' | 'symbol' | 'decimals'>> {
-  amount?: string;
+  extends Partial<Pick<TokenInfo, 'logoURI' | 'symbol' | 'decimals'>> {
+  value?: string;
   className?: string;
 }
 
 export default function TokenAmountItem({
   logoURI,
-  name,
   symbol,
   decimals,
-  amount,
+  value,
   className,
 }: ITokenAmountItemProps) {
-  if (!amount) return '--';
+  if (!value) return '--';
 
   return (
     <span
@@ -29,9 +28,9 @@ export default function TokenAmountItem({
       <img
         className="size-6 rounded-full ring-1 ring-gray-150"
         src={logoURI}
-        alt={name}
+        alt={symbol}
       />
-      <span>{formatTokenAmount(amount, decimals, symbol)}</span>
+      <span>{formatTokenAmount(value, decimals, symbol)}</span>
     </span>
   );
 }

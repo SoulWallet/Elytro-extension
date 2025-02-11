@@ -1,6 +1,7 @@
 import TokenAmountItem from '../TokenAmountItem';
 import FragmentedAddress from '../FragmentedAddress';
 import { DecodeResult } from '@soulwallet/decoder';
+import { getTransferredTokenInfo } from '@/utils/dataProcess';
 
 interface IInnerSendingDetailProps {
   decodedUserOp: Nullable<DecodeResult>;
@@ -9,15 +10,18 @@ interface IInnerSendingDetailProps {
 export default function InnerSendingDetail({
   decodedUserOp,
 }: IInnerSendingDetailProps) {
+  if (!decodedUserOp) {
+    return null;
+  }
+
+  const transferredTokenInfo = getTransferredTokenInfo(decodedUserOp);
+
   return (
     <>
       <div className="flex items-center justify-between px-lg py-md rounded-md bg-gray-150 ">
-        <TokenAmountItem
-          {...decodedUserOp?.fromInfo}
-          amount={decodedUserOp?.value?.toString()}
-        />
+        <TokenAmountItem {...transferredTokenInfo} />
         {/* TODO: no token price API. */}
-        <span className="elytro-text-smaller-body text-gray-600">--</span>
+        {/* <span className="elytro-text-smaller-body text-gray-600">--</span> */}
       </div>
 
       <div className="elytro-text-bold-body">To</div>

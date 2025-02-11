@@ -100,7 +100,10 @@ class ApprovalService {
       return;
     }
     this._currentApproval?.resolve(data);
-    tryRemoveWindow(this._currentApproval?.winId);
+
+    // go to success page. no need to remove window for now.
+    // tryRemoveWindow(this._currentApproval?.winId);
+
     this._currentApproval = null;
   };
 

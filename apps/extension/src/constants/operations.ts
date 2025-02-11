@@ -56,7 +56,12 @@ export type UserOperationHistory = {
   from: string;
   to: string;
   method?: Method;
-  value: string;
+  transferredTokenInfo: {
+    value: string;
+    decimals: number;
+    symbol: string;
+    logoURI?: string;
+  };
   opHash: string;
   status?: UserOperationStatusEn;
   type: Nullable<HistoricalActivityTypeEn>;

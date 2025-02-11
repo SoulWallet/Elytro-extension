@@ -82,7 +82,7 @@ export function formatAddressToShort(address: Nullable<string>) {
 export function formatTokenAmount(
   amount: string | null | undefined,
   decimals: number = 18,
-  symbol: string = 'ETH'
+  symbol: string = ''
 ): string {
   // todo: format amount. 8 decimal places is enough?
   try {

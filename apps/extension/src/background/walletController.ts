@@ -11,7 +11,7 @@ import {
   formatObjectWithBigInt,
 } from '@/utils/format';
 import historyManager from './services/history';
-import { UserOperationHistory } from '@/constants/operations';
+import { HistoricalActivityTypeEn } from '@/constants/operations';
 import { Address, formatEther, Hex, isHex, toHex } from 'viem';
 import chainService from './services/chain';
 import accountManager from './services/account';
@@ -21,6 +21,8 @@ import {
   createRecoveryRecord,
   getRecoveryRecord,
 } from '@/utils/ethRpc/recovery';
+import { DecodeResult } from '@soulwallet/decoder';
+import { getTransferredTokenInfo } from '@/utils/dataProcess';
 
 enum WalletStatusEn {
   NoOwner = 'NoOwner',
@@ -140,8 +142,25 @@ class WalletController {
     }
   }
 
-  public async addNewHistory(data: UserOperationHistory) {
-    historyManager.add(data);
+  public async addNewHistory({
+    type,
+    opHash,
+    userOp,
+    decodedDetail,
+  }: {
+    type: HistoricalActivityTypeEn;
+    opHash: string;
+    userOp: ElytroUserOperation;
+    decodedDetail: DecodeResult;
+  }) {
+    historyManager.add({
+      timestamp: Date.now(),
+      type,
+      opHash,
+      from: userOp.sender,
+      transferredTokenInfo: getTransferredTokenInfo(decodedDetail),
+      to: decodedDetail.to,
+    });
   }
 
   public getLatestHistories() {
