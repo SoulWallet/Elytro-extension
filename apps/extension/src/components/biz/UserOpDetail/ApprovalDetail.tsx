@@ -3,6 +3,7 @@ import SessionCard from '../SessionCard';
 import InfoCard from '../InfoCard';
 import TokenAmountItem from '../TokenAmountItem';
 import FragmentedAddress from '../FragmentedAddress';
+import { getTransferredTokenInfo } from '@/utils/dataProcess';
 
 const { InfoCardItem, InfoCardWrapper } = InfoCard;
 
@@ -11,10 +12,16 @@ interface IApprovalDetailProps {
   decodedUserOp: Nullable<DecodeResult>;
 }
 
-export default function ActivationDetail({
+export default function ApprovalDetail({
   session,
   decodedUserOp,
 }: IApprovalDetailProps) {
+  if (!decodedUserOp) {
+    return null;
+  }
+
+  const transferredTokenInfo = getTransferredTokenInfo(decodedUserOp);
+
   return (
     <>
       <SessionCard session={session} />
@@ -23,12 +30,7 @@ export default function ActivationDetail({
           <InfoCardWrapper>
             <InfoCardItem
               label="Sending"
-              content={
-                <TokenAmountItem
-                  {...decodedUserOp?.toInfo}
-                  amount={decodedUserOp?.value?.toString()}
-                />
-              }
+              content={<TokenAmountItem {...transferredTokenInfo} />}
             />
 
             <InfoCardItem
