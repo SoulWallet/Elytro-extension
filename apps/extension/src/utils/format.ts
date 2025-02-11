@@ -135,7 +135,6 @@ export function formatBlockInfo(block: Block) {
 
 export function checkType(value: SafeAny) {
   const typeString = Object.prototype.toString.call(value);
-  console.log('typeString', typeString, value);
 
   switch (typeString) {
     case '[object BigInt]':

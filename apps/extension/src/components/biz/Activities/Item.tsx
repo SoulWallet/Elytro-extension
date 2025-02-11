@@ -118,7 +118,7 @@ export default function ActivityItem({
         </div>
       </div>
 
-      {value && (
+      {value ? (
         <div className="flex flex-row items-center gap-2">
           <span className="text-base font-bold">
             {formatTokenAmount(value, decimals, symbol)}
@@ -127,7 +127,7 @@ export default function ActivityItem({
             <img src={logoURI} alt={symbol} className="size-4 rounded-full" />
           )}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
