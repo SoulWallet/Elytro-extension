@@ -18,47 +18,42 @@ export default function ActivationDetail({
   return (
     <>
       <SessionCard session={session} />
-      <InfoCard.InfoCardWrapper>
-        <div className="flex flex-col gap-y-sm">
-          <InfoCardWrapper>
-            <InfoCardItem
-              label="Sending"
-              content={
-                <TokenAmountItem
-                  {...decodedUserOp?.toInfo}
-                  amount={decodedUserOp?.value?.toString()}
-                />
-              }
-            />
+      <div className="flex flex-col gap-y-sm">
+        <InfoCardWrapper>
+          <InfoCardItem
+            label="Sending"
+            content={
+              <TokenAmountItem
+                {...decodedUserOp?.toInfo}
+                amount={decodedUserOp?.value?.toString() || '0'} // Changed line
+              />
+            }
+          />
 
-            <InfoCardItem
-              label="Token"
-              content={decodedUserOp?.toInfo?.symbol}
-            />
+          <InfoCardItem label="Token" content={decodedUserOp?.toInfo?.symbol} />
 
-            <InfoCardItem
-              label="Contract"
-              content={
-                <FragmentedAddress
-                  address={decodedUserOp?.to}
-                  chainId={decodedUserOp?.toInfo?.chainId}
-                />
-              }
-            />
+          <InfoCardItem
+            label="Contract"
+            content={
+              <FragmentedAddress
+                address={decodedUserOp?.to}
+                chainId={decodedUserOp?.toInfo?.chainId}
+              />
+            }
+          />
 
-            <InfoCardItem
-              label="Function"
-              content={decodedUserOp?.method?.text || 'Unknown'}
-            />
+          <InfoCardItem
+            label="Function"
+            content={decodedUserOp?.method?.text || 'Unknown'}
+          />
 
-            {/* TODO: get raw data */}
-            <InfoCardItem
-              label="Raw data"
-              content={decodedUserOp?.method?.bytes4}
-            />
-          </InfoCardWrapper>
-        </div>
-      </InfoCard.InfoCardWrapper>
+          {/* TODO: get raw data */}
+          <InfoCardItem
+            label="Raw data"
+            content={decodedUserOp?.method?.bytes4}
+          />
+        </InfoCardWrapper>
+      </div>
     </>
   );
 }
