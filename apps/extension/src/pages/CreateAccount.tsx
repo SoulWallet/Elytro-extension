@@ -60,10 +60,12 @@ const CreateAccount: React.FC = () => {
       }
     >
       <div className="space-y-4">
-        <h1 className="elytro-text-body">Set a network</h1>
+        <h1 className="elytro-text-body font-bold">Set a network</h1>
       </div>
       <div className="flex flex-col space-y-4">
-        <div className="elytro-text-body text-gray-600 mt-4">Mainnet</div>
+        <div className="elytro-text-body font-bold text-gray-600 mt-4">
+          Mainnet
+        </div>
         <div className="grid grid-cols-1 gap-sm">
           {chains
             .filter((chain) => !chain.testnet)
@@ -77,7 +79,7 @@ const CreateAccount: React.FC = () => {
             ))}
         </div>
 
-        <div className="elytro-text-body text-gray-600">Testnet</div>
+        <div className="elytro-text-body font-bold text-gray-600">Testnet</div>
         <div className="grid grid-cols-1 gap-sm">
           {chains
             .filter((chain) => chain.testnet)

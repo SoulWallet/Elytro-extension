@@ -38,13 +38,13 @@ export default function ChangePasswordModal({
   const passwordForm = z
     .object({
       oldPassword: z.string().refine(handleCheckPassword, {
-        message: 'The password is incorrect',
+        message: 'The passcode is incorrect',
       }),
       password: z
         .string()
         .min(6, {
           message:
-            'The password should be more than 6 characters and include more than 1 capitalized letter.',
+            'The passcode should be more than 6 characters and include more than 1 capitalized letter.',
         })
         .superRefine((value, ctx) => {
           const oldPassword = form.getValues('oldPassword');
@@ -53,20 +53,20 @@ export default function ChangePasswordModal({
             ctx.addIssue({
               code: 'custom',
               message:
-                'The password should include more than 1 capitalized letter.',
+                'The passcode should include more than 1 capitalized letter.',
             });
           }
           if (value === oldPassword) {
             ctx.addIssue({
               code: 'custom',
               message:
-                'The new password should be different from the old password',
+                'The new passcode should be different from the old passcode',
             });
           }
           if (confirmPassword && confirmPassword !== value) {
             ctx.addIssue({
               code: 'custom',
-              message: 'Password do not match confirm password',
+              message: 'Passcode do not match confirm passcode',
             });
           }
         }),
@@ -85,14 +85,14 @@ export default function ChangePasswordModal({
       const data = form.getValues();
       await wallet.changePassword(data.oldPassword, data.password);
       toast({
-        title: 'Password changed',
-        description: 'Your password has been changed successfully',
+        title: 'Passcode changed',
+        description: 'Your passcode has been changed successfully',
       });
       await wallet.lock();
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'An error occurred while changing the password',
+        description: 'An error occurred while changing the passcode',
       });
       console.error(error);
     }
@@ -101,7 +101,7 @@ export default function ChangePasswordModal({
     <Dialog open={open} onOpenChange={handleOnOpenChange}>
       <DialogContent className="h-screen">
         <DialogHeader>
-          <DialogTitle>Change password</DialogTitle>
+          <DialogTitle>Change passcode</DialogTitle>
           <DialogDescription>
             <Form {...form}>
               <form className="space-y-3xl mt-4">
@@ -114,7 +114,7 @@ export default function ChangePasswordModal({
                         <FormControl>
                           <PasswordInput
                             field={field}
-                            placeholder="Enter old password"
+                            placeholder="Enter old passcode"
                           />
                         </FormControl>
                         <FormMessage className="text-left" />
@@ -129,7 +129,7 @@ export default function ChangePasswordModal({
                         <FormControl>
                           <PasswordInput
                             field={field}
-                            placeholder="Enter new password"
+                            placeholder="Enter new passcode"
                           />
                         </FormControl>
                         <FormMessage className="text-left" />
@@ -144,7 +144,7 @@ export default function ChangePasswordModal({
                         <FormControl>
                           <PasswordInput
                             field={field}
-                            placeholder="Repeat new password"
+                            placeholder="Repeat new passcode"
                           />
                         </FormControl>
                         <FormMessage className="text-left" />

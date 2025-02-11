@@ -34,12 +34,12 @@ const Create: React.FC = () => {
       title="&nbsp;"
       showBack={true}
     >
-      <div className="space-y-4">
+      <div className="space-y-2">
         <div className="flex justify-center">
           <img src={IconPasscode} alt="Passcode" width={144} />
         </div>
         <h1 className="elytro-text-title text-center">Create a passcode</h1>
-        <h2 className="text-sm text-muted-foreground text-center">
+        <h2 className="text-sm text-muted-foreground text-center !mb-2xl">
           This is for access your accounts on this device
         </h2>
         <PasswordSetter

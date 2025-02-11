@@ -26,6 +26,7 @@ export default function Transfer() {
       </div>
       <div className="flex flex-col gap-y-md w-full">
         <Button
+          size="large"
           onClick={() =>
             toast({
               title: 'Import feature is not available yet',
@@ -36,6 +37,7 @@ export default function Transfer() {
           Import an account
         </Button>
         <Button
+          size="large"
           variant="secondary"
           onClick={async () => {
             try {

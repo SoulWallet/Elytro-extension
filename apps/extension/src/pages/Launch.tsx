@@ -65,7 +65,7 @@ export default function Launch() {
           <>
             {/* TODO: navigate to new create account page */}
             <Button
-              className="rounded-full w-full px-4 py-5 h-14 mb-4 font-medium text-lg leading-6"
+              size="large"
               onClick={() => {
                 navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.CreatePasscode);
               }}
@@ -74,6 +74,7 @@ export default function Launch() {
             </Button>
             {/* TODO: navigate to import/recover account page */}
             <Button
+              size="large"
               variant="secondary"
               onClick={() =>
                 // TODO: this is a temporary dev mock: go to recover account page without user's confirmation

@@ -20,15 +20,15 @@ const passwordForm = z
       .string()
       .min(6, {
         message:
-          'The password should be more than 6 characters and include more than 1 capitalized letter.',
+          'The passcode should be more than 6 characters and include more than 1 capitalized letter.',
       })
       .refine((value) => /[A-Z]/.test(value), {
-        message: 'The password should include more than 1 capitalized letter.',
+        message: 'The passcode should include more than 1 capitalized letter.',
       }),
     confirm: z.string(),
   })
   .refine((data) => data.password === data.confirm, {
-    message: "Passwords don't match",
+    message: "Passcodes don't match",
     path: ['confirm'], // path of error
   });
 
@@ -61,7 +61,7 @@ export function PasswordSetter({ onSubmit, loading }: PasswordSetterProps) {
                   <PasswordInput
                     field={field}
                     disabled={loading}
-                    placeholder="Enter password"
+                    placeholder="Enter passcode"
                     onPwdVisibleChange={setIsPwdVisible}
                   />
                 </FormControl>
@@ -70,7 +70,7 @@ export function PasswordSetter({ onSubmit, loading }: PasswordSetterProps) {
                   <FormMessage />
                 ) : (
                   <FormDescription>
-                    The password should be more than 6 characters and include
+                    The passcode should be more than 6 characters and include
                     more than 1 capitalized letter.
                   </FormDescription>
                 )}
@@ -87,7 +87,7 @@ export function PasswordSetter({ onSubmit, loading }: PasswordSetterProps) {
                   <PasswordInput
                     field={field}
                     disabled={loading}
-                    placeholder="Repeat password"
+                    placeholder="Repeat passcode"
                     showEye={false}
                     outerPwdVisible={isPwdVisible}
                   />
