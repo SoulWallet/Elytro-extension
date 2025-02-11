@@ -66,7 +66,10 @@ export default function ActivityItem({
   status = UserOperationStatusEn.pending,
   to,
   type,
-  transferredTokenInfo,
+  decimals,
+  value,
+  symbol,
+  logoURI,
 }: UserOperationHistory) {
   const { openExplorer } = useChain();
   const [latestStatus, setLatestStatus] = useState(status);
@@ -115,21 +118,13 @@ export default function ActivityItem({
         </div>
       </div>
 
-      {transferredTokenInfo && (
+      {value && (
         <div className="flex flex-row items-center gap-2">
           <span className="text-base font-bold">
-            {formatTokenAmount(
-              transferredTokenInfo.value,
-              transferredTokenInfo.decimals,
-              transferredTokenInfo.symbol
-            )}
+            {formatTokenAmount(value, decimals, symbol)}
           </span>
-          {transferredTokenInfo.logoURI && (
-            <img
-              src={transferredTokenInfo.logoURI}
-              alt={transferredTokenInfo.symbol}
-              className="size-4 rounded-full"
-            />
+          {logoURI && (
+            <img src={logoURI} alt={symbol} className="size-4 rounded-full" />
           )}
         </div>
       )}

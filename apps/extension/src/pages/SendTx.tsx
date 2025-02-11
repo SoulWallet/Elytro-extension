@@ -132,7 +132,7 @@ export default function SendTx() {
           variant="secondary"
           size="large"
           className="w-full"
-          // disabled={!form.formState.isValid}
+          disabled={!form.formState.isValid}
           onClick={handleContinue}
         >
           Continue

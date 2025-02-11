@@ -3,6 +3,7 @@ import { DecodeResult } from '@soulwallet/decoder';
 export const getTransferredTokenInfo = (decodeResult: DecodeResult) => {
   if (decodeResult.method?.name === 'transfer') {
     return {
+      to: decodeResult.method.params[0],
       value: decodeResult.method.params[1],
       decimals: decodeResult.toInfo?.decimals || 18,
       symbol: decodeResult.toInfo?.symbol || '',
@@ -11,6 +12,7 @@ export const getTransferredTokenInfo = (decodeResult: DecodeResult) => {
   }
 
   return {
+    to: decodeResult.to,
     value: decodeResult.value.toString(),
     decimals: 18,
     symbol: 'ETH',

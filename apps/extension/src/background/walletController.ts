@@ -158,8 +158,7 @@ class WalletController {
       type,
       opHash,
       from: userOp.sender,
-      transferredTokenInfo: getTransferredTokenInfo(decodedDetail),
-      to: decodedDetail.to,
+      ...getTransferredTokenInfo(decodedDetail),
     });
   }
 

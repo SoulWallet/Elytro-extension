@@ -50,11 +50,12 @@ export default function ContactList({
         Number(myThreshold)
       );
 
-      openUserOpConfirmTx(UserOpType.SendTransaction, txs);
+      openUserOpConfirmTx(UserOpType.ApproveTransaction, txs);
     } catch (error) {
       toast({
         title: 'Confirm contacts failed',
         description: String(error),
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
