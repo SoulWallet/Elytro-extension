@@ -6,14 +6,6 @@ import { toast } from '@/hooks/use-toast';
 import FullPageWrapper from '@/components/biz/FullPageWrapper';
 
 export default function Transfer() {
-  // TODO: dev mock only. delete this when new creation process is done.
-  const handleJumpPage = (
-    path: (typeof SIDE_PANEL_ROUTE_PATHS)[keyof typeof SIDE_PANEL_ROUTE_PATHS]
-  ) => {
-    navigateTo('side-panel', path, {
-      from: 'transfer',
-    });
-  };
   return (
     <FullPageWrapper>
       <img src={WalletImg} alt="Wallet" className="size-[144px]" />
@@ -39,7 +31,9 @@ export default function Transfer() {
         <Button
           variant="secondary"
           onClick={() => {
-            handleJumpPage(SIDE_PANEL_ROUTE_PATHS.CreatePasscode);
+            navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.CreatePasscode, {
+              from: 'recover',
+            });
           }}
         >
           Recover an account

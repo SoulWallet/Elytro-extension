@@ -29,6 +29,7 @@ enum WalletStatusEn {
   NoAccount = 'NoAccount',
   HasAccountButLocked = 'HasAccountButLocked',
   HasAccountAndUnlocked = 'HasAccountAndUnlocked',
+  Recovering = 'Recovering',
 }
 
 // ! DO NOT use getter. They can not be proxied.
@@ -49,6 +50,10 @@ class WalletController {
     return keyring.locked;
   }
   public async getWalletStatus() {
+    if (accountManager.recoveryRecord) {
+      return WalletStatusEn.Recovering;
+    }
+
     if (!keyring.hasOwner) {
       return WalletStatusEn.NoOwner;
     }
@@ -388,7 +393,6 @@ class WalletController {
   }
 
   public async getRecoveryRecord(address: Address) {
-    console.log('accountManager.recoveryRecord', accountManager.recoveryRecord);
     if (accountManager.recoveryRecord) {
       return await getRecoveryRecord(accountManager.recoveryRecord.id);
     }

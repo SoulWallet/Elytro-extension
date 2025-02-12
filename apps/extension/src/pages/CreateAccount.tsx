@@ -46,6 +46,7 @@ const CreateAccount: React.FC = () => {
   return (
     <SecondaryPageWrapper
       title="Create account"
+      showBack={false}
       footer={
         <Button
           type="submit"

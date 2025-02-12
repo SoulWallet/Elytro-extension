@@ -4,7 +4,7 @@ import FullPageWrapper from '@/components/biz/FullPageWrapper';
 import { SIDE_PANEL_ROUTE_PATHS } from '@/routes';
 import { Button } from '@/components/ui/button';
 import useSearchParams from '@/hooks/use-search-params';
-import { Link } from 'wouter';
+import { navigateTo } from '@/utils/navigation';
 
 const YouAreIn: React.FC = () => {
   const params = useSearchParams();
@@ -12,16 +12,16 @@ const YouAreIn: React.FC = () => {
 
   const { title, description, action, actionPath } = isFromRecover
     ? {
-        title: 'You are in!',
-        description: 'Now you can create your first smart account',
-        action: 'Create',
-        actionPath: SIDE_PANEL_ROUTE_PATHS.CreateAccount,
-      }
-    : {
         title: 'You are ready to recover',
         description: 'You will need the passcode to see recovery status',
         action: 'Start recover',
         actionPath: SIDE_PANEL_ROUTE_PATHS.AccountRecovery,
+      }
+    : {
+        title: 'You are in!',
+        description: 'Now you can create your first smart account',
+        action: 'Create',
+        actionPath: SIDE_PANEL_ROUTE_PATHS.CreateAccount,
       };
 
   return (
@@ -37,8 +37,14 @@ const YouAreIn: React.FC = () => {
         </h2>
       </div>
 
-      <Button type="submit" className="w-full rounded-full h-14" size="large">
-        <Link to={actionPath}>{action}</Link>
+      <Button
+        className="w-full rounded-full h-14"
+        size="large"
+        onClick={() => {
+          navigateTo('side-panel', actionPath);
+        }}
+      >
+        {action}
       </Button>
     </FullPageWrapper>
   );

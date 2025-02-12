@@ -13,7 +13,6 @@ const Create: React.FC = () => {
   const { wallet } = useWallet();
   const params = useSearchParams();
   const handleCreatePassword = async (pwd: string) => {
-    console.log(pwd);
     try {
       setLoading(true);
       await wallet.createNewOwner(pwd);

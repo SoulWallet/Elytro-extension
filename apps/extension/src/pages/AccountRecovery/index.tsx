@@ -44,6 +44,9 @@ export default function AccountRecovery() {
             Start recover
           </Button>
         }
+        onBack={() => {
+          navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.Home);
+        }}
       >
         <div className="flex flex-col items-center space-y-2xl">
           <img src={WalletImg} alt="Wallet" className="size-36" />

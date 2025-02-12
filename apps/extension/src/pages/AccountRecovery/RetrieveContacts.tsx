@@ -79,7 +79,17 @@ function PageContent() {
   }, [address, currentChain]);
 
   const handleShareContact = (contact: TRecoveryContact) => {
+    if (!recoveryRecord || !recoveryRecord.recoveryRecordID) {
+      toast({
+        title: 'No recovery record found',
+        description: 'Please try again later',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     const isAddressContact = isAddress(contact.address);
+
     // TODO: change this to real link
     const shareContent = isAddressContact
       ? `https://elytro.com/recovery?id=${recoveryRecord?.recoveryRecordID}`

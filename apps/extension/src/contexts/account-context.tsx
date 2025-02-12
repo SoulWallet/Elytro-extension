@@ -91,6 +91,10 @@ export const AccountProvider = ({
   });
 
   const updateTokens = async () => {
+    if (loading || !accountInfo.address) {
+      return;
+    }
+
     await refetchTokens();
   };
 

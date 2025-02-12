@@ -35,8 +35,13 @@ export default function Launch() {
   };
 
   const renderContent = useMemo(() => {
-    if (status === WalletStatusEn.NoAccount) {
+    if (status === WalletStatusEn.Recovering) {
       navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.AccountRecovery);
+      return null;
+    }
+
+    if (status === WalletStatusEn.NoAccount) {
+      navigateTo('side-panel', SIDE_PANEL_ROUTE_PATHS.CreateAccount);
       return null;
     }
 
