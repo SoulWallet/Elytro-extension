@@ -21,7 +21,7 @@ export default function Transfer() {
           Manage your smart contract accounts
         </h1>
         <p className="elytro-text-smaller-body text-gray-600">
-          We don’t manage externally owned accounts (EOAs)
+          Smart contract accounts created on Elytro only
         </p>
       </div>
       <div className="flex flex-col gap-y-md w-full">

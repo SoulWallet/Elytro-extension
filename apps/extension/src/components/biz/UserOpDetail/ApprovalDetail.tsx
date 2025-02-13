@@ -47,11 +47,8 @@ export default function ActivationDetail({
             content={decodedUserOp?.method?.text || 'Unknown'}
           />
 
-          {/* TODO: get raw data */}
-          <InfoCardItem
-            label="Raw data"
-            content={decodedUserOp?.method?.bytes4}
-          />
+          {/* TODO: get data */}
+          <InfoCardItem label="Data" content={decodedUserOp?.method?.bytes4} />
         </InfoCardWrapper>
       </div>
     </>

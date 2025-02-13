@@ -64,11 +64,9 @@ export function UserOpDetail({
       <div className="flex items-center justify-between">
         <span className="elytro-text-bold-body">{UserOpTitleMap[opType]}</span>
 
-        {/* Advanced view: for deploy wallet no need to show */}
+        {/* Raw data: for deploy wallet no need to show */}
         {opType === UserOpType.DeployWallet ? null : (
-          <span className="elytro-text-tiny-body text-gray-750">
-            Advanced view
-          </span>
+          <span className="elytro-text-tiny-body text-gray-750">Raw data</span>
         )}
       </div>
 
