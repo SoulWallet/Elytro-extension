@@ -9,10 +9,10 @@ interface ISessionCard {
 export default function SessionCard({
   session = ELYTRO_SESSION_DATA,
 }: ISessionCard) {
-  const { icon, name, origin } = session;
+  const { icon, name, url } = session;
 
   return (
-    <div className="flex items-center justify-between bg-gray-150 px-lg py-md rounded-sm">
+    <div className="flex items-center justify-between rounded-sm">
       <span className="flex items-center gap-x-xs">
         <Avatar className="border border-gray-300 bg-white size-8 flex items-center justify-center">
           <AvatarImage src={icon} alt={`${name} logo`} className="size-5" />
@@ -23,7 +23,7 @@ export default function SessionCard({
       </span>
 
       <span className="elytro-text-smaller-bold-body text-gray-600">
-        {getHostname(origin)}
+        {getHostname(url)}
       </span>
     </div>
   );

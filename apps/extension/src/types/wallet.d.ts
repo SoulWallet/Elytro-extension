@@ -41,7 +41,7 @@ type TElytroTxInfo = {
 
 type TDAppInfo = {
   name: string;
-  origin?: string;
+  url?: string;
   icon: string;
 };
 

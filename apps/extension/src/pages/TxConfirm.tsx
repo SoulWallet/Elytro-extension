@@ -15,7 +15,7 @@ import { UserOpDetail } from '@/components/biz/UserOpDetail';
 const UserOpTitleMap = {
   [UserOpType.DeployWallet]: 'Activate account',
   [UserOpType.SendTransaction]: 'Send',
-  [UserOpType.ApproveTransaction]: 'Confirm Transaction',
+  [UserOpType.ApproveTransaction]: 'Confirm transaction',
 };
 
 export default function TxConfirm() {

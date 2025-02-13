@@ -10,11 +10,9 @@ export default function Transfer() {
     <FullPageWrapper>
       <img src={WalletImg} alt="Wallet" className="size-[144px]" />
       <div className="text-center flex flex-col gap-y-2xs">
-        <h1 className="elytro-text-subtitle">
-          Manage your smart contract accounts
-        </h1>
+        <h1 className="elytro-text-subtitle">Manage your Elytro accounts</h1>
         <p className="elytro-text-smaller-body text-gray-600">
-          We don’t manage externally owned accounts (EOAs)
+          Smart contract accounts created on Elytro only
         </p>
       </div>
       <div className="flex flex-col gap-y-md w-full">
