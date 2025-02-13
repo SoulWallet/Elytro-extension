@@ -31,6 +31,7 @@ import AmountInput from '@/components/biz/AmountInput';
 import { useTx } from '@/contexts/tx-context';
 import { UserOpType } from '@/contexts/tx-context';
 import { ABI_ERC20 } from '@/constants/abi';
+import { toast } from '@/hooks/use-toast';
 
 export default function SendTx() {
   const {
@@ -107,6 +108,15 @@ export default function SendTx() {
 
     const token = form.getValues('token');
     const to = form.getValues('to');
+
+    if (to.toLowerCase() === address.toLowerCase()) {
+      toast({
+        title: 'Cannot send to yourself',
+        description: 'Please input a valid address.',
+      });
+      return;
+    }
+
     const txParams: Transaction = { to };
 
     const amount = parseEther(form.getValues('amount')).toString();
