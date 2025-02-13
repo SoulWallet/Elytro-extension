@@ -36,6 +36,7 @@ export function UserOpDetail({
   chainId,
   decodedUserOp,
   from,
+  session,
 }: IUserOpDetailProps) {
   const [showRawData, setShowRawData] = useState(false);
 
@@ -48,7 +49,9 @@ export function UserOpDetail({
         return <InnerSendingDetail decodedUserOp={decodedUserOp} />;
 
       case UserOpType.ApproveTransaction:
-        return <ApprovalDetail decodedUserOp={decodedUserOp} />;
+        return (
+          <ApprovalDetail session={session} decodedUserOp={decodedUserOp} />
+        );
 
       default:
         return null;

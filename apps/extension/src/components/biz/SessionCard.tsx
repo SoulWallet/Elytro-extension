@@ -1,5 +1,5 @@
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { ELYTRO_SESSION_DATA } from '@/constants/session';
+import { ELYTRO_APP_DATA } from '@/constants/dapps';
 import { getHostname } from '@/utils/format';
 
 interface ISessionCard {
@@ -7,9 +7,9 @@ interface ISessionCard {
 }
 
 export default function SessionCard({
-  session = ELYTRO_SESSION_DATA,
+  session = ELYTRO_APP_DATA,
 }: ISessionCard) {
-  const { icon, name, url } = session;
+  const { icon, name, origin } = session;
 
   return (
     <div className="flex items-center justify-between rounded-sm">
@@ -23,7 +23,7 @@ export default function SessionCard({
       </span>
 
       <span className="elytro-text-smaller-bold-body text-gray-600">
-        {getHostname(url)}
+        {getHostname(origin)}
       </span>
     </div>
   );
